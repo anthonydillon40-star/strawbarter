@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRAW Barter — Trade Anything. Own Everything.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+    
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+    .gap-tight { gap: 1rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    .modal-backdrop.show { opacity: 1; visibility: visible; }
+    .modal-content {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    .token-address { font-family: monospace; font-size: 0.85rem; word-break: break-all; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="#rwa" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔐 RWA</a>
+      <a href="#dating" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">☕ Dating</a>
+      <a href="#builder" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🏗️ Builders</a>
+      
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
+          <a href="#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <a href="https://phantom.app/" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-purple/40 rounded-lg hover:bg-s-purple/10 transition text-xs text-s-purple">Phantom</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <button class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</button>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="#rwa" class="py-2 px-3 rounded-lg hover:bg-s-card">🔐 RWA Registry</a>
+      <a href="#dating" class="py-2 px-3 rounded-lg hover:bg-s-card">☕ Coffee Dating</a>
+      <a href="#builder" class="py-2 px-3 rounded-lg hover:bg-s-card">🏗️ Find a Builder</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <a href="#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
+      <a href="#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
+      <a href="#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
+      <a href="#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
+      <a href="#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
+      <a href="#legal" class="py-2 px-3 rounded-lg hover:bg-s-card">⚖️ Legal</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section id="home" class="py-14 px-4">
+  <div class="max-w-6xl mx-auto text-center">
+    <div class="flex flex-wrap justify-center gap-3 mb-4 text-sm text-s-muted">
+      <span>✅ 100% Free</span><span>✅ No Credit Card</span><span>✅ UK Based</span>
+    </div>
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-s-green/10 border border-s-green/20 text-sm text-s-green mb-6">
+      <strong>🎁 10,000 FREE on Sign-Up • 10,000 per Referral</strong>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+      Trade Anything.<br>
+      <span class="gradient-text">Barter Without Borders.</span>
+    </h1>
+    <p class="text-lg text-s-muted max-w-2xl mx-auto mb-6">The UK's trusted barter platform — buy, sell, trade, connect.</p>
+    <div class="max-w-xl mx-auto mb-8">
+      <div class="relative">
+        <input type="text" placeholder="🔍 Search items, services…" class="w-full px-5 py-3 rounded-xl bg-s-card border border-s-border focus:border-s-green focus:outline-none">
+        <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-s-green px-4 py-1.5 rounded-lg font-medium">Search</button>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 justify-center mb-6">
+      <a href="#marketplace" class="bg-s-green px-6 py-3 rounded-xl font-semibold btn">🛒 Marketplace</a>
+      <a href="#signup" class="border border-s-border px-6 py-3 rounded-xl font-medium hover:bg-s-card transition">🎁 Join Free</a>
+    </div>
+    <div class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-s-solana/5 border border-s-solana/20">
+      <span class="text-s-solana font-semibold text-sm">💎 STRAW on Solana</span>
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline text-sm">View →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Token -->
+<section id="token" class="section-compact px-4 max-w-4xl mx-auto">
+  <div class="card rounded-2xl p-6">
+    <h2 class="text-2xl font-bold mb-3 text-center text-s-solana">💎 STRAW — Solana Blockchain</h2>
+    <p class="text-center text-s-muted mb-4 text-sm">Transparent & verifiable — live on-chain.</p>
+    <div class="bg-s-dark rounded-lg p-4 mb-4">
+      <p class="text-xs text-s-muted mb-2">Contract Address:</p>
+      <div class="flex items-center gap-2 flex-wrap">
+        <code class="token-address flex-1 bg-s-card px-3 py-2 rounded-lg text-s-solana text-xs">2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc</code>
+        <button onclick="copyTokenAddress()" class="bg-s-solana text-black px-3 py-2 rounded-lg text-sm btn whitespace-nowrap">📋 Copy</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="flex items-center justify-center gap-2 p-3 bg-s-solana/10 rounded-lg border border-s-solana/30 hover:border-s-solana transition text-sm">🔗 Solana Explorer</a>
+      <a href="https://phantom.app/" target="_blank" class="flex items-center justify-center gap-2 p-3 bg-s-purple/10 rounded-lg border border-s-purple/30 hover:border-s-purple transition text-sm">👻 Phantom Wallet</a>
+    </div>
+    <p class="text-center text-xs text-s-muted">⚠️ Value fluctuates — not financial advice</p>
+  </div>
+</section>
+
+<!-- Marketplace -->
+<section id="marketplace" class="section-compact px-4 max-w-6xl mx-auto">
+  <h2 class="text-2xl font-bold mb-3 text-center">🛒 Marketplace</h2>
+  <p class="text-center text-s-muted mb-4 text-sm">Buy, sell, trade across the UK.</p>
+  <div class="flex flex-wrap justify-center gap-2 mb-6">
+    <button class="px-3 py-1.5 rounded-full bg-s-green/10 text-s-green border border-s-green/20 text-sm">🆕 New</button>
+    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">🔥 Hot</button>
+    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">📍 Near Me</button>
+    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">£ — ££ — £££</button>
+  </div>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card rounded-xl p-5 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')">❤️</button>
+      <h3 class="text-lg font-semibold mb-2">📦 Physical Goods</h3>
+      <p class="text-s-muted text-sm mb-3">Electronics, furniture, tools, clothing.</p>
+      <a href="#" class="text-s-green hover:underline text-sm">Browse →</a>
+    </div>
+    <div class="card rounded-xl p-5 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')">❤️</button>
+      <h3 class="text-lg font-semibold mb-2">💻 Digital Products</h3>
+      <p class="text-s-muted text-sm mb-3">Guides, templates — instant download.</p>
+      <a href="#" class="text-s-green hover:underline text-sm">Browse →</a>
+    </div>
+    <div class="card rounded-xl p-5 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')">❤️</button>
+      <h3 class="text-lg font-semibold mb-2">🛠️ Services & Skills</h3>
+      <p class="text-s-muted text-sm mb-3">Design, writing, repairs — trade skills.</p>
+      <a href="#" class="text-s-green hover:underline text-sm">Find Services →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Barter -->
+<section id="barter" class="section-compact px-4 max-w-6xl mx-auto bg-s-card/30 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-3 text-center">🔄 Direct Barter</h2>
+  <p class="text-center text-s-muted mb-2 text-sm">Trade item-for-item — no money needed.</p>
+  <p class="text-center text-s-green font-medium mb-6 text-sm">✅ 1,245 Trades This Month</p>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+    <div><div class="text-2xl mb-2">1️⃣</div><h3 class="font-semibold text-sm mb-1">List It</h3><p class="text-s-muted text-xs">Add photos & desc.</p></div>
+    <div><div class="text-2xl mb-2">2️⃣</div><h3 class="font-semibold text-sm mb-1">Find It</h3><p class="text-s-muted text-xs">Search listings.</p></div>
+    <div><div class="text-2xl mb-2">3️⃣</div><h3 class="font-semibold text-sm mb-1">Propose It</h3><p class="text-s-muted text-xs">Offer or counter.</p></div>
+    <div><div class="text-2xl mb-2">4️⃣</div><h3 class="font-semibold text-sm mb-1">Swap It</h3><p class="text-s-muted text-xs">Confirm — done!</p></div>
+  </div>
+</section>
+
+<!-- RWA Registry -->
+<section id="rwa" class="section-compact px-4 max-w-6xl mx-auto">
+  <h2 class="text-2xl font-bold mb-3 text-center">🔐 RWA — Asset Registry</h2>
+  <p class="text-center text-s-muted mb-2 text-sm">Permanent, immutable proof of ownership.</p>
+  <p class="text-center text-s-green font-medium mb-6 text-sm">📊 4,892 Assets • £12.4M Value</p>
+  <div class="grid md:grid-cols-3 gap-4 mb-4">
+    <div class="card rounded-xl p-5"><h3 class="font-semibold mb-2">📝 Register</h3><p class="text-s-muted text-sm">Serial, photos, ownership.</p></div>
+    <div class="card rounded-xl p-5"><h3 class="font-semibold mb-2">✅ Verify</h3><p class="text-s-muted text-sm">Check provenance — no stolen goods.</p></div>
+    <div class="card rounded-xl p-5"><h3 class="font-semibold mb-2">📜 History</h3><p class="text-s-muted text-sm">Full chain of custody.</p></div>
+  </div>
+  <div class="max-w-xl mx-auto relative">
+    <input type="text" placeholder="🔍 Verify Serial / ID →" class="w-full px-4 py-2.5 rounded-lg bg-s-card border border-s-border focus:border-s-green focus:outline-none text-sm">
+    <button class="absolute right-3 top-1/2 -translate-y-1/2 text-s-green font-medium text-sm">Check</button>
+  </div>
+</section>
+
+<!-- Coffee Dating -->
+<section id="dating" class="section-compact px-4 max-w-6xl mx-auto bg-s-card/30 rounded-2xl">
+  <h2 class="text-2xl font-bold mb-3 text-center">☕ Coffee Dating</h2>
+  <p class="text-center text-s-muted mb-6 text-sm">Meet locally — low-pressure, safe. 18+ only.</p>
+  <div class="max-w-xl mx-auto card rounded-xl p-5 text-center">
+    <div class="text-3xl mb-3">❤️</div>
+    <h3 class="text-xl font-semibold mb-2">Meet Nearby</h3>
+    <p class="text-s-muted text-sm mb-4">Set preferences, match, meet for coffee.</p>
+    <div class="flex flex-wrap justify-center gap-2 mb-4">
+      <span class="px-2 py-1 bg-s-green/10 text-s-green rounded-full text-xs">✅ Verified</span>
+      <span class="px-2 py-1 bg-s-green/10 text-s-green rounded-full text-xs">✅ Photo Check</span>
+      <span class="px-2 py-1 bg-s-green/10 text-s-green rounded-full text-xs">✅ Location</span>
+    </div>
+    <div class="text-left bg-s-dark p-3 rounded-lg mb-4 text-xs text-s-muted">
+      <strong>🔒 Safety:</strong> Age verification • Moderation • Report/Block • <strong>Meet in public</strong>
+    </div>
+    <button class="bg-s-green px-5 py-2 rounded-lg font-semibold btn text-sm" onclick="openAgeGate()">Get Started →</button>
+  </div>
+</section>
+
+<!-- Find a Builder -->
+<section id="builder" class="section-compact px-4 max-w-6xl mx-auto">
+  <h2 class="text-2xl font-bold mb-3 text-center">🏗️ Find a Builder</h2>
+  <p class="text-center text-s-muted mb-4 text-sm">Verified tradespeople near you.</p>
+  <div class="max-w-md mx-auto mb-6 relative">
+    <input type="text" placeholder="📍 Postcode — e.g. M1 2AB" class="w-full px-4 py-2.5 rounded-lg bg-s-card border border-s-border focus:border-s-green focus:outline-none text-sm">
+    <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-s-green px-3 py-1 rounded text-sm font-medium">Find</button>
+  </div>
+  <div class="grid grid-cols-4 md:grid-cols-8 gap-3">
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🏠</div><h3 class="text-xs font-semibold">Builders</h3></div>
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🔌</div><h3 class="text-xs font-semibold">Electric</h3></div>
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🚿</div><h3 class="text-xs font-semibold">Plumber</h3></div>
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🎨</div><h3 class="text-xs font-semibold">Painter</h3></div>
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🌳</div><h3 class="text-xs font-semibold">Garden</h3></div>
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🔨</div><h3 class="text-xs font-semibold">Carpenter</h3></div>
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🧱</div><h3 class="text-xs font-semibold">Roof</h3></div>
+    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">📋</div><h3 class="text-xs font-semibold">All</h3></div>
+  </div>
+  <div class="text-center mt-5"><button class="bg-s-green px-6 py-2 rounded-lg font-semibold btn text-sm">Free Quote →</button></div>
+</section>
+
+<!-- Jobs -->
+<section id="jobs" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">💼 Jobs & Income</h2>
+  <p class="text-s-muted mb-4 text-sm">Remote work, freelance, side income.</p>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🏠 Remote Jobs</h3><p class="text-sm text-s-muted">Work from anywhere — curated roles.</p></div>
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">💡 Side Hustles</h3><p class="text-sm text-s-muted">Proven ways to earn extra.</p></div>
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🖥️ Freelance</h3><p class="text-sm text-s-muted">Offer skills — set your rates.</p></div>
+  </div>
+</section>
+
+<!-- 🧰 FREE TOOLS -->
+<section id="guides" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">🧰 Free Tools & Guides</h2>
+  <p class="text-s-muted mb-4 text-sm">Instant use — no sign-up required.</p>
+  <div class="grid md:grid-cols-3 gap-4 mb-4">
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">🧮 Calculators</h3>
+      <ul class="text-sm text-s-muted space-y-0.5">
+        <li>• Loan & Mortgage</li><li>• UK Tax & NI</li><li>• Salary Converter</li><li>• Interest</li><li>• Budget Planner</li>
+      </ul>
+    </div>
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">🔄 Converters</h3>
+      <ul class="text-sm text-s-muted space-y-0.5">
+        <li>• Length, Weight, Volume</li><li>• Temperature</li><li>• Currency</li><li>• Area & Speed</li><li>• Data</li>
+      </ul>
+    </div>
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">💷 UK Budget Tools</h3>
+      <ul class="text-sm text-s-muted space-y-0.5">
+        <li>• Budget Template</li><li>• Tax Deadlines</li><li>• Tax Code Decoder</li><li>• Savings Allowance</li><li>• Payslip Breakdown</li>
+      </ul>
+    </div>
+  </div>
+  <div class="text-center">
+    <button class="bg-s-green/10 text-s-green border border-s-green/20 px-5 py-2 rounded-lg font-medium hover:bg-s-green/20 transition text-sm">
+      📂 View All 50+ Tools →
+    </button>
+  </div>
+</section>
+
+<!-- 📁 DIGITAL DOWNLOADS -->
+<section id="digital" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">📁 Digital Downloads</h2>
+  <p class="text-s-muted mb-4 text-sm">Instant download — no shipping. Free & premium.</p>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">📄</div>
+      <h3 class="font-semibold text-sm mb-1">Templates</h3>
+      <p class="text-xs text-s-muted">Business, Budget</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">📊</div>
+      <h3 class="font-semibold text-sm mb-1">Charts</h3>
+      <p class="text-xs text-s-muted">Tax, Reference</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">📋</div>
+      <h3 class="font-semibold text-sm mb-1">Checklists</h3>
+      <p class="text-xs text-s-muted">Daily, Moving</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">🎨</div>
+      <h3 class="font-semibold text-sm mb-1">Printables</h3>
+      <p class="text-xs text-s-muted">Planners, Decor</p>
+    </div>
+  </div>
+  <div class="grid md:grid-cols-3 gap-3 mb-4">
+    <div class="card rounded-lg p-3 hover:border-s-green/50 transition">
+      <h4 class="font-semibold text-sm mb-1">📚 Business Guides</h4>
+      <p class="text-xs text-s-muted mb-1">Startups, Marketing, Finance</p>
+      <span class="text-s-green text-xs">Free & Premium →</span>
+    </div>
+    <div class="card rounded-lg p-3 hover:border-s-green/50 transition">
+      <h4 class="font-semibold text-sm mb-1">🏠 Home & Lifestyle</h4>
+      <p class="text-xs text-s-muted mb-1">DIY, Gardening, Cooking</p>
+      <span class="text-s-green text-xs">Browse →</span>
+    </div>
+    <div class="card rounded-lg p-3 hover:border-s-green/50 transition">
+      <h4 class="font-semibold text-sm mb-1">💻 Tech & Skills</h4>
+      <p class="text-xs text-s-muted mb-1">Coding, AI, Design</p>
+      <span class="text-s-green text-xs">Browse →</span>
+    </div>
+  </div>
+  <div class="text-center">
+    <button class="bg-s-green px-6 py-2.5 rounded-lg font-semibold btn text-sm">📂 Browse 500+ Downloads →</button>
+  </div>
+</section>
+
+<!-- Events -->
+<section id="events" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">📅 Local Events</h2>
+  <p class="text-s-muted mb-4 text-sm">Swap meets, meetups, workshops near you.</p>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🔄 Swap Meets</h3><p class="text-sm text-s-muted">In-person bartering — bring & take.</p></div>
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🤝 Meetups</h3><p class="text-sm text-s-muted">Connect with local members.</p></div>
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">📚 Workshops</h3><p class="text-sm text-s-muted">Learn new skills — trade knowledge.</p></div>
+  </div>
+</section>
+
+<!-- Businesses -->
+<section id="business" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">🏪 Local Businesses</h2>
+  <p class="text-s-muted mb-4 text-sm">Discover & support local — open to barter.</p>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">📍 Map View</h3><p class="text-sm text-s-muted">See who's nearby — services, shops.</p></div>
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">⭐ Rated Businesses</h3><p class="text-sm text-s-muted">Verified reviews — trusted local.</p></div>
+    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🤝 Partner Directory</h3><p class="text-sm text-s-muted">Businesses open to barter agreements.</p></div>
+  </div>
+</section>
+
+<!-- Sign-Up / Referral -->
+<section id="signup" class="section-compact px-4 max-w-3xl mx-auto text-center border-t border-s-border">
+  <div class="card rounded-2xl p-6">
+    <h2 class="text-3xl font-bold mb-3">🎁 Join — It's Free!</h2>
+    <p class="text-s-muted mb-5 text-sm">Start trading today. No fees, no hidden costs.</p>
+    <div class="grid md:grid-cols-2 gap-4 mb-5">
+      <div class="p-4 bg-s-green/10 rounded-xl border border-s-green/20">
+        <div class="text-2xl font-bold text-s-green mb-1">10,000</div>
+        <div class="text-s-muted text-sm">Free on Sign-Up</div>
+      </div>
+      <div class="p-4 bg-s-gold/10 rounded-xl border border-s-gold/20">
+        <div class="text-2xl font-bold text-s-gold mb-1">10,000</div>
+        <div class="text-s-muted text-sm">Per Friend Referred</div>
+      </div>
+    </div>
+    <div id="referral" class="scroll-anchor bg-s-dark rounded-lg p-4 mb-5">
+      <p class="text-xs text-s-muted mb-2">Your Referral Link:</p>
+      <div class="flex items-center gap-2 mb-3">
+        <input type="text" value="https://strawbarter.com/ref/yourname" id="refLink" class="flex-1 px-3 py-2 rounded-lg bg-s-card border border-s-border text-xs" readonly>
+        <button onclick="copyRefLink()" class="bg-s-green px-3 py-2 rounded-lg font-medium text-xs btn whitespace-nowrap">📋 Copy</button>
+      </div>
+      <div class="flex justify-center gap-3 text-xl">
+        <a href="#" class="hover:text-s-green transition">📘</a>
+        <a href="#" class="hover:text-s-green transition">🐦</a>
+        <a href="#" class="hover:text-s-green transition">💬</a>
+        <a href="#" class="hover:text-s-green transition">📧</a>
+      </div>
+    </div>
+    <button class="bg-s-green px-8 py-3 rounded-xl text-lg font-semibold btn w-full max-w-md mb-4">
+      🎁 Claim Free Welcome Bonus
+    </button>
+    <p class="text-xs text-s-muted">
+      👻 <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a> &nbsp;|&nbsp;
+      💎 <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a>
+    </p>
+  </div>
+</section>
+
+<!-- Legal -->
+<section id="legal" class="section-compact px-4 max-w-4xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3 text-center">⚖️ Legal & Risk</h2>
+  <div class="card rounded-xl p-5 text-sm text-s-muted space-y-2">
+    <p>⚠️ <strong>Digital Asset Warning:</strong> STRAW is a digital token — value can go down as well as up. Not regulated by the FCA or any financial authority. You may lose your entire investment. Not financial advice.</p>
+    <p>🔒 <strong>User Responsibility:</strong> All trades and barters are between users. Always verify items before exchanging. Meet in public for in-person trades.</p>
+    <p>📜 <strong>Terms & Privacy:</strong> By using this site, you agree to our Terms of Service and Privacy Policy.</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Link copied!</div>
+
+<!-- Age Gate Modal -->
+<div id="ageGate" class="modal-backdrop">
+  <div class="modal-content">
+    <h3 class="text-2xl font-bold mb-4">🔞 Age Verification</h3>
+    <p class="mb-6 text-s-muted">This section is for users aged 18+. Please confirm your age.</p>
+    <div class="flex gap-4 mb-4">
+      <button onclick="confirmAge(true)" class="flex-1 bg-s-green py-3 rounded-lg font-semibold btn">I am 18+</button>
+      <button onclick="confirmAge(false)" class="flex-1 border border-s-border py-3 rounded-lg font-semibold hover:bg-s-card transition">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target)) menu.classList.remove('open');
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Copy Functions
+function copyTokenAddress() {
+  navigator.clipboard.writeText('2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc')
+    .then(() => showToast('✅ Contract address copied!'));
+}
+function copyRefLink() {
+  navigator.clipboard.writeText(document.getElementById('refLink').value)
+    .then(() => showToast('✅ Referral link copied!'));
+}
+
+// Age Gate
+function openAgeGate() {
+  document.getElementById('ageGate').classList.add('show');
+}
+function confirmAge(isAdult) {
+  if (isAdult) {
+    document.getElementById('ageGate').classList.remove('show');
+    showToast('✅ Verified — welcome!');
+  } else {
+    document.getElementById('ageGate').classList.remove('show');
+    showToast('🔞 This section is 18+ only');
+  }
+}
+</script>
+
+</body>
+</html>
