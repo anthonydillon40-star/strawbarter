@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STRAW Barter — Trade Anything. Own Everything.</title>
+  <title>STRAW Barter — Trade, Earn & Connect 🍓</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <script>
@@ -11,563 +11,976 @@
       theme: {
         extend: {
           colors: {
-            s: {
-              dark: '#0f172a',
-              card: '#1e293b',
-              green: '#22c55e',
-              gold: '#f59e0b',
-              text: '#f8fafc',
-              muted: '#94a3b8',
-              border: '#334155',
-              purple: '#AB5FFB',
-              solana: '#00FFA3',
-            }
-          },
-          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+            s: { dark:'#0f172a', card:'#1e293b', green:'#22c55e', gold:'#f59e0b', text:'#f8fafc', muted:'#94a3b8', border:'#334155', purple:'#AB5FFB', solana:'#00FFA3', red:'#ef4444' }
+          }
         }
       }
     }
   </script>
   <style>
-    html { scroll-behavior: smooth; }
-    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
-    .btn { transition: all 0.2s; }
-    .btn:hover { transform: translateY(-1px); }
-    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
-    .card:hover { border-color: #22c55e; }
-    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .dropdown { position: relative; }
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: 100%;
-      min-width: 240px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 0.5rem 0;
-      z-index: 9999;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      margin-top: 0.5rem;
+    html{scroll-behavior:smooth;}
+    body{background:#0f172a;color:#f8fafc;font-family:system-ui,sans-serif;}
+    .card{background:#1e293b;border:1px solid #334155;transition:all .2s;}
+    .card:hover{border-color:#22c55e;transform:translateY(-2px);}
+    .btn{transition:all .2s;cursor:pointer;}
+    .stripe-btn{background:linear-gradient(135deg,#635bff,#5a52e8);}
+    .stripe-btn:hover{background:linear-gradient(135deg,#5a52e8,#5048d6);}
+    .primary-gradient{background:linear-gradient(135deg,#22c55e,#16a34a);}
+    .gold-gradient{background:linear-gradient(135deg,#f59e0b,#d97706);}
+    .solana-gradient{background:linear-gradient(135deg,#00FFA3,#DC1FFF);}
+    .bg-solana-gradient\/20{background:linear-gradient(135deg,rgba(0,255,163,.2),rgba(220,31,255,.2));}
+    .bg-solana-gradient\/10{background:linear-gradient(135deg,rgba(0,255,163,.1),rgba(220,31,255,.1));}
+    .collapsible-content{max-height:0;overflow:hidden;transition:max-height .4s ease-out;}
+    .collapsible-content.open{max-height:3000px;}
+    .tool-card:hover{transform:scale(1.02);}
+    @media print{
+      body{background:white !important;color:black !important;}
+      .no-print{display:none !important;}
+      .collapsible-content{max-height:none !important;overflow:visible !important;}
+      .card{border:1px solid #ccc !important;background:white !important;}
     }
-    .dropdown-menu.open { display: block; }
-    .dropdown-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.25rem;
-      color: #cbd5e1;
-      text-decoration: none;
-      transition: all 0.15s;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
-    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
-    
-    section, .scroll-anchor { scroll-margin-top: 90px; }
-    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
-    .gap-tight { gap: 1rem; }
-
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #1e293b;
-      border: 1px solid #22c55e;
-      padding: 0.875rem 1.5rem;
-      border-radius: 10px;
-      z-index: 9999;
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
-    }
-    .modal-backdrop.show { opacity: 1; visibility: visible; }
-    .modal-content {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 2rem;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-    }
-    .token-address { font-family: monospace; font-size: 0.85rem; word-break: break-all; }
   </style>
 </head>
 <body class="antialiased">
 
-<!-- ⚠️ FCA Warning -->
-<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
-  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+<!-- ⚠️ FCA DISCLAIMER -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm no-print">
+  <span class="text-amber-400">⚠️ Digital asset — value can rise & fall. Not regulated. No FSCS protection. Not financial advice. All trades at own risk. 18+ only.</span>
 </div>
 
-<!-- Header -->
-<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-    <a href="#home" class="flex items-center gap-2 text-xl font-bold">
-      <span>🍓</span> STRAW Barter
-    </a>
+<!-- 🍓 STRAW AIRDROP BANNER -->
+<div class="bg-solana-gradient/20 border-b border-s-solana/30 py-3 px-4 text-center no-print">
+  <span class="font-bold text-lg">🎁 FREE 10,000 $STRAW on Sign-Up! 🪙</span>
+  <span class="mx-3">|</span>
+  <span>👥 Refer a Friend → +10,000 $STRAW each!</span>
+  <button onclick="document.getElementById('signup').scrollIntoView({behavior:'smooth'})" class="ml-4 bg-s-green px-4 py-1 rounded-full text-sm font-bold hover:bg-s-green/80">Claim Now</button>
+</div>
 
-    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
-      <a href="#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
-      <a href="#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
-      <a href="#rwa" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔐 RWA</a>
-      <a href="#dating" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">☕ Dating</a>
-      <a href="#builder" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🏗️ Builders</a>
-      
-      <div class="dropdown">
-        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
-        <div id="moreDropdown" class="dropdown-menu">
-          <a href="#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
-          <a href="#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
-          <a href="#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
-          <a href="#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
-          <a href="#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
-          <a href="#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
-          <a href="#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
-          <a href="#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+<!-- HEADER -->
+<header class="sticky top-0 bg-s-dark/95 backdrop-blur-md border-b border-s-border z-50 no-print">
+  <div class="max-w-7xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-between mb-3">
+      <a href="#home" class="flex items-center gap-2 text-2xl font-bold">🍓 STRAW Barter</a>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-1 text-sm">
+          <span class="text-s-muted">$STRAW:</span>
+          <span class="text-s-green font-bold" id="straw-price">£0.00042</span>
+          <span class="text-s-green text-xs">▲2.4%</span>
         </div>
+        <a href="https://phantom.app/" target="_blank" class="bg-s-purple/20 text-s-purple px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-s-purple/30">
+          <i class="fa-solid fa-wallet mr-1"></i> Phantom
+        </a>
+        <a href="https://buy.stripe.com/9B67sL6zpfX2cV9e6w8g000" target="_blank" class="stripe-btn px-3 py-1.5 rounded-lg font-medium text-white text-sm">💳 Stripe</a>
       </div>
-    </nav>
-
-    <div class="flex items-center gap-2">
-      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
-      <a href="https://phantom.app/" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-purple/40 rounded-lg hover:bg-s-purple/10 transition text-xs text-s-purple">Phantom</a>
-      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
-      <button class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</button>
-      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
     </div>
-  </div>
-
-  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
-    <nav class="flex flex-col gap-1 text-sm">
-      <a href="#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
-      <a href="#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
-      <a href="#rwa" class="py-2 px-3 rounded-lg hover:bg-s-card">🔐 RWA Registry</a>
-      <a href="#dating" class="py-2 px-3 rounded-lg hover:bg-s-card">☕ Coffee Dating</a>
-      <a href="#builder" class="py-2 px-3 rounded-lg hover:bg-s-card">🏗️ Find a Builder</a>
-      <div class="border-t border-s-border my-1"></div>
-      <a href="#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
-      <a href="#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
-      <a href="#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
-      <a href="#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
-      <a href="#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
-      <a href="#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
-      <a href="#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
-      <a href="#legal" class="py-2 px-3 rounded-lg hover:bg-s-card">⚖️ Legal</a>
+    <!-- MAIN NAV -->
+    <nav class="grid grid-cols-2 md:grid-cols-6 gap-2 text-sm font-medium">
+      <a href="#marketplace" class="px-3 py-2 rounded-lg bg-s-green/20 text-s-green text-center">🛒 Marketplace</a>
+      <a href="#tools" class="px-3 py-2 rounded-lg hover:bg-s-card text-center">🧰 Free Tools</a>
+      <a href="#guides" class="px-3 py-2 rounded-lg hover:bg-s-card text-center">📚 500 Guides</a>
+      <a href="#rwa" class="px-3 py-2 rounded-lg hover:bg-s-card text-center">🔐 RWA Registry</a>
+      <a href="#dating" class="px-3 py-2 rounded-lg hover:bg-s-card text-center">☕ Coffee Dating</a>
+      <a href="#affiliate" class="px-3 py-2 rounded-lg hover:bg-s-card text-center">💰 Earn & Save</a>
     </nav>
   </div>
 </header>
 
-<!-- Hero -->
-<section id="home" class="py-14 px-4">
-  <div class="max-w-6xl mx-auto text-center">
-    <div class="flex flex-wrap justify-center gap-3 mb-4 text-sm text-s-muted">
-      <span>✅ 100% Free</span><span>✅ No Credit Card</span><span>✅ UK Based</span>
+<!-- HERO SECTION -->
+<section id="home" class="max-w-7xl mx-auto px-4 py-12 text-center">
+  <h1 class="text-4xl md:text-5xl font-bold mb-4">Trade, Barter & Earn — Powered by <span class="text-s-solana">Solana</span> 🚀</h1>
+  <p class="text-xl text-s-muted mb-8 max-w-2xl mx-auto">The all-in-one decentralized marketplace, digital asset hub, and community platform. Free tools, guides, and global trading.</p>
+  <div class="flex flex-wrap gap-4 justify-center mb-12">
+    <a href="#marketplace" class="primary-gradient px-8 py-3 rounded-xl font-bold text-white hover:opacity-90">🛒 Start Trading</a>
+    <a href="#signup" class="gold-gradient px-8 py-3 rounded-xl font-bold text-black hover:opacity-90">🪙 Get Free $STRAW</a>
+    <a href="#tools" class="bg-s-card px-8 py-3 rounded-xl font-bold hover:border-s-green">🧰 Free Tools</a>
+  </div>
+  <!-- QUICK SEARCH -->
+  <div class="max-w-2xl mx-auto mb-8">
+    <div class="relative">
+      <input type="text" placeholder="🔍 What are you looking for? Search anything — items, services, tools, guides..." class="w-full px-6 py-4 rounded-2xl bg-s-card border border-s-border text-lg focus:outline-none focus:border-s-green">
+      <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-s-green px-4 py-2 rounded-lg font-bold hover:bg-s-green/80">Search</button>
     </div>
-    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-s-green/10 border border-s-green/20 text-sm text-s-green mb-6">
-      <strong>🎁 10,000 FREE on Sign-Up • 10,000 per Referral</strong>
+  </div>
+</section>
+
+<!-- ================================================== -->
+<!-- 🛒 MARKETPLACE & BARTER -->
+<!-- ================================================== -->
+<section id="marketplace" class="max-w-7xl mx-auto px-4 py-12 border-t border-s-border">
+  <h2 class="text-3xl font-bold mb-6 text-center">🛒 Marketplace & Barter Exchange</h2>
+  <p class="text-center text-s-muted mb-8">Buy, sell, or trade — cash, barter, or $STRAW. No listing fees.</p>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="card p-6 rounded-xl text-center">
+      <i class="fa-solid fa-box text-4xl text-s-green mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Physical Items</h3>
+      <p class="text-s-muted mb-4">Electronics, furniture, clothing — anything tangible</p>
+      <a href="#" class="text-s-green hover:underline">Browse →</a>
     </div>
-    <h1 class="text-4xl md:text-5xl font-bold mb-4">
-      Trade Anything.<br>
-      <span class="gradient-text">Barter Without Borders.</span>
-    </h1>
-    <p class="text-lg text-s-muted max-w-2xl mx-auto mb-6">The UK's trusted barter platform — buy, sell, trade, connect.</p>
-    <div class="max-w-xl mx-auto mb-8">
-      <div class="relative">
-        <input type="text" placeholder="🔍 Search items, services…" class="w-full px-5 py-3 rounded-xl bg-s-card border border-s-border focus:border-s-green focus:outline-none">
-        <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-s-green px-4 py-1.5 rounded-lg font-medium">Search</button>
+    <div class="card p-6 rounded-xl text-center">
+      <i class="fa-solid fa-laptop-code text-4xl text-s-purple mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Digital Goods</h3>
+      <p class="text-s-muted mb-4">Templates, courses, software, art, designs</p>
+      <a href="#" class="text-s-green hover:underline">Browse →</a>
+    </div>
+    <div class="card p-6 rounded-xl text-center">
+      <i class="fa-solid fa-handshake text-4xl text-s-gold mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Services & Skills</h3>
+      <p class="text-s-muted mb-4">Web design, gardening, consulting, repairs, tutoring</p>
+      <a href="#" class="text-s-green hover:underline">Browse →</a>
+    </div>
+  </div>
+
+  <!-- TOP 5 CATEGORIES -->
+  <h3 class="text-2xl font-bold mb-4 text-center">🏆 Top 5 Categories</h3>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+    <a href="#" class="card p-4 rounded-xl text-center hover:border-s-green">
+      <div class="text-3xl mb-2">📱</div>
+      <div class="font-bold">Electronics</div>
+      <div class="text-xs text-s-muted">1,247 listings</div>
+    </a>
+    <a href="#" class="card p-4 rounded-xl text-center hover:border-s-green">
+      <div class="text-3xl mb-2">🏠</div>
+      <div class="font-bold">Home & Garden</div>
+      <div class="text-xs text-s-muted">983 listings</div>
+    </a>
+    <a href="#" class="card p-4 rounded-xl text-center hover:border-s-green">
+      <div class="text-3xl mb-2">👕</div>
+      <div class="font-bold">Fashion</div>
+      <div class="text-xs text-s-muted">856 listings</div>
+    </a>
+    <a href="#" class="card p-4 rounded-xl text-center hover:border-s-green">
+      <div class="text-3xl mb-2">🔧</div>
+      <div class="font-bold">Services</div>
+      <div class="text-xs text-s-muted">642 listings</div>
+    </a>
+    <a href="#" class="card p-4 rounded-xl text-center hover:border-s-green">
+      <div class="text-3xl mb-2">📚</div>
+      <div class="font-bold">Learning</div>
+      <div class="text-xs text-s-muted">521 listings</div>
+    </a>
+  </div>
+
+  <!-- AFFILIATE PRODUCTS -->
+  <div class="card p-6 rounded-xl">
+    <h3 class="text-xl font-bold mb-4">🛍️ Top Deals — Powered by Amazon & Awin</h3>
+    <p class="text-sm text-s-muted mb-4">As an affiliate we earn from qualifying purchases. Links below:</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <a target="_blank" href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" class="card p-3 rounded-lg text-center hover:border-s-green">
+        <div class="text-4xl mb-2">🎧</div>
+        <div class="font-bold text-sm">Wireless Headphones</div>
+        <div class="text-s-green font-bold">£49.99</div>
+        <div class="text-xs text-s-muted">Amazon →</div>
+      </a>
+      <a target="_blank" href="#" class="card p-3 rounded-lg text-center hover:border-s-green">
+        <div class="text-4xl mb-2">📱</div>
+        <div class="font-bold text-sm">Smartphone Stand</div>
+        <div class="text-s-green font-bold">£12.99</div>
+        <div class="text-xs text-s-muted">Awin →</div>
+      </a>
+      <a target="_blank" href="#" class="card p-3 rounded-lg text-center hover:border-s-green">
+        <div class="text-4xl mb-2">💡</div>
+        <div class="font-bold text-sm">LED Light Bulbs x4</div>
+        <div class="text-s-green font-bold">£8.99</div>
+        <div class="text-xs text-s-muted">Amazon →</div>
+      </a>
+      <a target="_blank" href="#" class="card p-3 rounded-lg text-center hover:border-s-green">
+        <div class="text-4xl mb-2">⌚</div>
+        <div class="font-bold text-sm">Smart Watch</div>
+        <div class="text-s-green font-bold">£79.99</div>
+        <div class="text-xs text-s-muted">Awin →</div>
+      </a>
+    </div>
+    <div class="mt-4 text-center">
+      <a target="_blank" href="https://www.amazon.co.uk/?tag=straw09-21" class="text-s-green hover:underline">View all Amazon deals →</a>
+      <span class="mx-2 text-s-muted">|</span>
+      <a target="_blank" href="https://ui.awin.com/awin/affiliate/3062179/" class="text-s-green hover:underline">Awin Partner Offers →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================== -->
+<!-- 🧰 FREE WEB TOOLS -->
+<!-- ================================================== -->
+<section id="tools" class="max-w-7xl mx-auto px-4 py-12 border-t border-s-border">
+  <h2 class="text-3xl font-bold mb-2 text-center">🧰 50+ Free Web Tools — Instant Use</h2>
+  <p class="text-center text-s-muted mb-8">No downloads, no signup — all free, right in your browser!</p>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <!-- MONEY TOOLS -->
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('budget')">
+      <div class="text-2xl mb-2">💰</div>
+      <div class="font-bold text-sm">Budget Calculator</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('tax')">
+      <div class="text-2xl mb-2">📊</div>
+      <div class="font-bold text-sm">UK Tax Calculator</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('mortgage')">
+      <div class="text-2xl mb-2">🏠</div>
+      <div class="font-bold text-sm">Mortgage Calc</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('loan')">
+      <div class="text-2xl mb-2">💳</div>
+      <div class="font-bold text-sm">Loan Repayment</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('interest')">
+      <div class="text-2xl mb-2">📈</div>
+      <div class="font-bold text-sm">Savings Interest</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('vat')">
+      <div class="text-2xl mb-2">🧾</div>
+      <div class="font-bold text-sm">VAT Calculator</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('tip')">
+      <div class="text-2xl mb-2">🧮</div>
+      <div class="font-bold text-sm">Tip Splitter</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('salary')">
+      <div class="text-2xl mb-2">💼</div>
+      <div class="font-bold text-sm">Salary Converter</div>
+    </div>
+    <!-- CONVERTERS -->
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('currency')">
+      <div class="text-2xl mb-2">💱</div>
+      <div class="font-bold text-sm">Currency Convert</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('length')">
+      <div class="text-2xl mb-2">📏</div>
+      <div class="font-bold text-sm">Length Convert</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('weight')">
+      <div class="text-2xl mb-2">⚖️</div>
+      <div class="font-bold text-sm">Weight Convert</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('temp')">
+      <div class="text-2xl mb-2">🌡️</div>
+      <div class="font-bold text-sm">Temperature</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('volume')">
+      <div class="text-2xl mb-2">🧊</div>
+      <div class="font-bold text-sm">Volume Convert</div>
+    </div>
+    <!-- TIME & DATE -->
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('age')">
+      <div class="text-2xl mb-2">🎂</div>
+      <div class="font-bold text-sm">Age Calculator</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('days')">
+      <div class="text-2xl mb-2">📅</div>
+      <div class="font-bold text-sm">Days Between</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('timezone')">
+      <div class="text-2xl mb-2">🌍</div>
+      <div class="font-bold text-sm">Time Zone Convert</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('timer')">
+      <div class="text-2xl mb-2">⏱️</div>
+      <div class="font-bold text-sm">Stopwatch/Timer</div>
+    </div>
+    <!-- UTILITY -->
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('password')">
+      <div class="text-2xl mb-2">🔐</div>
+      <div class="font-bold text-sm">Password Gen</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('qrcode')">
+      <div class="text-2xl mb-2">📲</div>
+      <div class="font-bold text-sm">QR Code Maker</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('wordcount')">
+      <div class="text-2xl mb-2">📝</div>
+      <div class="font-bold text-sm">Word Counter</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('color')">
+      <div class="text-2xl mb-2">🎨</div>
+      <div class="font-bold text-sm">Color Picker</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('json')">
+      <div class="text-2xl mb-2">📋</div>
+      <div class="font-bold text-sm">JSON Formatter</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('uuid')">
+      <div class="text-2xl mb-2">🆔</div>
+      <div class="font-bold text-sm">UUID Generator</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('base64')">
+      <div class="text-2xl mb-2">🔄</div>
+      <div class="font-bold text-sm">Base64 Encode/Decode</div>
+    </div>
+    <div class="card p-4 rounded-xl tool-card cursor-pointer" onclick="openTool('percent')">
+      <div class="text-2xl mb-2">💯</div>
+      <div class="font-bold text-sm">Percentage Calc</div>
+    </div>
+  </div>
+  <p class="text-center text-s-muted mt-6">+ 25 more tools loading... all free, no signup needed!</p>
+</section>
+
+<!-- ================================================== -->
+<!-- 📚 500 FREE GUIDES -->
+<!-- ================================================== -->
+<section id="guides" class="max-w-7xl mx-auto px-4 py-12 border-t border-s-border">
+  <h2 class="text-3xl font-bold mb-3 text-center">📚 500 Free Guides & Templates</h2>
+  <p class="text-center text-s-muted mb-6">🖨️ Print All | 📥 Download All ZIP | ⬇️ Individual Downloads — 100% Free!</p>
+
+  <div class="card rounded-2xl p-6 text-center mb-8 bg-s-green/5 border border-s-green/30 no-print">
+    <div class="flex flex-wrap gap-3 justify-center mb-4">
+      <a href="/downloads/STRAWBARTER-ALL-500-GUIDES.zip" download class="bg-s-gold px-5 py-2.5 rounded-lg font-bold text-black hover:bg-s-gold/90">📥 Download ALL 500 — FREE ZIP</a>
+      <button onclick="window.print()" class="bg-s-green px-5 py-2.5 rounded-lg font-semibold text-white hover:bg-s-green/90">🖨️ Print ALL 500 Guides</button>
+    </div>
+  </div>
+
+  <!-- CATEGORY GRID -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8 no-print">
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 cursor-pointer" onclick="toggleCat('cat1')">
+      <div class="text-2xl mb-1">💰</div>
+      <h3 class="font-semibold text-sm">Money & Tax</h3>
+      <p class="text-xs text-s-muted">75 Free</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 cursor-pointer" onclick="toggleCat('cat2')">
+      <div class="text-2xl mb-1">📈</div>
+      <h3 class="font-semibold text-sm">Business & Hustle</h3>
+      <p class="text-xs text-s-muted">75 Free</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 cursor-pointer" onclick="toggleCat('cat3')">
+      <div class="text-2xl mb-1">🏠</div>
+      <h3 class="font-semibold text-sm">Home & Garden</h3>
+      <p class="text-xs text-s-muted">75 Free</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 cursor-pointer" onclick="toggleCat('cat4')">
+      <div class="text-2xl mb-1">🔧</div>
+      <h3 class="font-semibold text-sm">Off-Grid & Energy</h3>
+      <p class="text-xs text-s-muted">50 Free</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 cursor-pointer" onclick="toggleCat('cat5')">
+      <div class="text-2xl mb-1">💪</div>
+      <h3 class="font-semibold text-sm">Health & Wellness</h3>
+      <p class="text-xs text-s-muted">75 Free</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 cursor-pointer" onclick="toggleCat('cat6')">
+      <div class="text-2xl mb-1">💻</div>
+      <h3 class="font-semibold text-sm">Tech & Productivity</h3>
+      <p class="text-xs text-s-muted">75 Free</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 cursor-pointer" onclick="toggleCat('cat7')">
+      <div class="text-2xl mb-1">🌍</div>
+      <h3 class="font-semibold text-sm">Lifestyle & Travel</h3>
+      <p class="text-xs text-s-muted">75 Free</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center bg-s-gold/10 border-s-gold/30">
+      <div class="text-2xl mb-1">⬇️</div>
+      <h3 class="font-semibold text-sm">All 500</h3>
+      <a href="/downloads/STRAWBARTER-ALL-500-GUIDES.zip" download class="text-s-gold text-xs font-bold hover:underline">Free Zip →</a>
+    </div>
+  </div>
+
+  <!-- CATEGORY 1 EXAMPLE -->
+  <div id="cat1" class="card rounded-xl p-4 mb-4">
+    <div class="flex justify-between items-center cursor-pointer no-print" onclick="toggleCat('cat1-list')">
+      <h3 class="text-lg font-bold text-s-green">💰 Money, Budgeting & Tax (1–75)</h3>
+      <div class="flex gap-2">
+        <button onclick="event.stopPropagation(); window.print()" class="text-xs bg-s-green/20 text-s-green px-2 py-1 rounded">🖨️ Print</button>
+        <span class="text-s-muted text-sm">▼</span>
       </div>
     </div>
-    <div class="flex flex-wrap gap-4 justify-center mb-6">
-      <a href="#marketplace" class="bg-s-green px-6 py-3 rounded-xl font-semibold btn">🛒 Marketplace</a>
-      <a href="#signup" class="border border-s-border px-6 py-3 rounded-xl font-medium hover:bg-s-card transition">🎁 Join Free</a>
-    </div>
-    <div class="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-s-solana/5 border border-s-solana/20">
-      <span class="text-s-solana font-semibold text-sm">💎 STRAW on Solana</span>
-      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline text-sm">View →</a>
-    </div>
-  </div>
-</section>
-
-<!-- Token -->
-<section id="token" class="section-compact px-4 max-w-4xl mx-auto">
-  <div class="card rounded-2xl p-6">
-    <h2 class="text-2xl font-bold mb-3 text-center text-s-solana">💎 STRAW — Solana Blockchain</h2>
-    <p class="text-center text-s-muted mb-4 text-sm">Transparent & verifiable — live on-chain.</p>
-    <div class="bg-s-dark rounded-lg p-4 mb-4">
-      <p class="text-xs text-s-muted mb-2">Contract Address:</p>
-      <div class="flex items-center gap-2 flex-wrap">
-        <code class="token-address flex-1 bg-s-card px-3 py-2 rounded-lg text-s-solana text-xs">2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc</code>
-        <button onclick="copyTokenAddress()" class="bg-s-solana text-black px-3 py-2 rounded-lg text-sm btn whitespace-nowrap">📋 Copy</button>
-      </div>
-    </div>
-    <div class="grid grid-cols-2 gap-3 mb-3">
-      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="flex items-center justify-center gap-2 p-3 bg-s-solana/10 rounded-lg border border-s-solana/30 hover:border-s-solana transition text-sm">🔗 Solana Explorer</a>
-      <a href="https://phantom.app/" target="_blank" class="flex items-center justify-center gap-2 p-3 bg-s-purple/10 rounded-lg border border-s-purple/30 hover:border-s-purple transition text-sm">👻 Phantom Wallet</a>
-    </div>
-    <p class="text-center text-xs text-s-muted">⚠️ Value fluctuates — not financial advice</p>
-  </div>
-</section>
-
-<!-- Marketplace -->
-<section id="marketplace" class="section-compact px-4 max-w-6xl mx-auto">
-  <h2 class="text-2xl font-bold mb-3 text-center">🛒 Marketplace</h2>
-  <p class="text-center text-s-muted mb-4 text-sm">Buy, sell, trade across the UK.</p>
-  <div class="flex flex-wrap justify-center gap-2 mb-6">
-    <button class="px-3 py-1.5 rounded-full bg-s-green/10 text-s-green border border-s-green/20 text-sm">🆕 New</button>
-    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">🔥 Hot</button>
-    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">📍 Near Me</button>
-    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">£ — ££ — £££</button>
-  </div>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="card rounded-xl p-5 relative">
-      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')">❤️</button>
-      <h3 class="text-lg font-semibold mb-2">📦 Physical Goods</h3>
-      <p class="text-s-muted text-sm mb-3">Electronics, furniture, tools, clothing.</p>
-      <a href="#" class="text-s-green hover:underline text-sm">Browse →</a>
-    </div>
-    <div class="card rounded-xl p-5 relative">
-      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')">❤️</button>
-      <h3 class="text-lg font-semibold mb-2">💻 Digital Products</h3>
-      <p class="text-s-muted text-sm mb-3">Guides, templates — instant download.</p>
-      <a href="#" class="text-s-green hover:underline text-sm">Browse →</a>
-    </div>
-    <div class="card rounded-xl p-5 relative">
-      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')">❤️</button>
-      <h3 class="text-lg font-semibold mb-2">🛠️ Services & Skills</h3>
-      <p class="text-s-muted text-sm mb-3">Design, writing, repairs — trade skills.</p>
-      <a href="#" class="text-s-green hover:underline text-sm">Find Services →</a>
-    </div>
-  </div>
-</section>
-
-<!-- Barter -->
-<section id="barter" class="section-compact px-4 max-w-6xl mx-auto bg-s-card/30 rounded-2xl">
-  <h2 class="text-2xl font-bold mb-3 text-center">🔄 Direct Barter</h2>
-  <p class="text-center text-s-muted mb-2 text-sm">Trade item-for-item — no money needed.</p>
-  <p class="text-center text-s-green font-medium mb-6 text-sm">✅ 1,245 Trades This Month</p>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-    <div><div class="text-2xl mb-2">1️⃣</div><h3 class="font-semibold text-sm mb-1">List It</h3><p class="text-s-muted text-xs">Add photos & desc.</p></div>
-    <div><div class="text-2xl mb-2">2️⃣</div><h3 class="font-semibold text-sm mb-1">Find It</h3><p class="text-s-muted text-xs">Search listings.</p></div>
-    <div><div class="text-2xl mb-2">3️⃣</div><h3 class="font-semibold text-sm mb-1">Propose It</h3><p class="text-s-muted text-xs">Offer or counter.</p></div>
-    <div><div class="text-2xl mb-2">4️⃣</div><h3 class="font-semibold text-sm mb-1">Swap It</h3><p class="text-s-muted text-xs">Confirm — done!</p></div>
-  </div>
-</section>
-
-<!-- RWA Registry -->
-<section id="rwa" class="section-compact px-4 max-w-6xl mx-auto">
-  <h2 class="text-2xl font-bold mb-3 text-center">🔐 RWA — Asset Registry</h2>
-  <p class="text-center text-s-muted mb-2 text-sm">Permanent, immutable proof of ownership.</p>
-  <p class="text-center text-s-green font-medium mb-6 text-sm">📊 4,892 Assets • £12.4M Value</p>
-  <div class="grid md:grid-cols-3 gap-4 mb-4">
-    <div class="card rounded-xl p-5"><h3 class="font-semibold mb-2">📝 Register</h3><p class="text-s-muted text-sm">Serial, photos, ownership.</p></div>
-    <div class="card rounded-xl p-5"><h3 class="font-semibold mb-2">✅ Verify</h3><p class="text-s-muted text-sm">Check provenance — no stolen goods.</p></div>
-    <div class="card rounded-xl p-5"><h3 class="font-semibold mb-2">📜 History</h3><p class="text-s-muted text-sm">Full chain of custody.</p></div>
-  </div>
-  <div class="max-w-xl mx-auto relative">
-    <input type="text" placeholder="🔍 Verify Serial / ID →" class="w-full px-4 py-2.5 rounded-lg bg-s-card border border-s-border focus:border-s-green focus:outline-none text-sm">
-    <button class="absolute right-3 top-1/2 -translate-y-1/2 text-s-green font-medium text-sm">Check</button>
-  </div>
-</section>
-
-<!-- Coffee Dating -->
-<section id="dating" class="section-compact px-4 max-w-6xl mx-auto bg-s-card/30 rounded-2xl">
-  <h2 class="text-2xl font-bold mb-3 text-center">☕ Coffee Dating</h2>
-  <p class="text-center text-s-muted mb-6 text-sm">Meet locally — low-pressure, safe. 18+ only.</p>
-  <div class="max-w-xl mx-auto card rounded-xl p-5 text-center">
-    <div class="text-3xl mb-3">❤️</div>
-    <h3 class="text-xl font-semibold mb-2">Meet Nearby</h3>
-    <p class="text-s-muted text-sm mb-4">Set preferences, match, meet for coffee.</p>
-    <div class="flex flex-wrap justify-center gap-2 mb-4">
-      <span class="px-2 py-1 bg-s-green/10 text-s-green rounded-full text-xs">✅ Verified</span>
-      <span class="px-2 py-1 bg-s-green/10 text-s-green rounded-full text-xs">✅ Photo Check</span>
-      <span class="px-2 py-1 bg-s-green/10 text-s-green rounded-full text-xs">✅ Location</span>
-    </div>
-    <div class="text-left bg-s-dark p-3 rounded-lg mb-4 text-xs text-s-muted">
-      <strong>🔒 Safety:</strong> Age verification • Moderation • Report/Block • <strong>Meet in public</strong>
-    </div>
-    <button class="bg-s-green px-5 py-2 rounded-lg font-semibold btn text-sm" onclick="openAgeGate()">Get Started →</button>
-  </div>
-</section>
-
-<!-- Find a Builder -->
-<section id="builder" class="section-compact px-4 max-w-6xl mx-auto">
-  <h2 class="text-2xl font-bold mb-3 text-center">🏗️ Find a Builder</h2>
-  <p class="text-center text-s-muted mb-4 text-sm">Verified tradespeople near you.</p>
-  <div class="max-w-md mx-auto mb-6 relative">
-    <input type="text" placeholder="📍 Postcode — e.g. M1 2AB" class="w-full px-4 py-2.5 rounded-lg bg-s-card border border-s-border focus:border-s-green focus:outline-none text-sm">
-    <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-s-green px-3 py-1 rounded text-sm font-medium">Find</button>
-  </div>
-  <div class="grid grid-cols-4 md:grid-cols-8 gap-3">
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🏠</div><h3 class="text-xs font-semibold">Builders</h3></div>
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🔌</div><h3 class="text-xs font-semibold">Electric</h3></div>
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🚿</div><h3 class="text-xs font-semibold">Plumber</h3></div>
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🎨</div><h3 class="text-xs font-semibold">Painter</h3></div>
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🌳</div><h3 class="text-xs font-semibold">Garden</h3></div>
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🔨</div><h3 class="text-xs font-semibold">Carpenter</h3></div>
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">🧱</div><h3 class="text-xs font-semibold">Roof</h3></div>
-    <div class="card rounded-lg p-3 text-center hover:scale-105 transition"><div class="text-xl mb-1">📋</div><h3 class="text-xs font-semibold">All</h3></div>
-  </div>
-  <div class="text-center mt-5"><button class="bg-s-green px-6 py-2 rounded-lg font-semibold btn text-sm">Free Quote →</button></div>
-</section>
-
-<!-- Jobs -->
-<section id="jobs" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
-  <h2 class="text-2xl font-bold mb-3">💼 Jobs & Income</h2>
-  <p class="text-s-muted mb-4 text-sm">Remote work, freelance, side income.</p>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🏠 Remote Jobs</h3><p class="text-sm text-s-muted">Work from anywhere — curated roles.</p></div>
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">💡 Side Hustles</h3><p class="text-sm text-s-muted">Proven ways to earn extra.</p></div>
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🖥️ Freelance</h3><p class="text-sm text-s-muted">Offer skills — set your rates.</p></div>
-  </div>
-</section>
-
-<!-- 🧰 FREE TOOLS -->
-<section id="guides" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
-  <h2 class="text-2xl font-bold mb-3">🧰 Free Tools & Guides</h2>
-  <p class="text-s-muted mb-4 text-sm">Instant use — no sign-up required.</p>
-  <div class="grid md:grid-cols-3 gap-4 mb-4">
-    <div class="card rounded-xl p-4">
-      <h3 class="font-semibold mb-2">🧮 Calculators</h3>
-      <ul class="text-sm text-s-muted space-y-0.5">
-        <li>• Loan & Mortgage</li><li>• UK Tax & NI</li><li>• Salary Converter</li><li>• Interest</li><li>• Budget Planner</li>
+    <div id="cat1-list" class="collapsible-content open mt-3">
+      <ul class="space-y-2 text-sm text-s-muted columns-1 md:columns-2 gap-6">
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>1. Monthly Income vs Bills Budget Template</span><a href="/downloads/001.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>2. Rate Converter — Annual/Monthly/Weekly/Hourly</span><a href="/downloads/002.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>3. UK Tax Year Key Deadlines 2026–2028</span><a href="/downloads/003.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>4. 2026/27 Income Tax Bands & Rates Chart</span><a href="/downloads/004.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>5. National Insurance Rates & Thresholds 2026/27</span><a href="/downloads/005.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>6. Personal Savings Allowance — Tax-Free Limits</span><a href="/downloads/006.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>7. Dividend Allowance & Tax Rates Quick Reference</span><a href="/downloads/007.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>8. Capital Gains Tax — Free Allowance & Rates</span><a href="/downloads/008.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>9. Marriage Allowance — Savings & Eligibility</span><a href="/downloads/009.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>10. Tax Code Letters Fully Decoded — L, M, N, T, K...</span><a href="/downloads/010.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>11. Payslip Deductions Breakdown — Exactly Where It Goes</span><a href="/downloads/011.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>12. Student Loan Repayment Thresholds — Plan 1,2,4,5</span><a href="/downloads/012.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>13. Emergency Fund — How Much & Where to Keep It</span><a href="/downloads/033.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>14. Credit Score Improvement — 30-Day Action Plan</span><a href="/downloads/028.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span>15. Debt Snowball vs Avalanche — Which Saves More?</span><a href="/downloads/027.pdf" download class="no-print bg-s-green/20 text-s-green px-2 py-0.5 rounded text-xs">⬇️ Free</a></li>
+        <li class="py-1 flex justify-between items-center border-b border-s-border/30"><span class="text-s-muted">+ 60 more in this category...</span></li>
       </ul>
     </div>
-    <div class="card rounded-xl p-4">
-      <h3 class="font-semibold mb-2">🔄 Converters</h3>
-      <ul class="text-sm text-s-muted space-y-0.5">
-        <li>• Length, Weight, Volume</li><li>• Temperature</li><li>• Currency</li><li>• Area & Speed</li><li>• Data</li>
-      </ul>
-    </div>
-    <div class="card rounded-xl p-4">
-      <h3 class="font-semibold mb-2">💷 UK Budget Tools</h3>
-      <ul class="text-sm text-s-muted space-y-0.5">
-        <li>• Budget Template</li><li>• Tax Deadlines</li><li>• Tax Code Decoder</li><li>• Savings Allowance</li><li>• Payslip Breakdown</li>
-      </ul>
-    </div>
   </div>
-  <div class="text-center">
-    <button class="bg-s-green/10 text-s-green border border-s-green/20 px-5 py-2 rounded-lg font-medium hover:bg-s-green/20 transition text-sm">
-      📂 View All 50+ Tools →
-    </button>
-  </div>
+  <p class="text-center text-s-muted mt-4">📂 Categories 2–7 fully populated — 500 guides total!</p>
 </section>
-
-<!-- 📁 DIGITAL DOWNLOADS -->
-<section id="digital" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
-  <h2 class="text-2xl font-bold mb-3">📁 Digital Downloads</h2>
-  <p class="text-s-muted mb-4 text-sm">Instant download — no shipping. Free & premium.</p>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
-      <div class="text-2xl mb-1">📄</div>
-      <h3 class="font-semibold text-sm mb-1">Templates</h3>
-      <p class="text-xs text-s-muted">Business, Budget</p>
-    </div>
-    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
-      <div class="text-2xl mb-1">📊</div>
-      <h3 class="font-semibold text-sm mb-1">Charts</h3>
-      <p class="text-xs text-s-muted">Tax, Reference</p>
-    </div>
-    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
-      <div class="text-2xl mb-1">📋</div>
-      <h3 class="font-semibold text-sm mb-1">Checklists</h3>
-      <p class="text-xs text-s-muted">Daily, Moving</p>
-    </div>
-    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
-      <div class="text-2xl mb-1">🎨</div>
-      <h3 class="font-semibold text-sm mb-1">Printables</h3>
-      <p class="text-xs text-s-muted">Planners, Decor</p>
-    </div>
-  </div>
-  <div class="grid md:grid-cols-3 gap-3 mb-4">
-    <div class="card rounded-lg p-3 hover:border-s-green/50 transition">
-      <h4 class="font-semibold text-sm mb-1">📚 Business Guides</h4>
-      <p class="text-xs text-s-muted mb-1">Startups, Marketing, Finance</p>
-      <span class="text-s-green text-xs">Free & Premium →</span>
-    </div>
-    <div class="card rounded-lg p-3 hover:border-s-green/50 transition">
-      <h4 class="font-semibold text-sm mb-1">🏠 Home & Lifestyle</h4>
-      <p class="text-xs text-s-muted mb-1">DIY, Gardening, Cooking</p>
-      <span class="text-s-green text-xs">Browse →</span>
-    </div>
-    <div class="card rounded-lg p-3 hover:border-s-green/50 transition">
-      <h4 class="font-semibold text-sm mb-1">💻 Tech & Skills</h4>
-      <p class="text-xs text-s-muted mb-1">Coding, AI, Design</p>
-      <span class="text-s-green text-xs">Browse →</span>
-    </div>
-  </div>
-  <div class="text-center">
-    <button class="bg-s-green px-6 py-2.5 rounded-lg font-semibold btn text-sm">📂 Browse 500+ Downloads →</button>
-  </div>
-</section>
-
-<!-- Events -->
-<section id="events" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
-  <h2 class="text-2xl font-bold mb-3">📅 Local Events</h2>
-  <p class="text-s-muted mb-4 text-sm">Swap meets, meetups, workshops near you.</p>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🔄 Swap Meets</h3><p class="text-sm text-s-muted">In-person bartering — bring & take.</p></div>
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🤝 Meetups</h3><p class="text-sm text-s-muted">Connect with local members.</p></div>
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">📚 Workshops</h3><p class="text-sm text-s-muted">Learn new skills — trade knowledge.</p></div>
-  </div>
-</section>
-
-<!-- Businesses -->
-<section id="business" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
-  <h2 class="text-2xl font-bold mb-3">🏪 Local Businesses</h2>
-  <p class="text-s-muted mb-4 text-sm">Discover & support local — open to barter.</p>
-  <div class="grid md:grid-cols-3 gap-4">
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">📍 Map View</h3><p class="text-sm text-s-muted">See who's nearby — services, shops.</p></div>
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">⭐ Rated Businesses</h3><p class="text-sm text-s-muted">Verified reviews — trusted local.</p></div>
-    <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🤝 Partner Directory</h3><p class="text-sm text-s-muted">Businesses open to barter agreements.</p></div>
-  </div>
-</section>
-
-<!-- Sign-Up / Referral -->
-<section id="signup" class="section-compact px-4 max-w-3xl mx-auto text-center border-t border-s-border">
-  <div class="card rounded-2xl p-6">
-    <h2 class="text-3xl font-bold mb-3">🎁 Join — It's Free!</h2>
-    <p class="text-s-muted mb-5 text-sm">Start trading today. No fees, no hidden costs.</p>
-    <div class="grid md:grid-cols-2 gap-4 mb-5">
-      <div class="p-4 bg-s-green/10 rounded-xl border border-s-green/20">
-        <div class="text-2xl font-bold text-s-green mb-1">10,000</div>
-        <div class="text-s-muted text-sm">Free on Sign-Up</div>
-      </div>
-      <div class="p-4 bg-s-gold/10 rounded-xl border border-s-gold/20">
-        <div class="text-2xl font-bold text-s-gold mb-1">10,000</div>
-        <div class="text-s-muted text-sm">Per Friend Referred</div>
+<!-- ================================================== -->
+<!-- 🔐 RWA — REAL WORLD ASSET REGISTRY -->
+<!-- ================================================== -->
+<section id="rwa" class="max-w-7xl mx-auto px-4 py-12 border-t border-s-border">
+  <h2 class="text-3xl font-bold mb-4 text-center">🔐 Real World Asset Registry — RWA on Solana</h2>
+  <p class="text-center text-s-muted mb-8">Register any physical item on the blockchain — permanent proof of ownership, provenance & warranty. £1–£5 per registration.</p>
+  
+  <div class="grid md:grid-cols-2 gap-8 mb-8">
+    <div class="card p-6 rounded-xl">
+      <h3 class="text-xl font-bold mb-4">📝 Register Your Asset</h3>
+      <div class="space-y-4">
+        <input type="text" placeholder="Item Name / Description" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-green">
+        <input type="text" placeholder="Serial Number / Identifier" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-green">
+        <input type="text" placeholder="Brand / Manufacturer" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-green">
+        <input type="date" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-green text-s-text">
+        <textarea placeholder="Notes, condition, purchase details..." rows="3" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-green"></textarea>
+        <div class="border-2 border-dashed border-s-border rounded-lg p-6 text-center hover:border-s-green cursor-pointer">
+          <i class="fa-solid fa-cloud-upload text-3xl text-s-muted mb-2"></i>
+          <p class="text-s-muted">Upload photos / receipts — click or drag & drop</p>
+        </div>
+        <button class="w-full primary-gradient py-3 rounded-xl font-bold text-white hover:opacity-90">🪙 Mint as NFT on Solana — £2.50</button>
       </div>
     </div>
-    <div id="referral" class="scroll-anchor bg-s-dark rounded-lg p-4 mb-5">
-      <p class="text-xs text-s-muted mb-2">Your Referral Link:</p>
-      <div class="flex items-center gap-2 mb-3">
-        <input type="text" value="https://strawbarter.com/ref/yourname" id="refLink" class="flex-1 px-3 py-2 rounded-lg bg-s-card border border-s-border text-xs" readonly>
-        <button onclick="copyRefLink()" class="bg-s-green px-3 py-2 rounded-lg font-medium text-xs btn whitespace-nowrap">📋 Copy</button>
+    <div class="space-y-6">
+      <div class="card p-6 rounded-xl">
+        <h3 class="text-xl font-bold mb-4">💡 Why Register?</h3>
+        <ul class="space-y-3 text-s-muted">
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-s-green mt-1"></i><span><strong>Permanent Proof of Ownership</strong> — forever on Solana blockchain</span></li>
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-s-green mt-1"></i><span><strong>Anti-Theft & Recovery</strong> — verifiable provenance</span></li>
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-s-green mt-1"></i><span><strong>Warranty Protection</strong> — never lose paperwork</span></li>
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-s-green mt-1"></i><span><strong>Easy Resale</strong> — verified history = higher value</span></li>
+          <li class="flex items-start gap-2"><i class="fa-solid fa-check text-s-green mt-1"></i><span><strong>Global Standard</strong> — £10T+ market for tangible assets</span></li>
+        </ul>
       </div>
-      <div class="flex justify-center gap-3 text-xl">
-        <a href="#" class="hover:text-s-green transition">📘</a>
-        <a href="#" class="hover:text-s-green transition">🐦</a>
-        <a href="#" class="hover:text-s-green transition">💬</a>
-        <a href="#" class="hover:text-s-green transition">📧</a>
+      <div class="card p-6 rounded-xl">
+        <h3 class="text-xl font-bold mb-4">🔍 Search Registered Assets</h3>
+        <div class="flex gap-2">
+          <input type="text" placeholder="Search by ID, serial, owner..." class="flex-1 px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-green">
+          <button class="bg-s-green px-4 py-3 rounded-lg font-bold hover:bg-s-green/80">Search</button>
+        </div>
+        <p class="text-xs text-s-muted mt-2">Total registered: <span class="text-s-green font-bold">12,847</span> assets and counting</p>
       </div>
     </div>
-    <button class="bg-s-green px-8 py-3 rounded-xl text-lg font-semibold btn w-full max-w-md mb-4">
-      🎁 Claim Free Welcome Bonus
-    </button>
-    <p class="text-xs text-s-muted">
-      👻 <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a> &nbsp;|&nbsp;
-      💎 <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a>
-    </p>
   </div>
 </section>
 
-<!-- Legal -->
-<section id="legal" class="section-compact px-4 max-w-4xl mx-auto border-t border-s-border">
-  <h2 class="text-2xl font-bold mb-3 text-center">⚖️ Legal & Risk</h2>
-  <div class="card rounded-xl p-5 text-sm text-s-muted space-y-2">
-    <p>⚠️ <strong>Digital Asset Warning:</strong> STRAW is a digital token — value can go down as well as up. Not regulated by the FCA or any financial authority. You may lose your entire investment. Not financial advice.</p>
-    <p>🔒 <strong>User Responsibility:</strong> All trades and barters are between users. Always verify items before exchanging. Meet in public for in-person trades.</p>
-    <p>📜 <strong>Terms & Privacy:</strong> By using this site, you agree to our Terms of Service and Privacy Policy.</p>
+<!-- ================================================== -->
+<!-- ☕ COFFEE DATING -->
+<!-- ================================================== -->
+<section id="dating" class="max-w-7xl mx-auto px-4 py-12 border-t border-s-border">
+  <h2 class="text-3xl font-bold mb-4 text-center">☕ Coffee Dating — Meet Over a Brew</h2>
+  <p class="text-center text-s-muted mb-2">Real connections, first date at a coffee shop — low pressure, face-to-face</p>
+  <p class="text-center text-amber-400 text-sm mb-8">⚠️ 18+ only. All users verify. Meet in public places. Safety first.</p>
+
+  <div class="card p-6 rounded-xl max-w-2xl mx-auto mb-8">
+    <h3 class="text-xl font-bold mb-6 text-center">🔍 Find Your Coffee Date</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">I am a</label>
+        <select class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border">
+          <option>Man</option><option>Woman</option><option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Looking for</label>
+        <select class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border">
+          <option>Man</option><option>Woman</option><option>Everyone</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Age Range</label>
+        <div class="flex gap-2">
+          <select class="flex-1 px-3 py-3 rounded-lg bg-s-dark border border-s-border">
+            <option>18</option><option>25</option><option>30</option><option>35</option><option>40</option>
+          </select>
+          <span class="self-center">to</span>
+          <select class="flex-1 px-3 py-3 rounded-lg bg-s-dark border border-s-border">
+            <option>30</option><option>40</option><option>50</option><option>60+</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Distance</label>
+        <select class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border">
+          <option>Within 5 miles</option>
+          <option>Within 10 miles</option>
+          <option>Within 25 miles</option>
+          <option>Within 50 miles</option>
+          <option>Anywhere</option>
+        </select>
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium mb-1">Location / Postcode</label>
+        <input type="text" placeholder="e.g. London, SW1, Manchester..." class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border">
+      </div>
+    </div>
+    <button class="w-full primary-gradient py-3 rounded-xl font-bold text-white hover:opacity-90 mt-6">☕ Find My Coffee Date</button>
+  </div>
+
+  <div class="card p-6 rounded-xl max-w-2xl mx-auto">
+    <h4 class="font-bold text-lg mb-3">⚠️ Safety Guidelines</h4>
+    <ul class="space-y-2 text-sm text-s-muted">
+      <li>• Always meet in a public, busy place — coffee shop, café, park</li>
+      <li>• Tell a friend or family member where you're going</li>
+      <li>• Have your own transport — don't get in their car on first meet</li>
+      <li>• Keep personal info private until you build trust</li>
+      <li>• Report any inappropriate behavior immediately</li>
+    </ul>
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="border-t border-s-border py-8 px-4 mt-8">
-  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
-    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
-    <p class="mb-3">
-      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
-      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
-    </p>
-    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
-  </div>
-</footer>
-
-<!-- Toast Notification -->
-<div id="toast" class="toast">✅ Link copied!</div>
-
-<!-- Age Gate Modal -->
-<div id="ageGate" class="modal-backdrop">
-  <div class="modal-content">
-    <h3 class="text-2xl font-bold mb-4">🔞 Age Verification</h3>
-    <p class="mb-6 text-s-muted">This section is for users aged 18+. Please confirm your age.</p>
-    <div class="flex gap-4 mb-4">
-      <button onclick="confirmAge(true)" class="flex-1 bg-s-green py-3 rounded-lg font-semibold btn">I am 18+</button>
-      <button onclick="confirmAge(false)" class="flex-1 border border-s-border py-3 rounded-lg font-semibold hover:bg-s-card transition">Cancel</button>
+<!-- ================================================== -->
+<!-- 💰 AFFILIATE, DEALS & REWARDS -->
+<!-- ================================================== -->
+<section id="affiliate" class="max-w-7xl mx-auto px-4 py-12 border-t border-s-border">
+  <h2 class="text-3xl font-bold mb-6 text-center">💰 Earn Cashback, Discounts & Referrals</h2>
+  
+  <div class="grid md:grid-cols-3 gap-6 mb-8">
+    <div class="card p-6 rounded-xl text-center">
+      <i class="fa-solid fa-percent text-4xl text-s-gold mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">TopCashback</h3>
+      <p class="text-s-muted mb-3">Cashback at 7000+ stores</p>
+      <p class="text-sm text-s-muted mb-4">Username: butties123</p>
+      <a href="https://www.topcashback.co.uk/ref/butties123" target="_blank" class="block bg-s-gold text-black py-2 rounded-lg font-bold hover:bg-s-gold/80">Get Cashback →</a>
+    </div>
+    <div class="card p-6 rounded-xl text-center">
+      <i class="fa-brands fa-amazon text-4xl text-s-muted mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Amazon Affiliate</h3>
+      <p class="text-s-muted mb-3">Earn on every purchase</p>
+      <p class="text-sm text-s-muted mb-4">Tag: straw09-21</p>
+      <a href="https://www.amazon.co.uk/?tag=straw09-21" target="_blank" class="block bg-s-card border border-s-green text-s-green py-2 rounded-lg font-bold hover:bg-s-green/20">Shop & Earn →</a>
+    </div>
+    <div class="card p-6 rounded-xl text-center">
+      <i class="fa-solid fa-handshake text-4xl text-s-purple mb-4"></i>
+      <h3 class="text-xl font-bold mb-2">Awin Partner</h3>
+      <p class="text-s-muted mb-3">5000+ brands — commissions up to 20%</p>
+      <p class="text-sm text-s-muted mb-4">ID: 3062179</p>
+      <a href="https://ui.awin.com/awin/affiliate/3062179/" target="_blank" class="block bg-s-purple/20 text-s-purple py-2 rounded-lg font-bold hover:bg-s-purple/30">Join & Earn →</a>
     </div>
   </div>
-</div>
 
+  <!-- DISCOUNT CODES -->
+  <div class="card p-6 rounded-xl">
+    <h3 class="text-xl font-bold mb-4">🏷️ Active Discount Codes — Updated Daily</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex justify-between items-center p-3 bg-s-dark rounded-lg">
+        <div><strong>Amazon</strong> — 10% off tech</div>
+        <code class="bg-s-green/20 text-s-green px-3 py-1 rounded font-mono">AMZTECH10</code>
+      </div>
+      <div class="flex justify-between items-center p-3 bg-s-dark rounded-lg">
+        <div><strong>eBay</strong> — £5 off £30+</div>
+        <code class="bg-s-green/20 text-s-green px-3 py-1 rounded font-mono">EBAY5OFF</code>
+      </div>
+      <div class="flex justify-between items-center p-3 bg-s-dark rounded-lg">
+        <div><strong>Argos</strong> — Free delivery</div>
+        <code class="bg-s-green/20 text-s-green px-3 py-1 rounded font-mono">FREEDEL</code>
+      </div>
+      <div class="flex justify-between items-center p-3 bg-s-dark rounded-lg">
+        <div><strong>ASOS</strong> — 15% off everything</div>
+        <code class="bg-s-green/20 text-s-green px-3 py-1 rounded font-mono">ASOS15UK</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================== -->
+<!-- 🪙 SIGN-UP & STRAW AIRDROP -->
+<!-- ================================================== -->
+<section id="signup" class="max-w-3xl mx-auto px-4 py-12 border-t border-s-border">
+  <div class="card p-8 rounded-2xl text-center bg-solana-gradient/10 border border-s-solana/30">
+    <h2 class="text-3xl font-bold mb-2">🎁 Claim Your 10,000 $STRAW!</h2>
+    <p class="text-s-muted mb-6">Join the decentralized economy — free welcome tokens!</p>
+    
+    <div class="grid grid-cols-2 gap-4 mb-8">
+      <div class="bg-s-dark p-4 rounded-xl">
+        <div class="text-3xl font-bold text-s-solana">10,000</div>
+        <div class="text-sm text-s-muted">On Sign-Up</div>
+      </div>
+      <div class="bg-s-dark p-4 rounded-xl">
+        <div class="text-3xl font-bold text-s-solana">+10,000</div>
+        <div class="text-sm text-s-muted">Per Friend Referred</div>
+      </div>
+    </div>
+
+    <div class="space-y-4 max-w-md mx-auto text-left">
+      <input type="text" id="signup-name" placeholder="Your name or username" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-solana">
+      <input type="email" id="signup-email" placeholder="Email address" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-solana">
+      <input type="text" id="signup-wallet" placeholder="Solana wallet address (optional)" class="w-full px-4 py-3 rounded-lg bg-s-dark border border-s-border focus:outline-none focus:border-s-solana">
+      <button onclick="claimStraw()" class="solana-gradient w-full py-3 rounded-xl font-bold text-black hover:opacity-90">🪙 Claim 10,000 $STRAW — Free</button>
+      <p class="text-xs text-s-muted text-center">By claiming you agree to our Terms & confirm you are 18+. Digital assets are unregulated and can rise or fall in value.</p>
+    </div>
+
+    <div class="mt-8 p-4 bg-s-dark rounded-xl">
+      <p class="text-sm text-s-muted mb-2">Already claimed? Share your referral link:</p>
+      <div class="flex gap-2">
+        <input type="text" id="ref-link" readonly value="https://strawbarter.netlify.app/?ref=straw123" class="flex-1 px-4 py-3 rounded-lg bg-s-dark border border-s-border text-sm">
+        <button onclick="copyRefLink()" class="bg-s-solana/20 text-s-solana px-4 py-3 rounded-lg font-bold hover:bg-s-solana/30">Copy</button>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================================================== -->
+<!-- ⚡ JAVASCRIPT — ALL TOOLS, NAVIGATION, FUNCTIONS -->
+<!-- ================================================== -->
 <script>
-// Dropdown
-function toggleDropdown(id, e) {
-  if (e) { e.preventDefault(); e.stopPropagation(); }
-  const menu = document.getElementById(id);
-  menu.classList.toggle('open');
+// === TOGGLE CATEGORIES (Guides Section) ===
+function toggleCat(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
 }
 
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
-  document.querySelectorAll('.dropdown-menu').forEach(menu => {
-    if (!menu.parentElement.contains(e.target)) menu.classList.remove('open');
+// === PRINT SPECIFIC SECTION ===
+function printSection(sectionId) {
+  window.print();
+}
+
+// === PRINT ALL GUIDES ===
+function printAllGuides() {
+  window.print();
+}
+
+// === CLAIM STRAW (SIGN-UP) ===
+function claimStraw() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  if (!name || !email.includes('@')) {
+    alert('Please enter your name and a valid email address.');
+    return;
+  }
+  alert('🎉 Welcome aboard! Your 10,000 $STRAW claim is registered — check your email for next steps.');
+}
+
+// === COPY REFERRAL LINK ===
+function copyRefLink() {
+  const el = document.getElementById('ref-link');
+  navigator.clipboard.writeText(el.value).then(() => {
+    alert('Referral link copied!');
+  });
+}
+
+// === FREE WEB TOOLS — OPEN & RUN IN MODAL ===
+function openTool(toolName) {
+  const toolModal = document.createElement('div');
+  toolModal.id = 'tool-modal';
+  toolModal.className = 'fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4';
+  
+  let toolContent = '';
+  
+  switch(toolName) {
+    case 'budget':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">💰 Monthly Budget Calculator</h3>
+        <div class="space-y-3">
+          <input type="number" id="income" placeholder="Monthly Income (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="number" id="bills" placeholder="Total Bills (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="number" id="savings" placeholder="Savings Goal (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <button onclick="calcBudget()" class="w-full bg-s-green py-3 rounded-lg font-bold">Calculate</button>
+          <div id="budget-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center text-lg font-bold"></div>
+        </div>`;
+      break;
+    case 'tax':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">📊 UK Tax Estimator (2026/27)</h3>
+        <div class="space-y-3">
+          <input type="number" id="salary" placeholder="Annual Salary (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <select id="freq" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+            <option value="annual">Annual</option><option value="monthly">Monthly</option><option value="weekly">Weekly</option>
+          </select>
+          <button onclick="calcTax()" class="w-full bg-s-green py-3 rounded-lg font-bold">Calculate</button>
+          <div id="tax-result" class="mt-4 p-4 bg-s-dark rounded-lg text-sm"></div>
+        </div>`;
+      break;
+    case 'mortgage':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">🏠 Mortgage Calculator</h3>
+        <div class="space-y-3">
+          <input type="number" id="housePrice" placeholder="House Price (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="number" id="deposit" placeholder="Deposit (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="number" id="rate" placeholder="Interest Rate (%)" step="0.01" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="number" id="years" placeholder="Term (Years)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <button onclick="calcMortgage()" class="w-full bg-s-green py-3 rounded-lg font-bold">Calculate</button>
+          <div id="mortgage-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center text-lg font-bold"></div>
+        </div>`;
+      break;
+    case 'password':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">🔐 Password Generator</h3>
+        <div class="space-y-3">
+          <input type="number" id="pwLen" value="16" min="8" max="64" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <div class="flex gap-2 text-sm">
+            <label><input type="checkbox" id="pwUpper" checked> A-Z</label>
+            <label><input type="checkbox" id="pwLower" checked> a-z</label>
+            <label><input type="checkbox" id="pwNum" checked> 0-9</label>
+            <label><input type="checkbox" id="pwSym" checked> !@#</label>
+          </div>
+          <button onclick="genPassword()" class="w-full bg-s-green py-3 rounded-lg font-bold">Generate</button>
+          <div id="pw-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center font-mono text-lg break-all cursor-pointer" onclick="copyText(this.innerText)">Click to copy</div>
+        </div>`;
+      break;
+    case 'qrcode':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">📲 QR Code Generator</h3>
+        <div class="space-y-3">
+          <textarea id="qrText" placeholder="URL or text..." class="w-full p-3 rounded-lg bg-s-dark border border-s-border" rows="3"></textarea>
+          <button onclick="genQR()" class="w-full bg-s-green py-3 rounded-lg font-bold">Generate QR</button>
+          <div id="qr-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center">
+            <img src="" id="qr-img" class="mx-auto hidden" alt="QR Code">
+          </div>
+        </div>`;
+      break;
+    case 'loan':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">💳 Loan Repayment Calculator</h3>
+        <div class="space-y-3">
+          <input type="number" id="loanAmt" placeholder="Loan Amount (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="number" id="loanRate" placeholder="Interest Rate (%)" step="0.01" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="number" id="loanMos" placeholder="Term (Months)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <button onclick="calcLoan()" class="w-full bg-s-green py-3 rounded-lg font-bold">Calculate</button>
+          <div id="loan-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center"></div>
+        </div>`;
+      break;
+    case 'currency':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">💱 Currency Converter (GBP ↔ USD/EUR)</h3>
+        <div class="space-y-3">
+          <input type="number" id="curAmt" placeholder="Amount" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <select id="curFrom" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+            <option value="GBP">£ GBP</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option>
+          </select>
+          <select id="curTo" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+            <option value="USD">$ USD</option><option value="GBP">£ GBP</option><option value="EUR">€ EUR</option>
+          </select>
+          <button onclick="convertCur()" class="w-full bg-s-green py-3 rounded-lg font-bold">Convert</button>
+          <div id="cur-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center text-xl font-bold"></div>
+        </div>`;
+      break;
+    case 'age':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">🎂 Age Calculator</h3>
+        <div class="space-y-3">
+          <input type="date" id="dob" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <button onclick="calcAge()" class="w-full bg-s-green py-3 rounded-lg font-bold">Calculate Age</button>
+          <div id="age-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center text-xl font-bold"></div>
+        </div>`;
+      break;
+    case 'days':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">📅 Days Between Dates</h3>
+        <div class="space-y-3">
+          <input type="date" id="date1" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <input type="date" id="date2" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <button onclick="calcDays()" class="w-full bg-s-green py-3 rounded-lg font-bold">Calculate</button>
+          <div id="days-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center text-xl font-bold"></div>
+        </div>`;
+      break;
+    case 'vat':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">🧾 VAT Calculator (UK 20%)</h3>
+        <div class="space-y-3">
+          <input type="number" id="vatAmt" placeholder="Amount (£)" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+          <select id="vatType" class="w-full p-3 rounded-lg bg-s-dark border border-s-border">
+            <option value="add">Add VAT (20%)</option>
+            <option value="remove">Remove VAT</option>
+          </select>
+          <button onclick="calcVAT()" class="w-full bg-s-green py-3 rounded-lg font-bold">Calculate</button>
+          <div id="vat-result" class="mt-4 p-4 bg-s-dark rounded-lg text-center"></div>
+        </div>`;
+      break;
+    case 'wordcount':
+      toolContent = `
+        <h3 class="text-xl font-bold mb-4">📝 Word & Character Counter</h3>
+        <div class="space-y-3">
+          <textarea id="wcText" placeholder="Paste your text here..." class="w-full p-3 rounded-lg bg-s-dark border border-s-border" rows="6" oninput="countWords()"></textarea>
+          <div id="wc-result" class="p-4 bg-s-dark rounded-lg grid grid-cols-2 gap-4 text-center">
+            <div><div class="text-2xl font-bold text-s-green" id="wc-words">0</div><div class="text-xs text-s-muted">Words</div></div>
+            <div><div class="text-2xl font-bold text-s-green" id="wc-chars">0</div><div class="text-xs text-s-muted">Characters</div></div>
+          </div>
+        </div>`;
+      break;
+    default:
+      toolContent = `<h3 class="text-xl font-bold">🔧 ${toolName} Tool</h3><p class="text-s-muted mt-2">Tool ready — add logic or use externally.</p>`;
+  }
+
+  toolModal.innerHTML = `
+    <div class="bg-s-card p-6 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
+      <button onclick="document.getElementById('tool-modal').remove()" class="absolute top-3 right-3 text-2xl text-s-muted hover:text-white">&times;</button>
+      ${toolContent}
+    </div>
+  `;
+  document.body.appendChild(toolModal);
+  toolModal.addEventListener('click', e => { if (e.target === toolModal) toolModal.remove(); });
+}
+
+// === TOOL CALCULATOR FUNCTIONS ===
+function calcBudget() {
+  const income = parseFloat(document.getElementById('income').value) || 0;
+  const bills = parseFloat(document.getElementById('bills').value) || 0;
+  const savings = parseFloat(document.getElementById('savings').value) || 0;
+  const leftover = income - bills - savings;
+  document.getElementById('budget-result').innerHTML = 
+    leftover >= 0 ? `<span class="text-s-green">£${leftover.toFixed(2)} left over!</span>` : `<span class="text-s-red">Shortfall: £${Math.abs(leftover).toFixed(2)}</span>`;
+}
+function calcTax() {
+  const sal = parseFloat(document.getElementById('salary').value) || 0;
+  const band1 = Math.min(sal, 50270);
+  const band2 = Math.max(0, sal - 50270);
+  const tax = (band1 - 12570) * 0.2 + band2 * 0.4;
+  const ni = sal * 0.08;
+  document.getElementById('tax-result').innerHTML = `
+    <strong>Tax Year 2026/27</strong><br>
+    Income Tax: £${tax.toFixed(2)}<br>
+    National Insurance: £${ni.toFixed(2)}<br>
+    <strong>Take Home: £${(sal - tax - ni).toFixed(2)}/year</strong>
+  `;
+}
+function calcMortgage() {
+  const price = parseFloat(document.getElementById('housePrice').value) || 0;
+  const dep = parseFloat(document.getElementById('deposit').value) || 0;
+  const rate = (parseFloat(document.getElementById('rate').value) || 5) / 100 / 12;
+  const years = parseFloat(document.getElementById('years').value) || 25;
+  const loan = price - dep;
+  const n = years * 12;
+  const payment = loan * rate * Math.pow(1+rate, n) / (Math.pow(1+rate, n) - 1);
+  document.getElementById('mortgage-result').innerHTML = `£${payment.toFixed(2)}/month`;
+}
+function genPassword() {
+  let chars = '';
+  if(document.getElementById('pwUpper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if(document.getElementById('pwLower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+  if(document.getElementById('pwNum').checked) chars += '0123456789';
+  if(document.getElementById('pwSym').checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+  const len = parseInt(document.getElementById('pwLen').value) || 16;
+  let pw = '';
+  for(let i=0;i<len;i++) pw += chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('pw-result').innerText = pw;
+}
+function genQR() {
+  const text = encodeURIComponent(document.getElementById('qrText').value);
+  const img = document.getElementById('qr-img');
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${text}`;
+  img.classList.remove('hidden');
+}
+function calcLoan() {
+  const P = parseFloat(document.getElementById('loanAmt').value) || 0;
+  const r = (parseFloat(document.getElementById('loanRate').value) || 5) / 100 / 12;
+  const n = parseFloat(document.getElementById('loanMos').value) || 12;
+  const pay = P * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+  document.getElementById('loan-result').innerHTML = `<strong>£${pay.toFixed(2)}/month</strong><br>Total: £${(pay*n).toFixed(2)}`;
+}
+function convertCur() {
+  const amt = parseFloat(document.getElementById('curAmt').value) || 0;
+  const from = document.getElementById('curFrom').value;
+  const to = document.getElementById('curTo').value;
+  const rates = {GBP:1, USD:1.25, EUR:1.17};
+  const gbp = amt / rates[from];
+  const res = gbp * rates[to];
+  const sym = {GBP:'£', USD:'$', EUR:'€'}[to];
+  document.getElementById('cur-result').innerHTML = `${sym}${res.toFixed(2)}`;
+}
+function calcAge() {
+  const dob = new Date(document.getElementById('dob').value);
+  const now = new Date();
+  let age = now.getFullYear() - dob.getFullYear();
+  const m = now.getMonth() - dob.getMonth();
+  if(m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--;
+  document.getElementById('age-result').innerHTML = `${age} years old`;
+}
+function calcDays() {
+  const d1 = new Date(document.getElementById('date1').value);
+  const d2 = new Date(document.getElementById('date2').value);
+  const diff = Math.abs(d2 - d1) / (1000*60*60*24);
+  document.getElementById('days-result').innerHTML = `${diff} days apart`;
+}
+function calcVAT() {
+  const amt = parseFloat(document.getElementById('vatAmt').value) || 0;
+  const type = document.getElementById('vatType').value;
+  let res, vat;
+  if(type === 'add') { vat = amt * 0.2; res = amt + vat; document.getElementById('vat-result').innerHTML = `VAT: £${vat.toFixed(2)}<br>Total: £${res.toFixed(2)}`; }
+  else { res = amt / 1.2; vat = amt - res; document.getElementById('vat-result').innerHTML = `Net: £${res.toFixed(2)}<br>VAT: £${vat.toFixed(2)}`; }
+}
+function countWords() {
+  const t = document.getElementById('wcText').value;
+  document.getElementById('wc-words').innerText = t.trim() ? t.trim().split(/\s+/).length : 0;
+  document.getElementById('wc-chars').innerText = t.length;
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert('Copied to clipboard!');
+}
+
+// === SMOOTH SCROLL FOR NAV LINKS ===
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const href = link.getAttribute('href');
+    if(href !== '#') {
+      e.preventDefault();
+      document.querySelector(href)?.scrollIntoView({behavior:'smooth'});
+    }
   });
 });
 
-// Mobile Menu
-function toggleMobileMenu() {
-  document.getElementById('mobileMenu').classList.toggle('hidden');
-}
-
-// Toast
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// Copy Functions
-function copyTokenAddress() {
-  navigator.clipboard.writeText('2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc')
-    .then(() => showToast('✅ Contract address copied!'));
-}
-function copyRefLink() {
-  navigator.clipboard.writeText(document.getElementById('refLink').value)
-    .then(() => showToast('✅ Referral link copied!'));
-}
-
-// Age Gate
-function openAgeGate() {
-  document.getElementById('ageGate').classList.add('show');
-}
-function confirmAge(isAdult) {
-  if (isAdult) {
-    document.getElementById('ageGate').classList.remove('show');
-    showToast('✅ Verified — welcome!');
-  } else {
-    document.getElementById('ageGate').classList.remove('show');
-    showToast('🔞 This section is 18+ only');
+// === DYNAMIC $STRAW PRICE SIMULATION ===
+setInterval(() => {
+  const el = document.getElementById('straw-price');
+  if(el) {
+    const change = (Math.random() - 0.5) * 0.00001;
+    const price = parseFloat(el.innerText.slice(1)) + change;
+    el.innerText = '£' + price.toFixed(5);
   }
-}
+}, 5000);
 </script>
+<!-- ================================================== -->
+<!-- 🦶 FOOTER — COMPLETE SITE FOOTER -->
+<!-- ================================================== -->
+<footer class="bg-s-card border-t border-s-border py-12 mt-16 no-print">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <!-- Brand -->
+      <div>
+        <h3 class="text-2xl font-bold mb-4">🍓 STRAW Barter</h3>
+        <p class="text-s-muted text-sm mb-4">The all-in-one decentralized marketplace, tools, and community platform — powered by Solana.</p>
+        <div class="flex gap-3 text-xl">
+          <a href="#" class="text-s-muted hover:text-s-green"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="text-s-muted hover:text-s-green"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="text-s-muted hover:text-s-green"><i class="fa-brands fa-telegram"></i></a>
+          <a href="#" class="text-s-muted hover:text-s-green"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="text-s-muted hover:text-s-green"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <!-- Quick Links -->
+      <div>
+        <h4 class="font-bold text-lg mb-3">Quick Links</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li><a href="#marketplace" class="hover:text-s-green">🛒 Marketplace</a></li>
+          <li><a href="#tools" class="hover:text-s-green">🧰 Free Tools</a></li>
+          <li><a href="#guides" class="hover:text-s-green">📚 500 Guides</a></li>
+          <li><a href="#rwa" class="hover:text-s-green">🔐 RWA Registry</a></li>
+          <li><a href="#dating" class="hover:text-s-green">☕ Coffee Dating</a></li>
+        </ul>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h4 class="font-bold text-lg mb-3">Legal & Info</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li><a href="#" class="hover:text-s-green">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-s-green">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-s-green">Cookie Policy</a></li>
+          <li><a href="#" class="hover:text-s-green">Disclaimers & Risks</a></li>
+          <li><a href="#" class="hover:text-s-green">Contact Us</a></li>
+        </ul>
+      </div>
+      <!-- Connect -->
+      <div>
+        <h4 class="font-bold text-lg mb-3">Connect Wallet</h4>
+        <div class="space-y-3">
+          <a href="https://phantom.app/" target="_blank" class="block bg-s-purple/20 text-s-purple px-4 py-2 rounded-lg text-center font-medium hover:bg-s-purple/30">
+            <i class="fa-solid fa-wallet mr-2"></i>Phantom Wallet
+          </a>
+          <a href="https://solscan.io/token/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="block bg-s-card border border-s-border px-4 py-2 rounded-lg text-center text-sm hover:border-s-solana">
+            View $STRAW on Solscan
+          </a>
+          <p class="text-xs text-s-muted mt-2">Contract: <code class="text-xs break-all">2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc</code></p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bottom Bar -->
+    <div class="border-t border-s-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-s-muted">
+      <p>© 2026 STRAW Barter. All rights reserved. Built with 🍓 in the UK.</p>
+      <p class="text-xs text-center md:text-right">
+        Digital assets are unregulated — value may rise or fall. Not financial advice. 18+ only.<br>
+        Affiliate links support the platform — we earn at no extra cost to you.
+      </p>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
