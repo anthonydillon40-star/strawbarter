@@ -109,6 +109,37 @@
       text-align: center;
     }
     .token-address { font-family: monospace; font-size: 0.85rem; word-break: break-all; }
+
+    .tip-tab {
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.05);
+      border: 1px solid rgba(34,197,94,0.5);
+      color: rgba(134,239,172,0.8);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tip-tab:hover { background: rgba(34,197,94,0.1); color: #86efac; }
+    .tip-tab.active { background: rgba(34,197,94,0.15); border-color: #22c55e; color: #86efac; }
+    .tip-card {
+      background: rgba(34,197,94,0.05);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 16px;
+      padding: 1.1rem 1.2rem;
+      color: #e2e8f0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .tips-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 700px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -139,6 +170,7 @@
           <a href="#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
           <a href="#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
           <a href="#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="#tips" class="dropdown-item"><i class="fa-solid fa-lightbulb w-5 text-center text-s-muted"></i> 🏆 Top Tips</a>
           <a href="#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
           <a href="#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
           <a href="#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
@@ -168,6 +200,7 @@
       <a href="#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
       <a href="#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
       <a href="#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
+      <a href="#tips" class="py-2 px-3 rounded-lg hover:bg-s-card">🏆 Top Tips</a>
       <a href="#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
       <a href="#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
       <a href="#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
@@ -441,6 +474,83 @@
   </div>
 </section>
 
+<!-- 2000 Top Tips -->
+<section id="tips" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-3xl font-extrabold mb-3" style="letter-spacing: -0.3px;">🏆 2000 Top Tips</h2>
+  <p class="text-s-muted mb-6 text-base">The best practical advice — all in one place. Free to browse, save &amp; share.</p>
+
+  <div class="flex flex-wrap gap-2.5 mb-8">
+    <button onclick="showTipsCat('money')" id="tips-tab-money" class="tip-tab active">💰 Money (200)</button>
+    <button onclick="showTipsCat('health')" id="tips-tab-health" class="tip-tab">🧠 Health (200)</button>
+    <button onclick="showTipsCat('home')" id="tips-tab-home" class="tip-tab">🏠 Home (200)</button>
+    <button onclick="showTipsCat('career')" id="tips-tab-career" class="tip-tab">💼 Career (200)</button>
+    <button onclick="showTipsCat('productivity')" id="tips-tab-productivity" class="tip-tab">⏰ Productivity (200)</button>
+    <button onclick="showTipsCat('tech')" id="tips-tab-tech" class="tip-tab">📱 Tech (200)</button>
+    <button onclick="showTipsCat('travel')" id="tips-tab-travel" class="tip-tab">✈️ Travel (200)</button>
+    <button onclick="showTipsCat('life')" id="tips-tab-life" class="tip-tab">🌱 Life (200)</button>
+    <button onclick="showTipsCat('all')" id="tips-tab-all" class="tip-tab">📋 All 2000</button>
+  </div>
+
+  <!-- Money -->
+  <div id="tipcat-money" class="tips-scroll">
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">1.</span>Pay yourself first — auto-transfer 10–20% of income before spending anything</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">2.</span>Track every penny for 30 days — you'll find 15–30% in unnecessary spending</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">3.</span>50/30/20 Rule — 50% Needs, 30% Wants, 20% Save / Debt Repayment</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">4.</span>Cancel all unused subscriptions — average person wastes £40+ per month</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">5.</span>Wait 48 hours before any non-essential purchase — kills impulse buys</div>
+    <button onclick="showToast('📋 Loading all 200 Money Tips…')" class="mt-4 bg-s-green px-6 py-3.5 rounded-full font-bold text-[#052e16] btn">📋 See All 200 Money Tips</button>
+  </div>
+
+  <!-- Health -->
+  <div id="tipcat-health" class="tips-scroll" style="display: none;">
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">201.</span>Keep a consistent sleep schedule — same bed &amp; wake time, even on weekends</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">202.</span>Aim for 7–9 hours sleep — individual needs vary, find your baseline</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">203.</span>No screens 1 hour before bed — blue light suppresses melatonin production</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">204.</span>Keep bedroom dark, cool &amp; quiet — 16–18°C is optimal sleep temperature</div>
+    <div class="tip-card"><span class="text-s-green font-bold mr-2.5">205.</span>Avoid caffeine after 2pm — half-life is 6+ hours, disrupts deep sleep</div>
+    <button onclick="showToast('❤️ Loading all 200 Health Tips…')" class="mt-4 bg-s-green px-6 py-3.5 rounded-full font-bold text-[#052e16] btn">❤️ See All 200 Health Tips</button>
+  </div>
+
+  <!-- Home -->
+  <div id="tipcat-home" style="display: none;">
+    <p class="text-s-muted py-5">🏠 Home Tips loading…</p>
+  </div>
+
+  <!-- Career -->
+  <div id="tipcat-career" style="display: none;">
+    <p class="text-s-muted py-5">💼 Career Tips loading…</p>
+  </div>
+
+  <!-- Productivity -->
+  <div id="tipcat-productivity" style="display: none;">
+    <p class="text-s-muted py-5">⏰ Productivity Tips loading…</p>
+  </div>
+
+  <!-- Tech -->
+  <div id="tipcat-tech" style="display: none;">
+    <p class="text-s-muted py-5">📱 Tech Tips loading…</p>
+  </div>
+
+  <!-- Travel -->
+  <div id="tipcat-travel" style="display: none;">
+    <p class="text-s-muted py-5">✈️ Travel Tips loading…</p>
+  </div>
+
+  <!-- Life -->
+  <div id="tipcat-life" style="display: none;">
+    <p class="text-s-muted py-5">🌱 Life Tips loading…</p>
+  </div>
+
+  <!-- All -->
+  <div id="tipcat-all" style="display: none;">
+    <div class="rounded-[20px] px-6 py-9 text-center bg-s-green/5 border border-s-green/35">
+      <h3 class="text-2xl font-extrabold mb-3">📋 All 2000 Top Tips</h3>
+      <p class="text-s-muted mb-6">Every tip from all 8 categories — one massive reference guide.</p>
+      <button onclick="showToast('📖 Loading ALL 2000 Tips — this may take a moment…')" class="w-full py-4 rounded-full text-lg font-extrabold bg-s-green text-[#052e16] btn">📖 VIEW ALL 2000 TIPS</button>
+    </div>
+  </div>
+</section>
+
 <!-- Sign-Up / Referral -->
 <section id="signup" class="section-compact px-4 max-w-3xl mx-auto text-center border-t border-s-border">
   <div class="card rounded-2xl p-6">
@@ -552,6 +662,14 @@ function copyTokenAddress() {
 function copyRefLink() {
   navigator.clipboard.writeText(document.getElementById('refLink').value)
     .then(() => showToast('✅ Referral link copied!'));
+}
+
+// 2000 Top Tips
+function showTipsCat(category) {
+  document.querySelectorAll('[id^="tipcat-"]').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.tip-tab').forEach(tab => tab.classList.remove('active'));
+  document.getElementById('tipcat-' + category).style.display = 'flex';
+  document.getElementById('tips-tab-' + category).classList.add('active');
 }
 
 // Age Gate
