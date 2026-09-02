@@ -44,6 +44,10 @@
       right: 0;
       top: 100%;
       min-width: 240px;
+      max-height: min(70vh, 560px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
       background: #1e293b;
       border: 1px solid #334155;
       border-radius: 12px;
@@ -163,7 +167,7 @@
     </div>
   </div>
 
-  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark max-h-[70vh] overflow-y-auto overscroll-contain">
     <nav class="flex flex-col gap-1 text-sm">
       <a href="#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
       <a href="#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
