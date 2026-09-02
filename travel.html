@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✈️ Travel & Exchange — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', sky: '#0ea5e9', teal: '#14b8a6',
+              coral: '#f97316', amber: '#f59e0b', lime: '#84cc16', pink: '#ec4899',
+              rose: '#f43f5e', orange: '#f97316'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .listing-card { transition: all 0.3s ease; }
+    .listing-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(14,165,233,0.15); border-color: #0ea5e9; }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(14,165,233,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #0ea5e9; }
+    .verified-badge { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .new-badge { background: linear-gradient(135deg, #ec4899, #f43f5e); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-sky/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-sky transition">← Back</a>
+      <button onclick="openNewListingModal()" class="bg-straw-sky text-white px-3 py-1.5 rounded-full font-semibold hover:bg-sky-600 transition">
+        <i class="fa-solid fa-plus mr-1"></i> List Your Space
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-sky/10 via-transparent to-straw-teal/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">✈️</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Travel & Home Exchange</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Stay · Host · Swap — Travel for Less, Connect Locally</strong><br>
+      Free accommodation, cultural exchange, real connections — no hotels, no big fees, just people helping people 🌍
+    </p>
+    <div class="max-w-3xl mx-auto relative mb-6 grid sm:grid-cols-4 gap-3">
+      <input type="text" id="locationInput" placeholder="📍 Where to?"
+        class="px-4 py-3 rounded-xl bg-straw-card border border-straw-sky/20 text-white">
+      <input type="date" id="dateFrom" class="px-4 py-3 rounded-xl bg-straw-card border border-straw-sky/20 text-white">
+      <input type="date" id="dateTo" class="px-4 py-3 rounded-xl bg-straw-card border border-straw-sky/20 text-white">
+      <button onclick="searchListings()" class="bg-straw-sky text-white px-4 py-3 rounded-xl font-semibold hover:bg-sky-600 transition">
+        <i class="fa-solid fa-magnifying-glass mr-1"></i> Search
+      </button>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-sky/20 text-straw-sky">🏠 Home Swap</span>
+      <span class="tag bg-straw-teal/20 text-straw-teal">🛏️ Free Hosting</span>
+      <span class="tag bg-straw-green/20 text-straw-green">🌍 Worldwide</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">✅ Verified Members</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⚡ HOW IT WORKS -->
+<section class="max-w-5xl mx-auto px-4 py-8">
+  <h2 class="text-2xl font-bold text-white text-center mb-8">How It Works — 3 Simple Ways</h2>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="bg-straw-card rounded-2xl p-6 border border-straw-sky/10 text-center">
+      <div class="text-4xl mb-3">🔄</div>
+      <h3 class="text-xl font-bold text-white mb-2">Home Swap</h3>
+      <p class="text-straw-gray mb-3">Exchange homes directly — you stay at theirs, they stay at yours. Same time, different places. Zero cost.</p>
+      <span class="tag bg-straw-green/20 text-straw-green">💰 £0 — Free</span>
+    </div>
+    <div class="bg-straw-card rounded-2xl p-6 border border-straw-sky/10 text-center">
+      <div class="text-4xl mb-3">🛏️</div>
+      <h3 class="text-xl font-bold text-white mb-2">Host & Stay</h3>
+      <p class="text-straw-gray mb-3">Host visitors at your place → earn nights → stay anywhere in the world. No money, just hospitality.</p>
+      <span class="tag bg-straw-sky/20 text-straw-sky">🌙 Night Credits</span>
+    </div>
+    <div class="bg-straw-card rounded-2xl p-6 border border-straw-sky/10 text-center">
+      <div class="text-4xl mb-3">🤝</div>
+      <h3 class="text-xl font-bold text-white mb-2">Local Welcome</h3>
+      <p class="text-straw-gray mb-3">Meet for coffee, get tips, show around. No accommodation needed — just friendly local connections.</p>
+      <span class="tag bg-straw-purple/20 text-straw-purple">☕ Community</span>
+    </div>
+  </div>
+</section>
+
+<!-- 🏆 FEATURED LISTINGS -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-white">🏆 Featured Listings — Worldwide</h2>
+    <select id="typeFilter" class="px-3 py-2 rounded-lg bg-straw-card border border-straw-sky/20 text-white text-sm">
+      <option value="all">All Types</option>
+      <option value="swap">Home Swap</option>
+      <option value="host">Host & Stay</option>
+      <option value="local">Local Welcome</option>
+    </select>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="listingsGrid">
+
+    <!-- LISTING 1 — Manchester, UK -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden border border-straw-sky/10 listing-card" data-type="swap host">
+      <div class="h-48 bg-gradient-to-br from-straw-sky/30 to-straw-teal/30 flex items-center justify-center text-6xl">🏡</div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Cosy Semi — Manchester, UK</h3>
+          <span class="verified-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">✅ Verified</span>
+        </div>
+        <p class="text-straw-gray text-sm mb-3"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Manchester • 3 beds • Garden • Close to public transport</p>
+        <p class="text-straw-gray text-sm mb-4">Sunny home near city centre. Looking for swap anywhere in UK or Europe. Flexible dates — message me! 🇬🇧</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="tag bg-straw-green/20 text-straw-green">Home Swap</span>
+          <span class="tag bg-straw-sky/20 text-straw-sky">Host Available</span>
+          <span class="tag bg-straw-amber/20 text-straw-amber">Family-Friendly</span>
+        </div>
+        <div class="flex gap-2">
+          <a href="#" class="flex-1 bg-straw-sky text-white text-center py-2 rounded-lg font-semibold hover:bg-sky-600 text-sm">
+            <i class="fa-solid fa-eye mr-1"></i> View Full
+          </a>
+          <a href="#" class="bg-straw-card border border-straw-sky/20 text-white px-3 py-2 rounded-lg font-semibold hover:bg-straw-sky/10 text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTING 2 — Lisbon, Portugal -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden border border-straw-sky/10 listing-card" data-type="host">
+      <div class="h-48 bg-gradient-to-br from-straw-orange/30 to-straw-amber/30 flex items-center justify-center text-6xl">🏠</div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Bright Apartment — Lisbon, Portugal</h3>
+          <span class="new-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">🔥 NEW</span>
+        </div>
+        <p class="text-straw-gray text-sm mb-3"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Lisbon • 1 bed • Balcony • Metro 5min</p>
+        <p class="text-straw-gray text-sm mb-4">Sunny apartment with amazing city views. Hosting available — free stay in exchange for good vibes! Great for solo travellers. 🇵🇹</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="tag bg-straw-sky/20 text-straw-sky">Host Available</span>
+          <span class="tag bg-straw-purple/20 text-straw-purple">Solo-Friendly</span>
+          <span class="tag bg-straw-amber/20 text-straw-amber">Central</span>
+        </div>
+        <div class="flex gap-2">
+          <a href="#" class="flex-1 bg-straw-sky text-white text-center py-2 rounded-lg font-semibold hover:bg-sky-600 text-sm">
+            <i class="fa-solid fa-eye mr-1"></i> View Full
+          </a>
+          <a href="#" class="bg-straw-card border border-straw-sky/20 text-white px-3 py-2 rounded-lg font-semibold hover:bg-straw-sky/10 text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTING 3 — Local Welcome, Manchester -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden border border-straw-sky/10 listing-card" data-type="local">
+      <div class="h-48 bg-gradient-to-br from-straw-purple/30 to-straw-pink/30 flex items-center justify-center text-6xl">☕</div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Local Guide — Manchester, UK</h3>
+          <span class="verified-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">✅ Verified</span>
+        </div>
+        <p class="text-straw-gray text-sm mb-3"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Northern Quarter • Available Weekdays</p>
+        <p class="text-straw-gray text-sm mb-4">Long-time local happy to show you around — best cafes, hidden spots, cheap eats, photo locations. Meet for coffee, no accommodation needed! 🇬🇧</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="tag bg-straw-purple/20 text-straw-purple">Local Welcome</span>
+          <span class="tag bg-straw-pink/20 text-straw-pink">Free Tour</span>
+          <span class="tag bg-straw-green/20 text-straw-green">All Welcome</span>
+        </div>
+        <div class="flex gap-2">
+          <a href="#" class="flex-1 bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+            <i class="fa-solid fa-calendar-check mr-1"></i> Arrange Meet
+          </a>
+          <a href="#" class="bg-straw-card border border-straw-purple/20 text-white px-3 py-2 rounded-lg font-semibold hover:bg-straw-purple/10 text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTING 4 — Edinburgh, Scotland -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden border border-straw-sky/10 listing-card" data-type="swap host">
+      <div class="h-48 bg-gradient-to-br from-straw-teal/30 to-straw-green/30 flex items-center justify-center text-6xl">🏰</div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Spacious Flat — Edinburgh, Scotland</h3>
+          <span class="verified-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">✅ Verified</span>
+        </div>
+        <p class="text-straw-gray text-sm mb-3"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Edinburgh • 2 beds • Near Castle • Parking</p>
+        <p class="text-straw-gray text-sm mb-4">Beautiful flat in historic Edinburgh. Available for swap or hosting. Looking for anywhere warm! 🏴</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="tag bg-straw-green/20 text-straw-green">Home Swap</span>
+          <span class="tag bg-straw-sky/20 text-straw-sky">Host Available</span>
+          <span class="tag bg-straw-amber/20 text-straw-amber">Pet-Friendly</span>
+        </div>
+        <div class="flex gap-2">
+          <a href="#" class="flex-1 bg-straw-sky text-white text-center py-2 rounded-lg font-semibold hover:bg-sky-600 text-sm">
+            <i class="fa-solid fa-eye mr-1"></i> View Full
+          </a>
+          <a href="#" class="bg-straw-card border border-straw-sky/20 text-white px-3 py-2 rounded-lg font-semibold hover:bg-straw-sky/10 text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTING 5 — Barcelona, Spain -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden border border-straw-sky/10 listing-card" data-type="host">
+      <div class="h-48 bg-gradient-to-br from-straw-rose/30 to-straw-orange/30 flex items-center justify-center text-6xl">🌊</div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Beachside Room — Barcelona, Spain</h3>
+          <span class="new-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">🔥 NEW</span>
+        </div>
+        <p class="text-straw-gray text-sm mb-3"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Barcelona • Private Room • 5min to Beach</p>
+        <p class="text-straw-gray text-sm mb-4">Bright room in shared apartment. Free use of kitchen & balcony. Love meeting new people — welcome! 🇪🇸</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="tag bg-straw-sky/20 text-straw-sky">Host Available</span>
+          <span class="tag bg-straw-teal/20 text-straw-teal">Beach Nearby</span>
+          <span class="tag bg-straw-purple/20 text-straw-purple">Shared Space</span>
+        </div>
+        <div class="flex gap-2">
+          <a href="#" class="flex-1 bg-straw-sky text-white text-center py-2 rounded-lg font-semibold hover:bg-sky-600 text-sm">
+            <i class="fa-solid fa-eye mr-1"></i> View Full
+          </a>
+          <a href="#" class="bg-straw-card border border-straw-sky/20 text-white px-3 py-2 rounded-lg font-semibold hover:bg-straw-sky/10 text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTING 6 — Local Welcome, London -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden border border-straw-sky/10 listing-card" data-type="local">
+      <div class="h-48 bg-gradient-to-br from-straw-lime/30 to-straw-green/30 flex items-center justify-center text-6xl">🚌</div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">London Tips & Meetup — South Bank</h3>
+          <span class="verified-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">✅ Verified</span>
+        </div>
+        <p class="text-straw-gray text-sm mb-3"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> South Bank • Weekends 12–6pm</p>
+        <p class="text-straw-gray text-sm mb-4">Free local advice — transport, cheap eats, free museums, best views. Happy to meet for a walk or coffee. No accommodation needed! 🇬🇧</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="tag bg-straw-purple/20 text-straw-purple">Local Welcome</span>
+          <span class="tag bg-straw-green/20 text-straw-green">Free Guide</span>
+          <span class="tag bg-straw-amber/20 text-straw-amber">Weekends</span>
+        </div>
+        <div class="flex gap-2">
+          <a href="#" class="flex-1 bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+            <i class="fa-solid fa-calendar-check mr-1"></i> Arrange Meet
+          </a>
+          <a href="#" class="bg-straw-card border border-straw-purple/20 text-white px-3 py-2 rounded-lg font-semibold hover:bg-straw-purple/10 text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-sky/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-sky/10 transition">
+      <i class="fa-solid fa-globe mr-2"></i> Load More Worldwide Listings
+    </button>
+  </div>
+</section>
+
+<!-- 🛡️ SAFETY & INFO -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-sky/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-shield-halved text-straw-green"></i>
+      Safety, Trust & Guidelines — Travel with Confidence
+    </h3>
+    <div class="grid md:grid-cols-2 gap-6 text-sm">
+      <div>
+        <h4 class="font-bold text-straw-green mb-2">✅ Safety Tips — Always Follow</h4>
+        <ul class="space-y-1.5 text-straw-gray">
+          <li>• <strong>Verify profiles</strong> — check reviews, ID badge, history</li>
+          <li>• <strong>Communicate here first</strong> — don't share contact too early</li>
+          <li>• <strong>Video chat before</strong> — confirm real person & place</li>
+          <li>• <strong>Tell someone</strong> — share your plans & location</li>
+          <li>• <strong>Trust your gut</strong> — if unsure, pass it on</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-straw-sky mb-2">💰 Costs & Fees</h4>
+        <ul class="space-y-1.5 text-straw-gray">
+          <li>• <strong>Basic listing — 100% free</strong> forever</li>
+          <li>• <strong>Home swap — zero fees</strong> direct exchange</li>
+          <li>• <strong>Host & Stay — night credits</strong> no money changes hands</li>
+          <li>• <strong>Featured listing</strong> — small optional fee (£2–£5)</li>
+          <li>• <strong>Travel insurance</strong> — always recommended (affiliate link)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Community First:</strong> This is a trust-based platform — kindness, respect, and honesty are our currency. All members must follow guidelines. We verify where possible but <strong>always do your own checks</strong> — travel smart, stay safe. Affiliate links for travel insurance, gear, and services may earn a small commission at no extra cost to you. © 2026 Travel & Exchange — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>✈️ Travel & Exchange — <span class="text-straw-sky">Travel for Less · Connect Locally · Explore the World 🌍</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('listingsGrid');
+  const allListings = grid.querySelectorAll('div[data-type]');
+
+  // Search & filter
+  function searchListings() {
+    const loc = document.getElementById('locationInput').value.toLowerCase();
+    const type = document.getElementById('typeFilter').value;
+    const dateFrom = document.getElementById('dateFrom').value;
+    const dateTo = document.getElementById('dateTo').value;
+    const term = loc.toLowerCase().trim();
+    let visible = 0;
+    allListings.forEach(l => {
+      const matchType = (type === 'all' || l.dataset.type.includes(type));
+      const matchLoc = !term || l.textContent.toLowerCase().includes(term);
+      const show = matchType && matchLoc;
+      l.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    alert(`🔍 Search complete!\n\n📍 Location: ${loc || 'Anywhere'}\n📅 Dates: ${dateFrom || 'Any'} → ${dateTo || 'Any'}\n🏷️ Type: ${type === 'all' ? 'All Types' : type}\n\n✅ ${visible} matching listing${visible === 1 ? '' : 's'} shown below.`);
+  }
+
+  // Type filter
+  document.getElementById('typeFilter').addEventListener('change', e => {
+    const type = e.target.value;
+    allListings.forEach(l => {
+      l.style.display = type === 'all' || l.dataset.type.includes(type) ? '' : 'none';
+    });
+  });
+
+  // New listing modal
+  function openNewListingModal() {
+    alert('🏠 New Listing — Coming Soon!\n\n📍 Location, type, dates, description, photos...\n\nFree to list — worldwide welcome! 🌍✨');
+  }
+</script>
+
+</body>
+</html>
