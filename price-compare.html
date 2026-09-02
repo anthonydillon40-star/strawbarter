@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📊 Price Comparison & Drop Alerts — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', orange: '#f97316', teal: '#14b8a6'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .price-card { transition: all 0.25s ease; }
+    .price-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(20,184,166,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(127,232,160,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #7FE8A0; }
+    .best-badge { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .sale-badge { background: linear-gradient(135deg, #e84a5f, #f97316); }
+    .price-down { color: #22c55e; }
+    .price-up { color: #e84a5f; }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-teal/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-teal transition">← Back</a>
+      <button onclick="openTrackModal()" class="bg-straw-teal text-white px-3 py-1.5 rounded-full font-semibold hover:bg-teal-600 transition">
+        <i class="fa-solid fa-bell mr-1"></i> Track Item
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-teal/10 via-transparent to-straw-green/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">📊</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Price Comparison & Drop Alerts</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Compare Prices Across Retailers · Track History · Get Notified When It Drops</strong><br>
+      Never pay too much — find the best price, instantly 💰
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6">
+      <input type="text" id="searchInput" placeholder="🔍 Search a product: PlayStation 5, Dyson V15, Samsung S24, AirPods Pro..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-teal/20 text-white text-lg">
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-teal/20 text-straw-teal">✅ Real-Time Prices</span>
+      <span class="tag bg-straw-green/20 text-straw-green">📉 Price History</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">🔔 Drop Alerts</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">🛒 Best Deals</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⚡ TODAY'S TOP PRICE DROPS -->
+<section class="max-w-7xl mx-auto px-4 mb-10">
+  <h2 class="text-2xl font-bold text-white mb-5 flex items-center gap-2">
+    <i class="fa-solid fa-bolt text-straw-gold"></i> Today's Top Price Drops
+  </h2>
+  <div class="grid md:grid-cols-3 gap-4">
+
+    <!-- DROP 1 -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-red/10 price-card">
+      <div class="flex justify-between items-start mb-2">
+        <span class="sale-badge text-white text-xs font-bold px-2 py-1 rounded-full">🔥 25% OFF</span>
+        <span class="text-xs text-straw-gray">Today</span>
+      </div>
+      <h3 class="font-bold text-white mb-1">Sony WH-1000XM5 Headphones</h3>
+      <div class="flex items-baseline gap-2 mb-2">
+        <span class="text-2xl font-bold text-straw-green">£299.00</span>
+        <span class="text-sm text-straw-gray line-through">£399.00</span>
+      </div>
+      <p class="price-down text-sm mb-3"><i class="fa-solid fa-arrow-down"></i> £100 drop — Lowest price this month!</p>
+      <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="block w-full bg-straw-teal text-white text-center py-2 rounded-lg font-semibold hover:bg-teal-600 text-sm">
+        <i class="fa-solid fa-cart-shopping mr-1"></i> View Best Price
+      </a>
+    </div>
+
+    <!-- DROP 2 -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-red/10 price-card">
+      <div class="flex justify-between items-start mb-2">
+        <span class="sale-badge text-white text-xs font-bold px-2 py-1 rounded-full">🔥 18% OFF</span>
+        <span class="text-xs text-straw-gray">2hrs ago</span>
+      </div>
+      <h3 class="font-bold text-white mb-1">Nintendo Switch OLED</h3>
+      <div class="flex items-baseline gap-2 mb-2">
+        <span class="text-2xl font-bold text-straw-green">£229.00</span>
+        <span class="text-sm text-straw-gray line-through">£279.99</span>
+      </div>
+      <p class="price-down text-sm mb-3"><i class="fa-solid fa-arrow-down"></i> £50.99 drop — Limited stock!</p>
+      <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="block w-full bg-straw-teal text-white text-center py-2 rounded-lg font-semibold hover:bg-teal-600 text-sm">
+        <i class="fa-solid fa-cart-shopping mr-1"></i> View Best Price
+      </a>
+    </div>
+
+    <!-- DROP 3 -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-red/10 price-card">
+      <div class="flex justify-between items-start mb-2">
+        <span class="sale-badge text-white text-xs font-bold px-2 py-1 rounded-full">🔥 32% OFF</span>
+        <span class="text-xs text-straw-gray">5hrs ago</span>
+      </div>
+      <h3 class="font-bold text-white mb-1">Dyson V15 Detect Absolute</h3>
+      <div class="flex items-baseline gap-2 mb-2">
+        <span class="text-2xl font-bold text-straw-green">£329.99</span>
+        <span class="text-sm text-straw-gray line-through">£479.99</span>
+      </div>
+      <p class="price-down text-sm mb-3"><i class="fa-solid fa-arrow-down"></i> £150 drop — Best price ever!</p>
+      <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="block w-full bg-straw-teal text-white text-center py-2 rounded-lg font-semibold hover:bg-teal-600 text-sm">
+        <i class="fa-solid fa-cart-shopping mr-1"></i> View Best Price
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterAll()" class="bg-straw-teal text-white px-4 py-2 rounded-full text-sm font-semibold">All Products</button>
+    <button onclick="filterCat('tech')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">📱 Tech & Electronics</button>
+    <button onclick="filterCat('home')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">🏠 Home Appliances</button>
+    <button onclick="filterCat('fashion')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">👗 Fashion</button>
+    <button onclick="filterCat('gaming')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">🎮 Gaming</button>
+  </div>
+</section>
+
+<!-- 📊 PRICE COMPARISON GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="space-y-5" id="comparisonGrid">
+
+    <!-- PRODUCT 1 → AirPods Pro 2 -->
+    <div class="bg-straw-card rounded-2xl p-5 price-card border border-straw-teal/10" data-cat="tech">
+      <div class="flex flex-col md:flex-row md:items-center gap-5">
+        <div class="text-5xl">🎧</div>
+        <div class="flex-1">
+          <h3 class="text-xl font-bold text-white mb-1">Apple AirPods Pro (2nd Generation)</h3>
+          <p class="text-straw-gray text-sm mb-3">Active Noise Cancellation · Adaptive Audio · USB-C · Personalised Spatial Audio</p>
+
+          <!-- Retailer Prices -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-straw-dark rounded-lg p-3 relative">
+              <span class="best-badge text-white text-xs font-bold px-2 py-0.5 rounded-full absolute -top-2 -right-2">BEST</span>
+              <p class="text-sm text-straw-gray mb-1">Amazon</p>
+              <p class="text-xl font-bold text-straw-green">£189.00</p>
+              <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="block mt-2 bg-straw-green text-white text-center py-1.5 rounded text-sm font-semibold hover:bg-green-600">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">Argos</p>
+              <p class="text-xl font-bold text-white">£199.00</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">Apple Store</p>
+              <p class="text-xl font-bold text-white">£229.00</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+          </div>
+
+          <!-- Price History & Alert -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-straw-mint/10">
+            <div class="flex items-center gap-4 text-sm">
+              <span class="text-straw-gray">📉 Lowest ever: <strong class="text-straw-green">£179.00</strong></span>
+              <span class="text-straw-gray">📈 Highest: <strong class="text-white">£249.00</strong></span>
+            </div>
+            <button onclick="openAlertModal('AirPods Pro 2nd Gen', 179)" class="bg-straw-blue/10 text-straw-blue px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-500/20 transition">
+              <i class="fa-solid fa-bell mr-1"></i> Alert Me
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT 2 → PS5 Slim -->
+    <div class="bg-straw-card rounded-2xl p-5 price-card border border-straw-teal/10" data-cat="gaming">
+      <div class="flex flex-col md:flex-row md:items-center gap-5">
+        <div class="text-5xl">🎮</div>
+        <div class="flex-1">
+          <h3 class="text-xl font-bold text-white mb-1">PlayStation 5 Slim Disc Edition</h3>
+          <p class="text-straw-gray text-sm mb-3">1TB Storage · 4K Gaming · HDR · Includes DualSense Controller</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-straw-dark rounded-lg p-3 relative">
+              <span class="best-badge text-white text-xs font-bold px-2 py-0.5 rounded-full absolute -top-2 -right-2">BEST</span>
+              <p class="text-sm text-straw-gray mb-1">Amazon</p>
+              <p class="text-xl font-bold text-straw-green">£399.00</p>
+              <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="block mt-2 bg-straw-green text-white text-center py-1.5 rounded text-sm font-semibold hover:bg-green-600">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">Currys</p>
+              <p class="text-xl font-bold text-white">£429.00</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">PlayStation Direct</p>
+              <p class="text-xl font-bold text-white">£449.00</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-straw-mint/10">
+            <div class="flex items-center gap-4 text-sm">
+              <span class="text-straw-gray">📉 Lowest ever: <strong class="text-straw-green">£379.00</strong></span>
+              <span class="text-straw-gray">📈 Highest: <strong class="text-white">£479.00</strong></span>
+            </div>
+            <button onclick="openAlertModal('PS5 Slim Disc Edition', 380)" class="bg-straw-blue/10 text-straw-blue px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-500/20 transition">
+              <i class="fa-solid fa-bell mr-1"></i> Alert Me
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT 3 → Samsung Fridge Freezer -->
+    <div class="bg-straw-card rounded-2xl p-5 price-card border border-straw-teal/10" data-cat="home">
+      <div class="flex flex-col md:flex-row md:items-center gap-5">
+        <div class="text-5xl">🧊</div>
+        <div class="flex-1">
+          <h3 class="text-xl font-bold text-white mb-1">Samsung SpaceMax Fridge Freezer</h3>
+          <p class="text-straw-gray text-sm mb-3">445L Total · SpaceMax Technology · All-Around Cooling · Energy Rated E</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-straw-dark rounded-lg p-3 relative">
+              <span class="best-badge text-white text-xs font-bold px-2 py-0.5 rounded-full absolute -top-2 -right-2">BEST</span>
+              <p class="text-sm text-straw-gray mb-1">AO.com</p>
+              <p class="text-xl font-bold text-straw-green">£529.00</p>
+              <a href="#" class="block mt-2 bg-straw-green text-white text-center py-1.5 rounded text-sm font-semibold hover:bg-green-600">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">Currys</p>
+              <p class="text-xl font-bold text-white">£579.00</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">Samsung</p>
+              <p class="text-xl font-bold text-white">£649.00</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-straw-mint/10">
+            <div class="flex items-center gap-4 text-sm">
+              <span class="text-straw-gray">📉 Lowest ever: <strong class="text-straw-green">£499.00</strong></span>
+              <span class="text-straw-gray">📈 Highest: <strong class="text-white">£729.00</strong></span>
+            </div>
+            <button onclick="openAlertModal('Samsung SpaceMax Fridge Freezer', 500)" class="bg-straw-blue/10 text-straw-blue px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-500/20 transition">
+              <i class="fa-solid fa-bell mr-1"></i> Alert Me
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT 4 → Nike Air Max -->
+    <div class="bg-straw-card rounded-2xl p-5 price-card border border-straw-teal/10" data-cat="fashion">
+      <div class="flex flex-col md:flex-row md:items-center gap-5">
+        <div class="text-5xl">👟</div>
+        <div class="flex-1">
+          <h3 class="text-xl font-bold text-white mb-1">Nike Air Max 90 — Men's</h3>
+          <p class="text-straw-gray text-sm mb-3">Iconic Design · Air Cushioning · Leather & Synthetic Upper · Rubber Sole</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-straw-dark rounded-lg p-3 relative">
+              <span class="best-badge text-white text-xs font-bold px-2 py-0.5 rounded-full absolute -top-2 -right-2">BEST</span>
+              <p class="text-sm text-straw-gray mb-1">Nike</p>
+              <p class="text-xl font-bold text-straw-green">£89.99</p>
+              <a href="#" class="block mt-2 bg-straw-green text-white text-center py-1.5 rounded text-sm font-semibold hover:bg-green-600">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">JD Sports</p>
+              <p class="text-xl font-bold text-white">£109.99</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+            <div class="bg-straw-dark rounded-lg p-3">
+              <p class="text-sm text-straw-gray mb-1">Footasylum</p>
+              <p class="text-xl font-bold text-white">£114.99</p>
+              <a href="#" class="block mt-2 bg-straw-card border border-straw-teal/20 text-white text-center py-1.5 rounded text-sm hover:bg-straw-teal/10">
+                Buy →
+              </a>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-straw-mint/10">
+            <div class="flex items-center gap-4 text-sm">
+              <span class="text-straw-gray">📉 Lowest ever: <strong class="text-straw-green">£74.99</strong></span>
+              <span class="text-straw-gray">📈 Highest: <strong class="text-white">£129.99</strong></span>
+            </div>
+            <button onclick="openAlertModal('Nike Air Max 90', 75)" class="bg-straw-blue/10 text-straw-blue px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-500/20 transition">
+              <i class="fa-solid fa-bell mr-1"></i> Alert Me
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-teal/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-teal/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Products
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-teal/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-straw-teal"></i>
+      How It Works — Price Comparison
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-teal/5 border border-straw-teal/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-teal mb-2">💰 How We Help You Save</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>Real-time prices</strong> — updated daily from major UK retailers</li>
+          <li>• <strong>Best price highlighted</strong> — instantly see the cheapest option</li>
+          <li>• <strong>Price history</strong> — see if now is a good time to buy or wait</li>
+          <li>• <strong>Price drop alerts</strong> — get notified when it hits your target price</li>
+          <li>• <strong>Affiliate links support the site</strong> — at no extra cost to you!</li>
+        </ul>
+      </div>
+      <div class="bg-straw-orange/5 border border-straw-orange/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-orange mb-2">⚠️ Important Notes</h4>
+        <ul class="space-y-1.5">
+          <li>• Prices change frequently — always verify on the retailer's site before buying</li>
+          <li>• Availability may differ between retailers — check stock status</li>
+          <li>• Delivery costs may vary — factor in shipping & membership perks (e.g. Amazon Prime)</li>
+          <li>• We don't sell products directly — all purchases happen on the retailer's website</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Price Disclaimer:</strong> Prices shown are correct at time of checking but may have changed. Always confirm the final price, including delivery and VAT, on the retailer's website before purchasing. Affiliate links may be used — we earn a commission at no extra cost to you, which helps keep this service free. © 2026 Price Comparison — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>📊 Price Comparison & Drop Alerts — <span class="text-straw-teal">Shop Smart · Pay Less · Save Money 💸</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('comparisonGrid');
+  const allProducts = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = 'all';
+
+  // Combined filter: search + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    allProducts.forEach(p => {
+      const matchSearch = p.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCat === 'all' || p.dataset.cat === activeCat);
+      p.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  function filterAll() {
+    activeCat = 'all';
+    applyFilters();
+  }
+
+  function filterCat(c) {
+    activeCat = c;
+    applyFilters();
+  }
+
+  function openTrackModal() {
+    alert('🔔 Track a Product: Paste the product link or name, set your target price, and we\'ll alert you when it drops! 📧');
+  }
+
+  function openAlertModal(name, price) {
+    alert(`🔔 Price Alert Set!\n\nProduct: ${name}\nTarget Price: £${price}\n\nWe'll email you the moment it drops below this price! 📧`);
+  }
+</script>
+
+</body>
+</html>

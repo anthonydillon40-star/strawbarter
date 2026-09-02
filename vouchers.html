@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎁 Gift Card & Voucher Exchange — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3498db', purple: '#9b59b6', orange: '#f97316', rose: '#f43f5e'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .voucher-card { transition: all 0.25s ease; }
+    .voucher-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(242,193,78,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(127,232,160,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #7FE8A0; }
+    .sell-badge { background: linear-gradient(135deg, #22c55e, #7FE8A0); }
+    .buy-badge { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+    .expire-badge { background: linear-gradient(135deg, #e84a5f, #f97316); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-gold/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-gold transition">← Back</a>
+      <button onclick="openPostModal()" class="bg-straw-gold text-straw-dark px-3 py-1.5 rounded-full font-bold hover:bg-yellow-400 transition">
+        <i class="fa-solid fa-plus mr-1"></i> Post Voucher
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-gold/10 via-transparent to-straw-orange/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🎁</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Gift Card & Voucher Exchange</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Trade Unused Vouchers · Buy · Sell · Swap — All Direct, Zero Fees</strong><br>
+      Turn unused cards into something you actually want — or grab a bargain! 💳
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6 grid sm:grid-cols-2 gap-3">
+      <input type="text" id="searchInput" placeholder="🔍 Brand: Amazon, Tesco, Marks & Spencer, IKEA..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-gold/20 text-white text-lg">
+      <select id="valueFilter" class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-gold/20 text-white text-lg">
+        <option value="">All Values</option>
+        <option value="10">£10 & under</option>
+        <option value="25">£10–£25</option>
+        <option value="50">£25–£50</option>
+        <option value="100">£50–£100</option>
+        <option value="101">£100+</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-green/20 text-straw-green">✅ 100% Free To List</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">🤝 All Direct</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">🚫 No Fees</span>
+      <span class="tag bg-straw-red/20 text-straw-red">⚠️ Check Expiry</span>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterAll()" class="bg-straw-gold text-straw-dark px-4 py-2 rounded-full text-sm font-bold">All Vouchers</button>
+    <button onclick="filterType('sell')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-green/10 hover:text-straw-green">💰 Selling</button>
+    <button onclick="filterType('buy')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-blue/10 hover:text-straw-blue">🛒 Buying</button>
+    <button onclick="filterType('swap')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-purple/10 hover:text-straw-purple">🔄 Swapping</button>
+    <button onclick="filterCat('retail')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10">🛍️ Retail</button>
+    <button onclick="filterCat('food')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10">🍔 Food & Drink</button>
+    <button onclick="filterCat('entertainment')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10">🎬 Entertainment</button>
+    <button onclick="filterCat('travel')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10">✈️ Travel</button>
+  </div>
+</section>
+
+<!-- 📦 VOUCHERS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="vouchersGrid">
+
+    <!-- SELL 1 → Amazon -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-green/10" data-type="sell" data-cat="retail" data-value="50">
+      <div class="flex justify-between items-start mb-3">
+        <span class="sell-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 SELLING</span>
+        <span class="text-xs text-straw-gray">Manchester · Today</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📦</div>
+      <h3 class="text-xl font-bold text-white mb-1">Amazon.co.uk Gift Card</h3>
+      <p class="text-straw-gray text-sm mb-3">£50.00 balance — unused, code ready. No expiry date.</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-green">£42.00</span>
+        <span class="text-sm text-straw-gray line-through">£50.00</span>
+        <span class="tag bg-straw-green text-white">16% off</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Expiry:</span> <span class="text-straw-green font-semibold">None</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Make Offer
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SWAP 1 → Tesco -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-purple/10" data-type="swap" data-cat="retail" data-value="25">
+      <div class="flex justify-between items-start mb-3">
+        <span class="buy-badge text-white text-xs font-bold px-3 py-1 rounded-full">🔄 SWAPPING</span>
+        <span class="text-xs text-straw-gray">Bolton · 2hrs ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🛒</div>
+      <h3 class="text-xl font-bold text-white mb-1">Tesco Gift Card — £25</h3>
+      <p class="text-straw-gray text-sm mb-3">£25.00 — valid until 2028. Prefer Sainsbury's or Amazon instead.</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-purple">£25</span>
+        <span class="text-sm text-straw-gray">Face Value</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Want in exchange:</span> <span class="text-straw-purple font-semibold">Sainsbury's / Amazon</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-purple text-white py-2 rounded-lg font-semibold text-sm hover:bg-purple-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SELL 2 → M&S -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-green/10" data-type="sell" data-cat="retail" data-value="30">
+      <div class="flex justify-between items-start mb-3">
+        <span class="sell-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 SELLING</span>
+        <span class="text-xs text-straw-gray">Bury · 5hrs ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🏷️</div>
+      <h3 class="text-xl font-bold text-white mb-1">Marks & Spencer — £30</h3>
+      <p class="text-straw-gray text-sm mb-3">£30 gift card — can be used in store or online. Expires 2027.</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-green">£25.00</span>
+        <span class="text-sm text-straw-gray line-through">£30.00</span>
+        <span class="tag bg-straw-green text-white">17% off</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Expiry:</span> <span class="text-straw-green font-semibold">2027</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Make Offer
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- BUY 1 → Costa -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-blue/10" data-type="buy" data-cat="food" data-value="15">
+      <div class="flex justify-between items-start mb-3">
+        <span class="buy-badge text-white text-xs font-bold px-3 py-1 rounded-full">🛒 WANTED</span>
+        <span class="text-xs text-straw-gray">Oldham · 1 day ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">☕</div>
+      <h3 class="text-xl font-bold text-white mb-1">Costa Coffee Card — Any Amount</h3>
+      <p class="text-straw-gray text-sm mb-3">Looking for any unused Costa card. Will pay 90% of face value. Local collection or code online.</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-blue">90%</span>
+        <span class="text-sm text-straw-gray">of face value</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Payment:</span> <span class="text-straw-blue font-semibold">Bank Transfer / Cash</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-600">
+          <i class="fa-solid fa-hand-holding-dollar mr-1"></i> I Have One!
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SELL 3 → Cineworld -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-green/10" data-type="sell" data-cat="entertainment" data-value="40">
+      <div class="flex justify-between items-start mb-3">
+        <span class="sell-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 SELLING</span>
+        <span class="text-xs text-straw-gray">Stockport · 1 day ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🎬</div>
+      <h3 class="text-xl font-bold text-white mb-1">Cineworld — 2 Adult Tickets + Popcorn</h3>
+      <p class="text-straw-gray text-sm mb-3">Valid any day — no restrictions. Expires soon! Perfect weekend treat 🎟️</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-green">£28.00</span>
+        <span class="text-sm text-straw-gray line-through">£40.00</span>
+        <span class="tag bg-straw-green text-white">30% off</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Expiry:</span> <span class="text-straw-red font-semibold">This Month!</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Buy Now
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SWAP 2 → IKEA -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-purple/10" data-type="swap" data-cat="retail" data-value="75">
+      <div class="flex justify-between items-start mb-3">
+        <span class="buy-badge text-white text-xs font-bold px-3 py-1 rounded-full">🔄 SWAPPING</span>
+        <span class="text-xs text-straw-gray">Salford · 2 days ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🪑</div>
+      <h3 class="text-xl font-bold text-white mb-1">IKEA Gift Card — £75</h3>
+      <p class="text-straw-gray text-sm mb-3">£75 balance — valid until 2028. Would swap for John Lewis or Argos voucher of equal value.</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-purple">£75</span>
+        <span class="text-sm text-straw-gray">Face Value</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Looking for:</span> <span class="text-straw-purple font-semibold">John Lewis / Argos</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-purple text-white py-2 rounded-lg font-semibold text-sm hover:bg-purple-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Swap With Me
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SELL 4 → Uber -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-green/10" data-type="sell" data-cat="travel" data-value="20">
+      <div class="flex justify-between items-start mb-3">
+        <span class="sell-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 SELLING</span>
+        <span class="text-xs text-straw-gray">Manchester · 2 days ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🚗</div>
+      <h3 class="text-xl font-bold text-white mb-1">Uber Credit — £20</h3>
+      <p class="text-straw-gray text-sm mb-3">£20 Uber credit — can be used for rides or Uber Eats. No expiry. Code sent instantly.</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-green">£16.00</span>
+        <span class="text-sm text-straw-gray line-through">£20.00</span>
+        <span class="tag bg-straw-green text-white">20% off</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Delivery:</span> <span class="text-straw-green font-semibold">Online Code</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Buy Now
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- BUY 2 → Nando's -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-blue/10" data-type="buy" data-cat="food" data-value="25">
+      <div class="flex justify-between items-start mb-3">
+        <span class="buy-badge text-white text-xs font-bold px-3 py-1 rounded-full">🛒 WANTED</span>
+        <span class="text-xs text-straw-gray">Rochdale · 3 days ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🍗</div>
+      <h3 class="text-xl font-bold text-white mb-1">Nando's Gift Card — £20–£30</h3>
+      <p class="text-straw-gray text-sm mb-3">Looking for a Nando's card for a family meal. Will pay 90% face value. Cash or bank transfer.</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-blue">90%</span>
+        <span class="text-sm text-straw-gray">of face value</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Collection:</span> <span class="text-straw-blue font-semibold">Local or Online</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-600">
+          <i class="fa-solid fa-hand-holding-dollar mr-1"></i> I Can Help!
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SELL 5 → Prezzo -->
+    <div class="bg-straw-card rounded-2xl p-5 voucher-card border border-straw-green/10" data-type="sell" data-cat="food" data-value="50">
+      <div class="flex justify-between items-start mb-3">
+        <span class="sell-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 SELLING</span>
+        <span class="text-xs text-straw-gray">Wigan · 3 days ago</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🍝</div>
+      <h3 class="text-xl font-bold text-white mb-1">Prezzo — £50 Dining Card</h3>
+      <p class="text-straw-gray text-sm mb-3">£50 — valid at all UK Prezzo restaurants. Expires 12 months from issue. Perfect for a date night!</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-3xl font-bold text-straw-green">£40.00</span>
+        <span class="text-sm text-straw-gray line-through">£50.00</span>
+        <span class="tag bg-straw-green text-white">20% off</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Expiry:</span> <span class="text-straw-orange font-semibold">~10 months left</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Buy Now
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-gold/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-gold/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Vouchers
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER — ALL DIRECT, NO PAYMENTS -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-gold/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-shield-halved text-straw-gold"></i>
+      How It Works — Safe & Simple Trading
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-gold/5 border border-straw-gold/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-gold mb-2">🤝 All Direct — Platform Never Handles Payments</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>We are a LISTING BOARD ONLY.</strong> All payments, codes, and cards are exchanged directly between buyer and seller.</li>
+          <li>• <strong>STRAW Barter NEVER holds money, codes, or cards.</strong> All transactions are 100% user-to-user.</li>
+          <li>• <strong>Agree payment & delivery BEFORE sharing code.</strong> Meet in person or confirm payment before sending digital code.</li>
+          <li>• <strong>Check balance & expiry BEFORE completing.</strong> Verify the card is valid and has the correct value immediately.</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-green mb-2">✅ Selling a Voucher</h4>
+          <ul class="space-y-1.5">
+            <li>• Be honest about value, expiry & condition</li>
+            <li>• Keep the code hidden until payment is confirmed</li>
+            <li>• Mark as SOLD once it's gone</li>
+            <li>• Delete your listing — don't reuse codes</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-blue mb-2">🛒 Buying a Voucher</h4>
+          <ul class="space-y-1.5">
+            <li>• Always check balance & expiry first</li>
+            <li>• Meet in a public place for physical cards</li>
+            <li>• For digital: verify code works before paying full amount</li>
+            <li>• Never share personal info beyond what's needed</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bg-straw-red/5 border border-straw-red/20 rounded-xl p-4 mt-4">
+        <h4 class="font-bold text-straw-red mb-2">⚠️ Safety & Scam Warning</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>Never send code before receiving payment</strong> — no exceptions</li>
+          <li>• <strong>Check the balance on the retailer's official site</strong> immediately</li>
+          <li>• If a deal looks too good to be true — it probably is</li>
+          <li>• We cannot refund or recover lost codes — trade at your own risk</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>By using this section:</strong> All voucher trades are entirely between the parties involved. This platform provides listing information only — we do not verify, guarantee, or endorse any gift card or voucher. Always check balance and expiry before completing any trade. Trade safely! 🎁 © 2026 Voucher Exchange — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🎁 Gift Card & Voucher Exchange — <span class="text-straw-gold">Turn Unused Cards Into Something You Want 💛</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('vouchersGrid');
+  const allVouchers = grid.querySelectorAll('div[data-type]');
+
+  let activeType = 'all';
+  let activeCat = 'all';
+  let activeValue = '';
+
+  // Combined filter: search + type + category + value bracket, applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    const sel = document.getElementById('valueFilter').value;
+    // Value brackets: "10" → £0–10, "25" → £10–25, "50" → £25–50, "100" → £50–100, "101" → £100+
+    let vMin = null, vMax = null;
+    if (sel === '10')       { vMin = 0;   vMax = 10; }
+    else if (sel === '25')  { vMin = 10;  vMax = 25; }
+    else if (sel === '50')  { vMin = 25;  vMax = 50; }
+    else if (sel === '100') { vMin = 50;  vMax = 100; }
+    else if (sel === '101') { vMin = 100; vMax = Infinity; }
+    allVouchers.forEach(v => {
+      const matchSearch = v.textContent.toLowerCase().includes(term);
+      const matchType = (activeType === 'all' || v.dataset.type === activeType);
+      const matchCat = (activeCat === 'all' || v.dataset.cat === activeCat);
+      const val = parseInt(v.dataset.value);
+      const matchValue = (vMin === null) || (val >= vMin && val <= vMax);
+      v.style.display = (matchSearch && matchType && matchCat && matchValue) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('valueFilter').addEventListener('change', applyFilters);
+
+  function filterAll() {
+    activeType = 'all';
+    activeCat = 'all';
+    document.getElementById('valueFilter').value = '';
+    applyFilters();
+  }
+
+  function filterType(t) {
+    activeType = t;
+    applyFilters();
+  }
+
+  function filterCat(c) {
+    activeCat = c;
+    applyFilters();
+  }
+
+  function openPostModal() {
+    alert('🎁 Post a Voucher: Tell us the brand, value, expiry, and whether you want to sell, buy, or swap. Listing is FREE. All deals direct — no fees ever!');
+  }
+</script>
+
+</body>
+</html>

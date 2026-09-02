@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🤖 AI Tools Directory — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', orange: '#f97316', pink: '#ec4899',
+              cyan: '#06b6d4', violet: '#7c3aed'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .tool-card { transition: all 0.25s ease; }
+    .tool-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(139,92,246,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(139,92,246,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #8b5cf6; }
+    .free-badge { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .paid-badge { background: linear-gradient(135deg, #f97316, #eab308); }
+    .new-badge { background: linear-gradient(135deg, #3b82f6, #06b6d4); animation: pulse 2s infinite; }
+    .best-badge { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-purple/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-purple transition">← Back</a>
+      <span class="text-xs text-straw-purple hidden sm:inline">
+        <i class="fa-solid fa-rocket"></i> Updated Daily — 200+ Tools
+      </span>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-purple/10 via-transparent to-straw-pink/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🤖</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">AI Tools Directory</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Curated AI Tools · Compare & Find Best · Boost Productivity Instantly</strong><br>
+      Save hours of work — the best AI for every task, all in one place 🚀
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6 grid sm:grid-cols-2 gap-3">
+      <input type="text" id="searchInput" placeholder="🔍 Search: writing, image, code, video, chat..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-purple/20 text-white text-lg">
+      <select id="priceFilter" class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-purple/20 text-white text-lg">
+        <option value="">All Prices</option>
+        <option value="free">🆓 Free / Freemium</option>
+        <option value="paid">💰 Paid — Free Trial</option>
+        <option value="open">📂 Open Source</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-purple/20 text-straw-purple">✅ Curated List</span>
+      <span class="tag bg-straw-green/20 text-straw-green">✅ Free Options</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">✅ Updated Weekly</span>
+      <span class="tag bg-straw-pink/20 text-straw-pink">✅ Affiliate Links</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⚡ TOP CATEGORIES -->
+<section class="max-w-7xl mx-auto px-4 mb-10">
+  <h2 class="text-2xl font-bold text-white mb-5 flex items-center gap-2">
+    <i class="fa-solid fa-bolt text-straw-gold"></i> Popular Categories
+  </h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+    <button onclick="filterCat('all')" class="bg-straw-purple text-white p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🤖</span>
+      <span class="text-sm font-semibold">All Categories</span>
+    </button>
+    <button onclick="filterCat('chat')" class="bg-straw-card hover:bg-straw-purple/10 hover:text-straw-purple p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">💬</span>
+      <span class="text-sm font-semibold">Chatbots</span>
+    </button>
+    <button onclick="filterCat('image')" class="bg-straw-card hover:bg-straw-purple/10 hover:text-straw-purple p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🎨</span>
+      <span class="text-sm font-semibold">Image Gen</span>
+    </button>
+    <button onclick="filterCat('write')" class="bg-straw-card hover:bg-straw-purple/10 hover:text-straw-purple p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">✍️</span>
+      <span class="text-sm font-semibold">Writing</span>
+    </button>
+    <button onclick="filterCat('video')" class="bg-straw-card hover:bg-straw-purple/10 hover:text-straw-purple p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🎬</span>
+      <span class="text-sm font-semibold">Video</span>
+    </button>
+    <button onclick="filterCat('code')" class="bg-straw-card hover:bg-straw-purple/10 hover:text-straw-purple p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">💻</span>
+      <span class="text-sm font-semibold">Coding</span>
+    </button>
+    <button onclick="filterCat('productivity')" class="bg-straw-card hover:bg-straw-purple/10 hover:text-straw-purple p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">⚡</span>
+      <span class="text-sm font-semibold">Productivity</span>
+    </button>
+  </div>
+</section>
+
+<!-- 🤖 AI TOOLS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="toolsGrid">
+
+    <!-- TOOL 1 → ChatGPT -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="chat" data-price="free">
+      <div class="flex justify-between items-start mb-3">
+        <span class="best-badge text-white text-xs font-bold px-3 py-1 rounded-full">🏆 #1 Rated</span>
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 Free Tier</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🤖</div>
+      <h3 class="text-xl font-bold text-white mb-1">ChatGPT</h3>
+      <p class="text-straw-gray text-sm mb-3">The world's most popular AI assistant — write, code, brainstorm, analyse, translate. GPT-4o available!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.8/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-green">Free / £18/mo</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 2 → Midjourney -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="image" data-price="paid">
+      <div class="flex justify-between items-start mb-3">
+        <span class="best-badge text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Images</span>
+        <span class="paid-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 Paid — Free Trial</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🎨</div>
+      <h3 class="text-xl font-bold text-white mb-1">Midjourney</h3>
+      <p class="text-straw-gray text-sm mb-3">Create stunning, photorealistic art & images from text. Industry-leading quality — used by professionals!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.9/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-orange">From £10/mo</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 3 → Claude 3 -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="chat" data-price="free">
+      <div class="flex justify-between items-start mb-3">
+        <span class="new-badge text-white text-xs font-bold px-3 py-1 rounded-full">✨ New</span>
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 Free Tier</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🧠</div>
+      <h3 class="text-xl font-bold text-white mb-1">Claude 3 Opus / Sonnet</h3>
+      <p class="text-straw-gray text-sm mb-3">Handles huge documents — analyse PDFs, books, codebases. Long context window, highly accurate!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.7/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-green">Free / £15/mo</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 4 → Jasper / Copy AI -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="write" data-price="paid">
+      <div class="flex justify-between items-start mb-3">
+        <span class="best-badge text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Writing</span>
+        <span class="paid-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 Free Trial</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">✍️</div>
+      <h3 class="text-xl font-bold text-white mb-1">Jasper — AI Copywriting</h3>
+      <p class="text-straw-gray text-sm mb-3">Marketing copy, blogs, ads, emails, social media. 50+ templates — write 10x faster, brand voice!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.6/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-orange">Free Trial / £39/mo</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 5 → GitHub Copilot -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="code" data-price="paid">
+      <div class="flex justify-between items-start mb-3">
+        <span class="best-badge text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Coding</span>
+        <span class="paid-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 Free for Students</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">💻</div>
+      <h3 class="text-xl font-bold text-white mb-1">GitHub Copilot</h3>
+      <p class="text-straw-gray text-sm mb-3">Your AI pair programmer — suggests code & functions in real-time. Works with all major editors!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.8/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-orange">£8/mo / Free Students</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 6 → Sora / Runway -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="video" data-price="paid">
+      <div class="flex justify-between items-start mb-3">
+        <span class="new-badge text-white text-xs font-bold px-3 py-1 rounded-full">✨ New</span>
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 Free Tier</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🎬</div>
+      <h3 class="text-xl font-bold text-white mb-1">Runway — Gen-2 Video AI</h3>
+      <p class="text-straw-gray text-sm mb-3">Text-to-video, image-to-video, motion tracking, green screen — full AI video studio!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.5/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-green">Free Credits / £12/mo</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 7 → Notion AI -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="productivity" data-price="paid">
+      <div class="flex justify-between items-start mb-3">
+        <span class="best-badge text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Notes</span>
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 Free Tier</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📝</div>
+      <h3 class="text-xl font-bold text-white mb-1">Notion AI</h3>
+      <p class="text-straw-gray text-sm mb-3">Write, summarise, brainstorm, translate — built into your workspace. Notes, docs, projects all in one!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.7/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-green">Free / £8/mo</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 8 → DALL·E 3 -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="image" data-price="free">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 Free with Bing</span>
+        <span class="best-badge text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Great Value</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🖼️</div>
+      <h3 class="text-xl font-bold text-white mb-1">DALL·E 3 — OpenAI</h3>
+      <p class="text-straw-gray text-sm mb-3">Powerful image generation — precise text understanding. Free via Bing Image Creator! Great for beginners.</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.6/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-green">🆓 Free</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+    <!-- TOOL 9 → GrammarlyGO -->
+    <div class="bg-straw-card rounded-2xl p-5 tool-card border border-straw-purple/10" data-cat="write" data-price="free">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 Free Tier</span>
+        <span class="best-badge text-white text-xs font-bold px-3 py-1 rounded-full">🏆 Best Writing</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">✅</div>
+      <h3 class="text-xl font-bold text-white mb-1">GrammarlyGO — AI Writing</h3>
+      <p class="text-straw-gray text-sm mb-3">Fix grammar, rewrite, tone adjust, generate text. Works everywhere — email, docs, social media!</p>
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-straw-gold">★★★★★</span>
+          <span class="text-xs text-straw-gray ml-1">4.8/5</span>
+        </div>
+        <span class="text-sm font-bold text-straw-green">Free / £10/mo</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        Try Now →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-purple/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-purple/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More AI Tools
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-purple/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-straw-purple"></i>
+      How It Works — AI Tools Directory
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-purple/5 border border-straw-purple/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-purple mb-2">💡 How to Choose the Right Tool</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>Start Free First</strong> — almost every tool has a free tier or trial. Test before subscribing!</li>
+          <li>• <strong>Match to Your Need</strong> — image → Midjourney/DALL·E; writing → Claude/Jasper; code → Copilot</li>
+          <li>• <strong>Check Limits</strong> — free tiers often cap daily generations. Upgrade when you hit limits!</li>
+          <li>• <strong>Privacy Matters</strong> — never paste passwords, API keys, or sensitive data into AI tools</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-green mb-2">✅ Free Tools to Start With</h4>
+          <ul class="space-y-1.5">
+            <li>• ChatGPT (free tier)</li>
+            <li>• DALL·E 3 via Bing — 100% free!</li>
+            <li>• Claude 3 Haiku — free at Anthropic</li>
+            <li>• GrammarlyGO — free basic</li>
+            <li>• Google Gemini — free tier</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-orange mb-2">💰 Affiliate Disclosure</h4>
+          <p>When you click through and subscribe to a tool, we may earn a commission — <strong>at no extra cost to you!</strong> This helps us keep this directory updated and free for everyone. Thank you for your support! 💜</p>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Notes:</strong> Prices and features are subject to change. Always verify on the tool's official site before subscribing. Free tiers may have usage limits — check each provider's terms. © 2026 AI Tools Directory — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🤖 AI Tools Directory — <span class="text-straw-purple">Save Time · Boost Productivity · Work Smarter 🚀</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('toolsGrid');
+  const allTools = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = 'all';
+
+  // Combined filter: search + category + price applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    const price = document.getElementById('priceFilter').value;
+    allTools.forEach(t => {
+      const matchSearch = t.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCat === 'all' || t.dataset.cat === activeCat);
+      const matchPrice = (!price || t.dataset.price === price);
+      t.style.display = (matchSearch && matchCat && matchPrice) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('priceFilter').addEventListener('change', applyFilters);
+
+  function filterCat(c) {
+    activeCat = c;
+    applyFilters();
+  }
+</script>
+
+</body>
+</html>
