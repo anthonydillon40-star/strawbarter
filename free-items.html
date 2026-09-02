@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎁 Free Items & Wanted — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3498db', purple: '#9b59b6', orange: '#f97316'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .card-hover { transition: all 0.25s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34,197,94,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select, textarea { background: #0A0C0B; border: 1px solid rgba(127,232,160,0.2); color: white; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #7FE8A0; }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-mint/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-mint transition">← Back</a>
+      <button onclick="openPostModal()" class="bg-straw-green text-white px-3 py-1.5 rounded-full font-semibold hover:bg-straw-green/90 transition">
+        <i class="fa-solid fa-plus mr-1"></i> Post Free Ad
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-green/10 via-transparent to-straw-gold/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🎁</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Free Items & Wanted</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Give Away · Request · Zero Cost — All Direct</strong><br>
+      No money changes hands. Arrange collection directly. Help keep things out of landfill ♻️
+    </p>
+    <div class="max-w-xl mx-auto relative mb-6">
+      <input type="text" id="searchInput" placeholder="🔍 Search free items: furniture, books, plants, tools, boxes..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-mint/20 text-white text-lg">
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-green/20 text-straw-green">✅ 100% Free — No Money</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">🤝 Arrange Direct</span>
+      <span class="tag bg-straw-orange/20 text-straw-orange">♻️ Reduce Waste</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">📍 Local Pickup</span>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterAll()" class="bg-straw-green text-white px-4 py-2 rounded-full text-sm font-semibold">All Items</button>
+    <button onclick="filterType('free')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-green/10 hover:text-straw-green">🎁 Free Stuff</button>
+    <button onclick="filterType('wanted')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-blue/10 hover:text-straw-blue">🙏 Wanted</button>
+    <button onclick="filterCat('furniture')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10">🛋️ Furniture</button>
+    <button onclick="filterCat('electronics')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10">📱 Tech</button>
+    <button onclick="filterCat('garden')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10">🌱 Garden</button>
+    <button onclick="filterCat('books')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10">📚 Books</button>
+    <button onclick="filterCat('household')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10">🏠 Household</button>
+    <button onclick="filterCat('clothing')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10">👕 Clothing</button>
+    <button onclick="filterCat('other')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10">📦 Other</button>
+  </div>
+</section>
+
+<!-- 📦 LISTINGS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="listingsGrid">
+
+    <!-- FREE Item 1 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-green/10" data-type="free" data-cat="furniture">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-green text-white">🎁 FREE</span>
+        <span class="text-xs text-straw-gray">2 hours ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Solid Wood Coffee Table</h3>
+      <p class="text-straw-gray text-sm mb-3">Good condition, a few minor marks. 100cm x 60cm. Need gone this week — moving house.</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Manchester — M24 · <span class="text-straw-green">Collection Only</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Request
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- WANTED 1 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-blue/10" data-type="wanted" data-cat="garden">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-blue text-white">🙏 WANTED</span>
+        <span class="text-xs text-straw-gray">5 hours ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Compost Bins / Planters Wanted</h3>
+      <p class="text-straw-gray text-sm mb-3">Looking for any unwanted compost bins, large plant pots, or raised bed frames. Will collect any distance. Thank you!</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Bolton · <span class="text-straw-blue">Will Collect</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-600">
+          <i class="fa-solid fa-hand-holding-heart mr-1"></i> Offer
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FREE 2 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-green/10" data-type="free" data-cat="books">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-green text-white">🎁 FREE</span>
+        <span class="text-xs text-straw-gray">1 day ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Box of Mixed Books — Fiction & Non-Fiction</h3>
+      <p class="text-straw-gray text-sm mb-3">~40 books — novels, history, gardening, cookery. All clean and dry. Great condition.</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Bury · <span class="text-straw-green">Collection</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Request
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FREE 3 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-green/10" data-type="free" data-cat="electronics">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-green text-white">🎁 FREE</span>
+        <span class="text-xs text-straw-gray">1 day ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Old PC Monitor — Working</h3>
+      <p class="text-straw-gray text-sm mb-3">22-inch monitor — works perfectly, just upgraded. VGA & HDMI ports. No stand but easy to wall-mount.</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Oldham · <span class="text-straw-green">Collection</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Request
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- WANTED 2 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-blue/10" data-type="wanted" data-cat="household">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-blue text-white">🙏 WANTED</span>
+        <span class="text-xs text-straw-gray">2 days ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Moving Boxes — Any Size</h3>
+      <p class="text-straw-gray text-sm mb-3">Moving house next month — any unwanted cardboard boxes gratefully received! Will collect locally.</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Stockport · <span class="text-straw-blue">Will Collect</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-600">
+          <i class="fa-solid fa-hand-holding-heart mr-1"></i> Offer
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FREE 4 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-green/10" data-type="free" data-cat="clothing">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-green text-white">🎁 FREE</span>
+        <span class="text-xs text-straw-gray">3 days ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Bag of Men's Clothes — Size L</h3>
+      <p class="text-straw-gray text-sm mb-3">Jumpers, t-shirts, jeans — all good clean condition. Brands include Next, M&S, Uniqlo. Bag ready to go.</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Manchester City Centre · <span class="text-straw-green">Collection</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Request
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FREE 5 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-green/10" data-type="free" data-cat="garden">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-green text-white">🎁 FREE</span>
+        <span class="text-xs text-straw-gray">3 days ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Large Terracotta Plant Pots x4</h3>
+      <p class="text-straw-gray text-sm mb-3">Various sizes — 30cm down to 15cm. Some weathered but all solid. Need gone before winter.</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Rochdale · <span class="text-straw-green">Collection — Heavy!</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Request
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- WANTED 3 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-blue/10" data-type="wanted" data-cat="furniture">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-blue text-white">🙏 WANTED</span>
+        <span class="text-xs text-straw-gray">4 days ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Single Bed Frame Needed</h3>
+      <p class="text-straw-gray text-sm mb-3">Looking for a simple single bed frame for spare room. Doesn't need to be perfect — just sturdy. Can collect local.</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Salford · <span class="text-straw-blue">Will Collect</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-600">
+          <i class="fa-solid fa-hand-holding-heart mr-1"></i> Offer
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FREE 6 -->
+    <div class="bg-straw-card rounded-2xl p-5 card-hover border border-straw-green/10" data-type="free" data-cat="other">
+      <div class="flex justify-between items-start mb-3">
+        <span class="tag bg-straw-green text-white">🎁 FREE</span>
+        <span class="text-xs text-straw-gray">5 days ago</span>
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Assorted Jigsaw Puzzles</h3>
+      <p class="text-straw-gray text-sm mb-3">6 puzzles — 500 & 1000 pieces. All complete and boxed. Great for rainy days!</p>
+      <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+        <i class="fa-solid fa-location-dot text-straw-red"></i> Wigan · <span class="text-straw-green">Collection</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-green text-white py-2 rounded-lg font-semibold text-sm hover:bg-green-600">
+          <i class="fa-solid fa-envelope mr-1"></i> Request
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-mint/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-mint/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Listings
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER — ALL DIRECT, NO PAYMENTS -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-green/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-shield-halved text-straw-green"></i>
+      How It Works — 100% Free & Direct
+    </h3>
+    <div class="grid md:grid-cols-2 gap-6 text-sm text-straw-gray">
+      <div class="md:col-span-2 bg-straw-green/5 border border-straw-green/20 rounded-xl p-4 mb-2">
+        <h4 class="font-bold text-straw-green mb-2">🔑 No Money — Ever</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>This section is for FREE items ONLY.</strong> No payment, no money, no fees — ever.</li>
+          <li>• <strong>All arrangements are direct between users.</strong> Message → agree → collect — entirely yourselves.</li>
+          <li>• <strong>Platform NEVER handles payments or items.</strong> We are a listing board only — nothing changes hands through us.</li>
+          <li>• <strong>Always inspect items in person before taking them.</strong> Meet in daylight, check condition, transport yourself.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-straw-mint mb-2">✅ Giving Items</h4>
+        <ul class="space-y-1.5">
+          <li>• Items must be legal, safe, and non-hazardous</li>
+          <li>• Be honest about condition — no surprises</li>
+          <li>• Arrange collection at a safe time/place</li>
+          <li>• Remove your ad once item is gone</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-straw-blue mb-2">🙏 Requesting Items</h4>
+        <ul class="space-y-1.5">
+          <li>• Be polite and prompt — reply quickly</li>
+          <li>• Arrange collection clearly — don't no-show</li>
+          <li>• Bring bags/transport — come prepared</li>
+          <li>• Say thank you — kindness goes a long way 💚</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>By using this section:</strong> All items and arrangements are entirely between the giver and receiver. This platform provides listing information only — we do not inspect, verify, or guarantee items. Always meet safely, inspect before collecting, and respect others. ♻️ Help keep useful things out of landfill! © 2026 Free Items Board — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🎁 Free Items & Wanted — <span class="text-straw-green">Give More · Want Less · Reuse Everything ♻️</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('listingsGrid');
+  const allCards = grid.querySelectorAll('div[data-type]');
+
+  let activeType = 'all';
+  let activeCat = 'all';
+
+  // Combined filter: search + type + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    allCards.forEach(card => {
+      const matchSearch = card.textContent.toLowerCase().includes(term);
+      const matchType = (activeType === 'all' || card.dataset.type === activeType);
+      const matchCat = (activeCat === 'all' || card.dataset.cat === activeCat);
+      card.style.display = (matchSearch && matchType && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  // Show all
+  function filterAll() {
+    activeType = 'all';
+    activeCat = 'all';
+    applyFilters();
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  }
+
+  // Filter by type (free / wanted)
+  function filterType(type) {
+    activeType = type;
+    applyFilters();
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  }
+
+  // Filter by category
+  function filterCat(cat) {
+    activeCat = cat;
+    applyFilters();
+  }
+
+  // Post Ad — direct submission
+  function openPostModal() {
+    alert('📋 Post a Free Listing: Send us your item title, description, location, and photos. Listing is FREE. No money — ever. All deals direct.');
+  }
+</script>
+
+</body>
+</html>
