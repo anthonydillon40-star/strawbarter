@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🖨️ Printables & Templates Hub — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', pink: '#ec4899', teal: '#14b8a6',
+              coral: '#f97316', lavender: '#a78bfa'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .print-card { transition: all 0.25s ease; }
+    .print-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(236,72,153,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(236,72,153,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #ec4899; }
+    .free-badge { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .pdf-badge { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+    .new-badge { background: linear-gradient(135deg, #ec4899, #f43f5e); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    .download-btn:active { transform: scale(0.95); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-pink/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-pink transition">← Back</a>
+      <span class="text-xs text-straw-pink hidden sm:inline">
+        <i class="fa-solid fa-download"></i> 100% Free — Instant PDF Downloads
+      </span>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-pink/10 via-transparent to-straw-purple/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🖨️</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Printables & Templates Hub</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Instant Downloads · Ready-to-Print · Organise & Create — All Free</strong><br>
+      Planners, checklists, budgets, logs — click, print, use right now 📄✨
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6 grid sm:grid-cols-2 gap-3">
+      <input type="text" id="searchInput" placeholder="🔍 Search: budget, planner, checklist, meal plan, invoice..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-pink/20 text-white text-lg">
+      <select id="catFilter" class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-pink/20 text-white text-lg">
+        <option value="">All Categories</option>
+        <option value="planner">📅 Planners & Calendars</option>
+        <option value="budget">💰 Budget & Finance</option>
+        <option value="checklist">✅ Checklists & To-Do</option>
+        <option value="home">🏠 Home & Household</option>
+        <option value="business">💼 Business & Work</option>
+        <option value="kids">👶 Kids & Education</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-pink/20 text-straw-pink">✅ 100% Free</span>
+      <span class="tag bg-straw-green/20 text-straw-green">✅ Instant PDF</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">✅ A4 & US Letter</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">✅ No Sign-Up</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⚡ POPULAR CATEGORIES -->
+<section class="max-w-7xl mx-auto px-4 mb-10">
+  <h2 class="text-2xl font-bold text-white mb-5 flex items-center gap-2">
+    <i class="fa-solid fa-bolt text-straw-gold"></i> Popular Categories
+  </h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+    <button onclick="filterCat('all')" class="bg-straw-pink text-white p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🖨️</span>
+      <span class="text-sm font-semibold">All Categories</span>
+    </button>
+    <button onclick="filterCat('planner')" class="bg-straw-card hover:bg-straw-pink/10 hover:text-straw-pink p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">📅</span>
+      <span class="text-sm font-semibold">Planners</span>
+    </button>
+    <button onclick="filterCat('budget')" class="bg-straw-card hover:bg-straw-pink/10 hover:text-straw-pink p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">💰</span>
+      <span class="text-sm font-semibold">Budget</span>
+    </button>
+    <button onclick="filterCat('checklist')" class="bg-straw-card hover:bg-straw-pink/10 hover:text-straw-pink p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">✅</span>
+      <span class="text-sm font-semibold">Checklists</span>
+    </button>
+    <button onclick="filterCat('home')" class="bg-straw-card hover:bg-straw-pink/10 hover:text-straw-pink p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🏠</span>
+      <span class="text-sm font-semibold">Home</span>
+    </button>
+    <button onclick="filterCat('business')" class="bg-straw-card hover:bg-straw-pink/10 hover:text-straw-pink p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">💼</span>
+      <span class="text-sm font-semibold">Business</span>
+    </button>
+    <button onclick="filterCat('kids')" class="bg-straw-card hover:bg-straw-pink/10 hover:text-straw-pink p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">👶</span>
+      <span class="text-sm font-semibold">Kids</span>
+    </button>
+  </div>
+</section>
+
+<!-- 📄 PRINTABLES GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="printsGrid">
+
+    <!-- PRINT 1 → Weekly Budget Planner -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="budget">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">💰</div>
+      <h3 class="text-xl font-bold text-white mb-1">Weekly Budget Planner</h3>
+      <p class="text-straw-gray text-sm mb-3">Income, bills, savings, debt tracker — clear layout, A4 & US Letter. Take control of your money!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 2 Pages</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('weekly-budget-planner')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 2 → Daily Planner -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="planner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📅</div>
+      <h3 class="text-xl font-bold text-white mb-1">Daily Planner — Time Blocking</h3>
+      <p class="text-straw-gray text-sm mb-3">Hourly schedule, top 3 priorities, gratitude, water intake, notes. Perfect for productivity!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 1 Page</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('daily-planner')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 3 → Meal Plan + Grocery List -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="home">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🍽️</div>
+      <h3 class="text-xl font-bold text-white mb-1">Weekly Meal Plan + Grocery List</h3>
+      <p class="text-straw-gray text-sm mb-3">7-day meal planner + categorized shopping list. Save time & money — no more food waste!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 2 Pages</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('meal-plan-grocery')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 4 → Cleaning Schedule -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="checklist">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🧹</div>
+      <h3 class="text-xl font-bold text-white mb-1">House Cleaning Schedule</h3>
+      <p class="text-straw-gray text-sm mb-3">Daily, weekly, monthly, seasonal tasks — room-by-room breakdown. Keep your home tidy easily!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 2 Pages</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('cleaning-schedule')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 5 → Invoice Template -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="business">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF + Word</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🧾</div>
+      <h3 class="text-xl font-bold text-white mb-1">Professional Invoice Template</h3>
+      <p class="text-straw-gray text-sm mb-3">Clean, modern design — logo, itemized list, tax, payment terms. Ready to customize & send!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 1 Page</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('invoice-template')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 6 → Kids Chore Chart -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="kids">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">⭐</div>
+      <h3 class="text-xl font-bold text-white mb-1">Kids Chore & Reward Chart</h3>
+      <p class="text-straw-gray text-sm mb-3">Daily tasks, checkboxes, reward system — fun, colourful design. Great for ages 4–12!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 1 Page</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('chore-chart')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 7 → Password Organizer -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="checklist">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🔐</div>
+      <h3 class="text-xl font-bold text-white mb-1">Password & Login Organizer</h3>
+      <p class="text-straw-gray text-sm mb-3">Website, username, password, hint — 40+ entries. Keep offline backup safe & organized!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 2 Pages</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('password-organizer')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 8 → Monthly Bill Tracker -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="budget">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📊</div>
+      <h3 class="text-xl font-bold text-white mb-1">Monthly Bill Payment Tracker</h3>
+      <p class="text-straw-gray text-sm mb-3">Due dates, amounts, paid status, payment method — never miss a payment or late fee again!</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 1 Page</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('bill-tracker')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+    <!-- PRINT 9 → Goal Tracker -->
+    <div class="bg-straw-card rounded-2xl p-5 print-card border border-straw-pink/10" data-cat="planner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="pdf-badge text-white text-xs font-bold px-3 py-1 rounded-full">📄 PDF</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🎯</div>
+      <h3 class="text-xl font-bold text-white mb-1">Yearly Goal & Habit Tracker</h3>
+      <p class="text-straw-gray text-sm mb-3">SMART goals, action steps, monthly habit tracker, progress review. Turn dreams into done! 💪</p>
+      <div class="flex items-center gap-2 mb-4 text-xs text-straw-gray">
+        <span>📄 3 Pages</span>
+        <span>•</span>
+        <span>📐 A4 / Letter</span>
+      </div>
+      <button onclick="downloadFile('goal-tracker')" class="download-btn block w-full bg-straw-pink text-white text-center py-2 rounded-lg font-semibold hover:bg-pink-600 text-sm">
+        <i class="fa-solid fa-download mr-1"></i> Download Free
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-pink/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-pink/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Printables (500+ Total)
+    </button>
+  </div>
+</section>
+
+<!-- 💡 INFO SECTION -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-pink/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-straw-pink"></i>
+      How It Works — Instant Downloads
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-pink/5 border border-straw-pink/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-pink mb-2">✅ 3 Simple Steps</h4>
+        <ol class="space-y-1.5 list-decimal pl-5">
+          <li><strong>Click Download</strong> — no sign-up, no email required</li>
+          <li><strong>Open PDF</strong> — works on phone, tablet, laptop</li>
+          <li><strong>Print or Fill In</strong> — print at home or write directly on screen!</li>
+        </ol>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-green mb-2">💡 Printing Tips</h4>
+          <ul class="space-y-1.5">
+            <li>• Select <strong>Fit to Page</strong> in printer settings</li>
+            <li>• Use A4 paper for best results</li>
+            <li>• Print on cardstock for durability</li>
+            <li>• Save paper — print 2 pages per sheet</li>
+            <li>• Laminate & use dry-erase for reuse!</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-purple mb-2">📂 Coming Soon</h4>
+          <ul class="space-y-1.5">
+            <li>• Editable Canva templates — customize colours!</li>
+            <li>• Digital versions for GoodNotes / Notability</li>
+            <li>• Premium bundle packs — all 500 for £9</li>
+            <li>• Custom requests — suggest what you need!</li>
+            <li>• Share & earn — refer friends, get premium free</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bg-straw-teal/5 border border-straw-teal/20 rounded-xl p-4 mt-4">
+        <h4 class="font-bold text-straw-teal mb-2">💌 Share & Support</h4>
+        <p>Found these useful? Share with friends & on Pinterest — it helps us keep creating more free printables! 📌 Affiliate links to recommended paper, planners, and tools may earn a small commission — at no extra cost to you. Thank you for supporting the site! 💛</p>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Terms:</strong> All printables are for personal, non-commercial use only. You may not resell, redistribute, or upload to other sites. For commercial use, please contact us. © 2026 Printables & Templates Hub — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🖨️ Printables & Templates Hub — <span class="text-straw-pink">Instant Downloads · 100% Free · Organise Your Life ✨</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('printsGrid');
+  const allPrints = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = '';
+
+  // Simulate download function
+  function downloadFile(filename) {
+    alert(`✅ Download Started!\n\n📄 File: ${filename}.pdf\n\n📁 Saving to your Downloads folder...\n\nThank you for using STRAW Barter! 💛\n\n✨ 500+ more printables coming soon!`);
+  }
+
+  // Combined filter: search + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    allPrints.forEach(p => {
+      const matchSearch = p.textContent.toLowerCase().includes(term);
+      const matchCat = (!activeCat || p.dataset.cat === activeCat);
+      p.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  document.getElementById('catFilter').addEventListener('change', e => {
+    activeCat = e.target.value;
+    applyFilters();
+  });
+
+  function filterCat(c) {
+    activeCat = (c === 'all') ? '' : c;
+    document.getElementById('catFilter').value = activeCat;
+    applyFilters();
+    if (c !== 'all') {
+      window.scrollTo({ top: grid.offsetTop - 80, behavior: 'smooth' });
+    }
+  }
+</script>
+
+</body>
+</html>
