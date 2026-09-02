@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🤝 Skill Swap & Service Exchange — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3498db', purple: '#9b59b6', orange: '#f97316', teal: '#14b8a6'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .skill-card { transition: all 0.25s ease; }
+    .skill-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(20,184,166,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select, textarea { background: #0A0C0B; border: 1px solid rgba(127,232,160,0.2); color: white; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #7FE8A0; }
+    .skill-badge { background: linear-gradient(135deg, #14b8a6, #22c55e); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-teal/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-teal transition">← Back</a>
+      <button onclick="openPostModal()" class="bg-straw-teal text-white px-3 py-1.5 rounded-full font-semibold hover:bg-teal-600 transition">
+        <i class="fa-solid fa-plus mr-1"></i> Offer a Skill
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-teal/10 via-transparent to-straw-green/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🤝</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Skill Swap & Service Exchange</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Trade What You Can Do · Get What You Need — No Money Changes Hands</strong><br>
+      Skills for skills · Time for help · All arranged directly — fair, local, community-first 💚
+    </p>
+    <div class="max-w-xl mx-auto relative mb-6">
+      <input type="text" id="searchInput" placeholder="🔍 Search: plumbing, gardening, design, tutoring, cooking, web help..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-teal/20 text-white text-lg">
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-teal/20 text-straw-teal">✅ Zero Cash — Skills Only</span>
+      <span class="tag bg-straw-green/20 text-straw-green">🤝 All Direct</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">⏰ Time-Based Fairness</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">📍 Local First</span>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterAll()" class="bg-straw-teal text-white px-4 py-2 rounded-full text-sm font-semibold">All Skills</button>
+    <button onclick="filterCat('home')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">🏠 Home & DIY</button>
+    <button onclick="filterCat('garden')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">🌱 Garden & Outdoor</button>
+    <button onclick="filterCat('tech')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">💻 Tech & Digital</button>
+    <button onclick="filterCat('creative')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">🎨 Creative & Arts</button>
+    <button onclick="filterCat('care')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">❤️ Care & Wellness</button>
+    <button onclick="filterCat('learning')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">📚 Learning & Tutoring</button>
+    <button onclick="filterCat('other')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-teal/10 hover:text-straw-teal">🛠️ Other</button>
+  </div>
+</section>
+
+<!-- 📦 SKILLS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="skillsGrid">
+
+    <!-- SKILL 1 → Home/DIY -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="home">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Manchester · 2hrs ago</span>
+      </div>
+      <div class="text-4xl mb-3">🔧</div>
+      <h3 class="text-xl font-bold text-white mb-2">General Handyman & Flat-Pack Assembly</h3>
+      <p class="text-straw-gray text-sm mb-3">I can build furniture, fix shelves, replace fixtures, small painting jobs, basic carpentry. 2hrs minimum. Reliable & tidy!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">Basic plumbing help / Gardening work / Tech help</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 2 → Garden -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="garden">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Bolton · 5hrs ago</span>
+      </div>
+      <div class="text-4xl mb-3">🌿</div>
+      <h3 class="text-xl font-bold text-white mb-2">Vegetable Gardening & Plot Planning</h3>
+      <p class="text-straw-gray text-sm mb-3">Experienced grower — help with soil prep, sowing, planting plans, crop rotation, composting, pruning fruit bushes. Happy to teach!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">Web design / Basic DIY / Car maintenance help</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 3 → Tech -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="tech">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Bury · 1 day ago</span>
+      </div>
+      <div class="text-4xl mb-3">💻</div>
+      <h3 class="text-xl font-bold text-white mb-2">Laptop & PC Setup / Virus Removal</h3>
+      <p class="text-straw-gray text-sm mb-3">Speed up your computer, remove bloatware, set up accounts, fix basic issues, advise on buying new kit. Patient teacher — all ages welcome!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">Cooking / Baking / Gardening help / Furniture repair</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 4 → Creative -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="creative">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Oldham · 1 day ago</span>
+      </div>
+      <div class="text-4xl mb-3">🎨</div>
+      <h3 class="text-xl font-bold text-white mb-2">Graphic Design — Logos, Flyers, Social Media</h3>
+      <p class="text-straw-gray text-sm mb-3">Clean, modern design for small businesses or personal projects. Digital files only — ready for print or web. 2–3 day turnaround.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">House painting / Decorating / DIY / General handyman</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 5 → Learning -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="learning">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Stockport · 2 days ago</span>
+      </div>
+      <div class="text-4xl mb-3">📐</div>
+      <h3 class="text-xl font-bold text-white mb-2">Maths Tutoring — Primary & Secondary</h3>
+      <p class="text-straw-gray text-sm mb-3">Friendly, patient tutor. KS1–KS4. Homework help, exam prep, confidence building. Can do online or in-person locally — 1hr sessions.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">French conversation / Gardening help / IT support</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 6 → Care -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="care">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Salford · 2 days ago</span>
+      </div>
+      <div class="text-4xl mb-3">🐕</div>
+      <h3 class="text-xl font-bold text-white mb-2">Dog Walking & Pet Sitting</h3>
+      <p class="text-straw-gray text-sm mb-3">Reliable animal lover — 30–45min walks, daily visits, overnight sitting. Experienced with all sizes and temperaments. Fully insured & references available.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">Garden maintenance / Painting / Small DIY jobs</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 7 → Home -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="home">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Manchester · 3 days ago</span>
+      </div>
+      <div class="text-4xl mb-3">🧵</div>
+      <h3 class="text-xl font-bold text-white mb-2">Sewing, Alterations & Repairs</h3>
+      <p class="text-straw-gray text-sm mb-3">Hemming, taking in/letting out, zip replacements, button repairs, simple curtains/cushions. Small mends welcome — give your clothes a second life!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">Tech help / Garden digging / Painting rooms</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 8 → Other -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="other">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Rochdale · 4 days ago</span>
+      </div>
+      <div class="text-4xl mb-3">🚗</div>
+      <h3 class="text-xl font-bold text-white mb-2">Basic Car Maintenance & Servicing</h3>
+      <p class="text-straw-gray text-sm mb-3">Oil/filter changes, brake checks, bulb replacements, battery testing, general checks. I bring my own tools — driveway space needed. No engine rebuilds!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">Accounting / Bookkeeping / Admin help</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- SKILL 9 → Creative -->
+    <div class="bg-straw-card rounded-2xl p-5 skill-card border border-straw-teal/10" data-cat="creative">
+      <div class="flex justify-between items-start mb-3">
+        <span class="skill-badge text-white text-xs font-bold px-3 py-1 rounded-full">OFFERING</span>
+        <span class="text-xs text-straw-gray">Wigan · 5 days ago</span>
+      </div>
+      <div class="text-4xl mb-3">📸</div>
+      <h3 class="text-xl font-bold text-white mb-2">Photography — Portraits, Events, Products</h3>
+      <p class="text-straw-gray text-sm mb-3">Natural light portraits, small event coverage, product shots for makers/businesses. Digital images provided — no prints unless agreed. 1–2hr sessions.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4">
+        <span class="text-xs text-straw-gray">🔄 Looking for in exchange:</span>
+        <p class="text-straw-green text-sm mt-1">Web coding / DIY / Garden landscaping / Carpentry</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="flex-1 bg-straw-teal text-white py-2 rounded-lg font-semibold text-sm hover:bg-teal-600">
+          <i class="fa-solid fa-handshake mr-1"></i> Propose Swap
+        </button>
+        <button class="bg-straw-dark border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-teal/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-teal/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Skills
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER — ALL DIRECT, NO PAYMENTS -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-teal/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-shield-halved text-straw-teal"></i>
+      How It Works — Skill Swap Rules
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-teal/5 border border-straw-teal/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-teal mb-2">🤝 Fair Swap — No Money, Ever</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>This is a SKILLS-ONLY exchange.</strong> No cash, no payments, no fees — ever.</li>
+          <li>• <strong>All arrangements are direct between users.</strong> Message → agree → swap — entirely between yourselves.</li>
+          <li>• <strong>Time is the best currency.</strong> Aim for roughly equal time/effort on both sides — be fair 💚</li>
+          <li>• <strong>Platform NEVER handles payments or services.</strong> We are a listing board only — all work is agreed & delivered directly.</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-mint mb-2">✅ Offering Your Skill</h4>
+          <ul class="space-y-1.5">
+            <li>• Be clear about what you CAN & CAN'T do</li>
+            <li>• State experience level & location</li>
+            <li>• Be realistic about timeframes</li>
+            <li>• Update when your skill is no longer available</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-blue mb-2">🤝 Requesting a Swap</h4>
+          <ul class="space-y-1.5">
+            <li>• Be polite & prompt — reply quickly</li>
+            <li>• Offer something fair in return — match effort</li>
+            <li>• Agree scope, time & location BEFORE starting</li>
+            <li>• Say thank you — good vibes only ✨</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bg-straw-gold/5 border border-straw-gold/20 rounded-xl p-4 mt-4">
+        <h4 class="font-bold text-straw-gold mb-2">⚠️ Safety & Best Practice</h4>
+        <ul class="space-y-1.5">
+          <li>• Meet in public first if possible — daylight, safe location</li>
+          <li>• Agree all details clearly before any work starts</li>
+          <li>• Be honest about skills — don't overpromise</li>
+          <li>• If in doubt, trust your gut — no obligation to swap</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>By using this section:</strong> All skill swaps and arrangements are entirely between the two parties. This platform provides listing information only — we do not inspect, verify, or guarantee work, safety, or outcomes. Always meet safely, agree terms upfront, and respect each other's time and abilities. Build community, share skills, help each other grow! 💚 © 2026 Skill Swap — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🤝 Skill Swap & Service Exchange — <span class="text-straw-teal">Share What You Know · Get What You Need · Community First 💚</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('skillsGrid');
+  const allSkills = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = 'all';
+
+  // Combined filter: search + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    allSkills.forEach(skill => {
+      const matchSearch = skill.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCat === 'all' || skill.dataset.cat === activeCat);
+      skill.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  // Show all
+  function filterAll() {
+    activeCat = 'all';
+    applyFilters();
+  }
+
+  // Filter by category
+  function filterCat(cat) {
+    activeCat = cat;
+    applyFilters();
+  }
+
+  // Post Skill
+  function openPostModal() {
+    alert('📋 Post a Skill Listing: Tell us what you can do, what you\'d like in return, your location, and availability. Listing is FREE. No money — skills only!');
+  }
+</script>
+
+</body>
+</html>
