@@ -531,11 +531,43 @@ function toggleDropdown(id, e) {
   menu.classList.toggle('open');
 }
 
-// Close dropdown when clicking outside
+// Close dropdown when clicking outside; close mobile menu when clicking outside header
 document.addEventListener('click', (e) => {
   document.querySelectorAll('.dropdown-menu').forEach(menu => {
     if (!menu.parentElement.contains(e.target)) menu.classList.remove('open');
   });
+  const mobileMenu = document.getElementById('mobileMenu');
+  const header = document.querySelector('header');
+  if (mobileMenu && !mobileMenu.classList.contains('hidden') && header && !header.contains(e.target)) {
+    mobileMenu.classList.add('hidden');
+  }
+});
+
+// Close menus when a nav link is clicked, and always scroll to the target
+// (fixes links appearing "dead" when the menu stays open over the section,
+// or when the link points to the section already in the URL hash)
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    const href = link.getAttribute('href');
+    document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('open'));
+    document.getElementById('mobileMenu').classList.add('hidden');
+    if (href && href.length > 1) {
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+        try { history.replaceState(null, '', href); } catch (err) {}
+      }
+    }
+  });
+});
+
+// ESC closes dropdown and mobile menu
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('open'));
+    document.getElementById('mobileMenu').classList.add('hidden');
+  }
 });
 
 // Mobile Menu
