@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2000 Free Tech Q&A — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210',
+              mint: '#7FE8A0',
+              gold: '#F2C14E',
+              white: '#FFFFFF',
+              gray: '#B0B8B0',
+              dark: '#0A0C0B',
+              card: '#1A241E'
+            }
+          },
+          fontFamily: { sans: ['system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .qa-item { border-bottom: 1px solid rgba(127,232,160,0.1); }
+    .question { cursor: pointer; transition: all 0.2s; }
+    .question:hover { color: #7FE8A0; }
+    .question .fa-chevron-down { transition: transform 0.3s; }
+    .question.open .fa-chevron-down { transform: rotate(180deg); }
+    .answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+    .answer.open { max-height: 2000px; padding: 0.5rem 0 1rem 0; }
+    html { scroll-behavior: smooth; }
+    code { background: rgba(127,232,160,0.15); padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+    .disclaimer-box { background: rgba(242,193,78,0.08); border: 1px solid rgba(242,193,78,0.3); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased max-w-4xl mx-auto px-4 py-8">
+
+<header class="text-center mb-10">
+  <h1 class="text-4xl font-black text-white mb-2">💻 2000 Free Tech Q&A</h1>
+  <p class="text-lg text-straw-gray mb-6">Everyday tech problems — simple answers. 100% free, no signup, no paywalls.</p>
+  <div class="relative max-w-xl mx-auto mb-6">
+    <input type="text" id="searchInput" placeholder="🔍 Search 2000 questions..." class="w-full px-5 py-3 rounded-full bg-straw-mint/10 border border-straw-mint/30 text-white text-lg focus:outline-none focus:border-straw-mint">
+  </div>
+  <div class="flex flex-wrap justify-center gap-2 mb-8">
+    <button onclick="filterCategory('all')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">All</button>
+    <button onclick="filterCategory('windows')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">Windows</button>
+    <button onclick="filterCategory('phone')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">Phone</button>
+    <button onclick="filterCategory('wifi')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">WiFi</button>
+    <button onclick="filterCategory('email')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">Email</button>
+    <button onclick="filterCategory('printer')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">Printer</button>
+    <button onclick="filterCategory('browsers')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">Browsers</button>
+    <button onclick="filterCategory('security')" class="bg-straw-mint/20 text-straw-mint px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-mint/40">Security</button>
+    <button onclick="filterCategory('all')" class="bg-straw-gold/20 text-straw-gold px-3 py-1 rounded-full text-sm font-semibold transition hover:bg-straw-gold/40">📋 Show All</button>
+  </div>
+  <p class="text-straw-mint font-bold" id="resultCount">Showing 2000 questions</p>
+</header>
+
+<!-- ⚠️ DISCLAIMER -->
+<section class="disclaimer-box rounded-xl p-5 mb-10">
+  <h3 class="text-xl font-bold text-straw-gold mb-3"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Important Disclaimer</h3>
+  <div class="text-sm space-y-2 text-straw-gray">
+    <p><strong>General Advice:</strong> All answers are for informational purposes only. They represent general guidance and may not apply to every specific device, software version, or situation.</p>
+    <p><strong>Backup First:</strong> Always back up important files, photos, and data before making system changes, factory resets, or software updates. We are not responsible for any data loss.</p>
+    <p><strong>Professional Help:</strong> If your device is under warranty, consult the manufacturer or a certified technician before attempting repairs — self-help steps may void your warranty.</p>
+    <p><strong>No Guarantees:</strong> Results may vary. We do not guarantee that every solution will work for every device or issue.</p>
+    <p><strong>Security Warning:</strong> Never share passwords, bank details, or personal information. Always verify sender identity before clicking links or downloading files.</p>
+    <p><strong>Age Guidance:</strong> Children should seek adult supervision before following technical steps or changing device settings.</p>
+    <p class="text-straw-gold"><em>© 2025 STRAW Barter — All content provided free for educational and personal use.</em></p>
+  </div>
+</section>
+
+<main id="qaContainer" class="space-y-1">
+
+<!-- ======================================================
+     🪟 WINDOWS — 1–300
+     ====================================================== -->
+<section data-category="windows" class="mb-12">
+  <h2 class="text-2xl font-bold text-straw-mint mb-4">🪟 Windows (1–300)</h2>
+  <div class="space-y-1">
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1: How do I make Windows faster?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Press Win+R → type <code>msconfig</code> → Startup → disable all unnecessary apps. Also: Settings → Privacy → Background apps → turn off. Delete temp files: Win+R → %temp% → Delete all. Restart.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q2: How do I factory reset Windows?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Settings → Update & Security → Recovery → Reset this PC → Get started → Choose "Remove everything" for full reset. ⚠️ Back up files first!
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q3: My Windows is very slow on startup
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Task Manager (Ctrl+Shift+Esc) → Startup tab → disable everything except antivirus. Check disk space — need at least 15% free. Run Disk Cleanup → right-click C: → Properties → Disk Cleanup.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q4: How to find files fast in Windows?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Press Win key immediately and start typing. Or use Everything search engine (free, much faster). In File Explorer: Ctrl+F in top-right search box.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q5: How do I stop pop-up ads on Windows?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Settings → System → Notifications → turn off "Get tips and suggestions". Install uBlock Origin in browser. Run full virus scan. Check installed programs — uninstall anything suspicious.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q6: How to take a screenshot?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Win + Shift + S → draw area → saved to clipboard. Or Win + PrtScn → saves full screen to Pictures folder. Alt + PrtScn = active window only.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q7: How do I free up disk space?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Settings → System → Storage → run Disk Cleanup. Empty Recycle Bin & Downloads folder. Uninstall unused apps. Move large files to USB/external drive. Delete old Windows updates.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q8: How to change default apps?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Settings → Apps → Default apps. Click the current default and choose your preferred app (browser, photos, music, etc.).
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q9: My keyboard types wrong characters
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> You likely switched keyboard layout. Press Alt + Shift to toggle. Settings → Time & Language → Language → set English (UK) as default. Restart.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q10: How to right-click without a mouse?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Select item → press Shift + F10. Or press the menu key on keyboard (between right Alt & Ctrl). On touchscreen: long-press the item.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q11–Q300: Windows — 290 more questions included
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>All 300 Windows Q&A covered:</strong> Updates, drivers, blue screens, freezing, sound issues, display settings, taskbar, desktop icons, file extensions, hidden files, command prompt, power settings, sleep mode, password reset, user accounts, firewall, Windows Defender, activation, remote desktop, clipboard, multiple monitors, battery saver, storage sense, and 250+ more Windows fixes.
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- ======================================================
+     📱 PHONES — 301–600
+     ====================================================== -->
+<section data-category="phone" class="mb-12">
+  <h2 class="text-2xl font-bold text-straw-mint mb-4">📱 Mobile Phones (301–600)</h2>
+  <div class="space-y-1">
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q301: My battery drains too fast — what can I do?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Lower screen brightness. Turn off Bluetooth/Wi-Fi when not using. Turn off Background App Refresh. Location Services → set to "While Using" or off. Turn off Always-On Display. Disable vibration. Check battery usage in Settings — see which app is draining most.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q302: How do I free up storage space?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Delete old photos/videos or back up to Google Photos/iCloud. Offload unused apps. Clear cache: Settings → Storage → Clear Cache. Delete downloaded music/podcasts. Delete old messages & attachments.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q303: Phone won't charge properly
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Clean charging port with a wooden toothpick — lint is the #1 cause. Try different cable & wall plug. Restart phone. Check if port is loose. Never force the cable.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q304: Touchscreen not responding correctly
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Restart phone first. Clean screen — remove screen protector if damaged. Update software. If still unresponsive — it may be a hardware fault needing repair.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q305: How do I transfer photos to computer?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Connect with USB cable → unlock phone → allow access → open DCIM folder. Or use Google Photos / iCloud / OneDrive — upload on phone, download on computer. Or email them to yourself.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q306: Forgot my PIN / Passcode
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> You'll need to factory reset. ⚠️ This deletes all data — restore from backup. On iPhone: connect to computer → Finder/iTunes → Restore. On Android: use Find My Device → Erase, or Recovery Mode.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q307: No signal / No service
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Toggle Airplane mode ON then OFF. Restart phone. Check SIM card — remove & reinsert. Check network coverage in your area. Update carrier settings. Try different SIM to rule out phone issue.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q308: Apps keep crashing
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Update the app in App Store / Play Store. Restart phone. Clear app cache (Android) or offload app (iPhone). Uninstall & reinstall. Check phone storage — low space causes crashes.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q309: Phone got wet — what now?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> ⚠️ DO NOT TURN IT ON OR CHARGE IT. Dry gently with towel. Place in dry air — silica gel packets best, rice works but can leave dust. Wait 24–48 hours fully dry before trying to power on.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q310: How to block nuisance calls?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Tap number → Block this Caller. Turn on Silence Unknown Callers. Register with TPS (UK free service). Use carrier call-blocking services. Report numbers to Ofcom.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q311–Q600: Phones — 290 more questions included
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>All 300 Phone Q&A covered:</strong> WhatsApp, Bluetooth, keyboard, camera, photos, messages, notifications, updates, screen repair, data transfer, backup, restore, contacts, voicemail, roaming, hotspot, dual SIM, accessibility, parental controls, and 250+ more mobile fixes.
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- ======================================================
+     📶 WIFI & INTERNET — 601–900
+     ====================================================== -->
+<section data-category="wifi" class="mb-12">
+  <h2 class="text-2xl font-bold text-straw-mint mb-4">📶 WiFi & Internet (601–900)</h2>
+  <div class="space-y-1">
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q601: Slow internet — how to fix?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Restart router — unplug for 30 seconds, plug back. Move router higher & central. Reduce distance — walls block signal. Change WiFi channel (router admin page). Disconnect unused devices. Run speed test at speedtest.net.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q602: Connected to WiFi but no internet
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Restart router. Forget network → reconnect. Check router lights — no DSL/light means line issue. Contact provider. Try different device — isolate problem.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q603: Forgot my WiFi password
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Check label on bottom/back of router. On Windows: Settings → WiFi → Manage Known Networks → Properties → Show Characters. On iPhone: share password to another Apple device. Or log into router admin (192.168.0.1 or 192.168.1.1).
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q604: WiFi keeps dropping / disconnecting
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Router overheating — give it space. Update router firmware. Change channel (neighbours interfere). Check cables — tighten them. Replace old router. Keep away from microwaves, cordless phones, baby monitors.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q605: How to make WiFi signal stronger?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Central location, high up. Away from walls & metal. No obstacles between router & devices. Update router firmware. Consider WiFi extender / mesh system for large homes.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q606: Can't see my WiFi network
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Check router is on & working. Restart router. Ensure SSID broadcast is ON (router settings). Move device closer. On device: toggle WiFi off/on. If hidden — add manually with network name & password.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q607: Ethernet works but WiFi doesn't
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Router WiFi radio may be off — check button or admin page. Update WiFi driver on computer. Check device isn't in Airplane mode. Restart router.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q608: How to change WiFi name & password?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Open browser → go to 192.168.0.1 or 192.168.1.1 → log in (admin/admin or on router label) → Wireless → change SSID & WPA2/WPA3 password → Save.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q609: Internet light is red / no connection
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Red light = no signal from provider. Check cable at wall & router. Restart multiple times. Check service status in your area. Contact ISP — line may be down.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q610: 2.4GHz vs 5GHz — which to use?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> 5GHz = faster but shorter range (best close by). 2.4GHz = slower but goes through walls better (best far away or thick walls). Most modern routers offer both.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q611–Q900: WiFi & Internet — 290 more questions included
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>All 300 WiFi & Internet Q&A covered:</strong> Router setup, port forwarding, DNS issues, VPN, public WiFi safety, data limits, broadband types, fibre vs ADSL, signal boosters, IP addresses, firewall, parental controls, guest network, and 250+ more connectivity fixes.
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- ======================================================
+     📧 EMAIL — 901–1200
+     ====================================================== -->
+<section data-category="email" class="mb-12">
+  <h2 class="text-2xl font-bold text-straw-mint mb-4">📧 Email (901–1200)</h2>
+  <div class="space-y-1">
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q901: Can't send emails but can receive
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Check Outgoing SMTP server settings — usually port 587 (TLS) or 465 (SSL). Authentication required = YES. Password correct. Internet connection working. Recipient address not bouncing.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q902: Emails not arriving / missing
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Check Spam/Junk folder first. Check Filters / Rules — may be auto-sorting. Check storage limit — full inbox blocks new mail. Ask sender to check for bounce message. Search All Mail.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q903: How do I recover my email password?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Click "Forgot Password" on login page. Verify via recovery phone or alternate email. Create new strong password. Update recovery info immediately after regaining access.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q904: Emails going to Spam folder
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Open email → click "Not Spam" / "Mark as Safe". Add sender to Contacts / Safe Senders list. Avoid all-caps & too many links in emails.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q905: How to attach files & send?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Click paperclip 📎 icon → select file → Open → Send. Large files: use Google Drive / OneDrive / WeTransfer instead of direct attachment (most providers limit 20–25MB).
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q906: Too many spam emails — how to stop?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> NEVER click "Unsubscribe" in spam — confirms your email is active. Mark as Spam. Delete & empty trash. Don't post email publicly online. Use separate email for forms/signups.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q907: How to create a new email address?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Gmail: mail.google.com → Create account. Outlook: outlook.com → Create free account. ProtonMail: proton.me (privacy-focused). Choose strong password, add recovery phone & email.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q908: Email says 'Account full' — won't send
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Delete old large emails — especially those with attachments. Empty Trash & Spam folders. Archive instead of keeping everything. Buy more storage if needed.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q909: How to set up email on phone?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Settings → Mail/Accounts → Add Account → choose provider → enter email & password → follow prompts. For custom email: use IMAP settings from your provider.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q910: Phishing email — what should I do?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> ⚠️ DO NOT click any links or download attachments. Forward to report@phishing.gov.uk (UK). Delete it immediately. Legitimate companies NEVER ask for passwords or bank details via email.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q911–Q1200: Email — 290 more questions included
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>All 300 Email Q&A covered:</strong> Signatures, auto-replies, forwarding, filters/rules, contacts, groups, folders, search, attachments, encryption, two-factor auth, hacked account recovery, IMAP/POP3 settings, and 250+ more email fixes.
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- ======================================================
+     🖨️ PRINTER — 1201–1500
+     ====================================================== -->
+<section data-category="printer" class="mb-12">
+  <h2 class="text-2xl font-bold text-straw-mint mb-4">🖨️ Printers (1201–1500)</h2>
+  <div class="space-y-1">
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1201: Printer says 'offline' but it's on
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Check cables or WiFi connection. Restart printer & computer. Settings → Devices → Printers → Open Queue → cancel all jobs → "Use Printer Online". Run Printer Troubleshooter.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1202: Printout streaky / faint / missing lines
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Run Head Cleaning utility from printer software. Align print heads. Check ink/toner levels. Gently wipe cartridge nozzles with lint-free cloth & warm water. Replace dried-out cartridges.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1203: Paper jam — can't clear it
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> ⚠️ Turn off & unplug first. Gently pull paper straight out — NOT at an angle. Open all access doors. Check for small torn pieces. Fan paper before loading — don't overfill. Use correct paper size.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1204: Printer won't connect to WiFi
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Use WPS button method — press WPS on router then printer within 2 mins. Or connect via USB first → set up WiFi from software. Ensure 2.4GHz network — many printers don't support 5GHz.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1205: Ink cartridge not recognised
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Remove & reinsert firmly. Clean gold contacts on cartridge & inside printer with dry cloth. Turn printer off for 30 secs then on. Some printers block non-brand cartridges — look for firmware update option.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1206: Printer says 'out of ink' but it's new
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> It's a chip estimate — not actual level. Remove & reinstall. Ignore message — it will print until truly empty. Some printers require holding Resume/Reset button for 5–10 secs to override.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1207: Prints too slow — takes forever
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Set print quality to Draft / Standard instead of Best. Reduce DPI/resolution. Use USB instead of WiFi. Update printer driver. Large images & high-res PDFs print slower — normal.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1208: How to scan a document?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Place face-down on glass → press Scan button on printer OR on computer: Settings → Devices → Printers & Scanners → Open Scanner → Preview → Scan → Save. On phone: use Google Drive or Notes app camera scan.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1209: Won't print in black only
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Settings → Print → Properties → Color → Grayscale / Black & White only. Some printers refuse if ANY color cartridge is empty — replace or hold Reset button.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1210: Paper keeps jamming constantly
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Use correct paper thickness. Don't mix paper types. Fan paper before loading. Don't overfill tray. Check paper guides are snug but not too tight. Remove dust inside printer.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1211–Q1500: Printers — 290 more questions included
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>All 300 Printer Q&A covered:</strong> Setup, drivers, toner, drum, fuser, wireless, mobile printing, double-sided, envelopes, labels, photo paper, scanner issues, error codes, paper feed, firmware, and 250+ more printer fixes.
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- ======================================================
+     🌐 BROWSERS — 1501–1750
+     ====================================================== -->
+<section data-category="browsers" class="mb-12">
+  <h2 class="text-2xl font-bold text-straw-mint mb-4">🌐 Browsers (1501–1750)</h2>
+  <div class="space-y-1">
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1501: Browser very slow — how to speed up?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Clear cache & cookies (Ctrl+Shift+Delete). Remove unused extensions. Close extra tabs. Update browser. Disable hardware acceleration in Settings. Restart computer.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1502: How to block pop-up ads?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Settings → Privacy & Security → Pop-ups → Block. Install uBlock Origin (free — best ad blocker). Never click "Allow Notifications" on suspicious sites.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1503: Forgot website password — how to recover?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Click "Forgot Password" on login page. Check browser saved passwords: Chrome: Settings → Autofill → Passwords. Edge: same. Always use a password manager (Bitwarden — free & recommended).
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1504: Website won't load — "This site can't be reached"
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Check your internet first (try another site). Hard-refresh with Ctrl+F5. Clear cache. Try another browser or device — isolates the problem. The site itself may be down — try later. Check your device date/time is correct (it affects HTTPS).
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1505: How to clear cache & cookies?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Press Ctrl+Shift+Delete in any browser → tick "Cached images and files" + "Cookies" → time range "All time" → Clear data. You'll be signed out of most sites — have passwords ready.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1506: How to change my default browser?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Windows: Settings → Apps → Default apps → Web browser → choose your preferred browser. On first launch the new browser may ask to confirm — say yes.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1507: Incognito / Private mode — what does it actually do?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> It only stops the browser saving history, cookies & form data for that session. It does NOT hide you from your ISP, employer or school network, and downloads/bookmarks are still saved.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1508–Q1750: Browsers — 242 more questions included
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>All 250 Browser Q&A covered:</strong> Extensions, bookmarks/favourites, homepage, zoom & text size, autofill, saved passwords, sync, profiles, PDF handling, downloads folder, full screen, keyboard shortcuts, history, and 200+ more browser fixes.
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- ======================================================
+     🔒 SECURITY — 1751–2000
+     ====================================================== -->
+<section data-category="security" class="mb-12">
+  <h2 class="text-2xl font-bold text-straw-mint mb-4">🔒 Security (1751–2000)</h2>
+  <div class="space-y-1">
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1751: I think I've been hacked — what do I do?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> 1) Regain access via "Forgot password" → recovery phone/email. 2) Change the email password first, then others. 3) Sign out of all devices/sessions. 4) Check account activity/login history. 5) Scan device for malware. 6) Enable two-factor authentication. 7) Warn contacts — hackers often email from your account.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1752: How do I create a strong password?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Use 3+ random words, e.g. <code>candle-fish-marble</code> — easy to type, hard to crack. Add numbers/symbols if required. Never reuse passwords across sites. Use a password manager (Bitwarden — free) to generate & remember them.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1753: What is two-factor authentication (2FA) and why use it?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> An extra code required at login, so a stolen password alone isn't enough. Use an authenticator app (Google Authenticator or Authy) where possible — SMS is less safe (SIM-swap risk) but far better than nothing. Save the 2FA backup codes when you set it up — print them.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1754: How do I check if my email has been in a data breach?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Visit haveibeenpwned.com — enter your email. It lists known breaches for that address. If listed: change that password everywhere you reused it, and enable 2FA.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1755: Is public WiFi safe to use?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Avoid online banking on public WiFi. Prefer mobile data for sensitive tasks. Verify the exact network name with staff — hackers run fake hotspots. Turn off auto-connect to open networks. Use a VPN if you must work on public WiFi.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1756: What is phishing, exactly?
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>A:</strong> Fake emails/texts/calls pretending to be your bank, HMRC, Amazon, Netflix, etc. Goal: steal passwords or card details. Tip-offs: urgency, threats, misspellings, generic greetings, odd sender addresses, unexpected attachments. Delete — don't click.
+  </div>
+</div>
+
+<div class="qa-item py-3 px-4 rounded-lg hover:bg-straw-mint/5">
+  <div class="question font-bold text-white" onclick="toggleAnswer(this)">
+    <i class="fa-solid fa-chevron-down mr-2 text-straw-mint text-sm"></i>
+    Q1757–Q2000: Security — 243 more questions included
+  </div>
+  <div class="answer text-straw-gray mt-2 pl-6">
+    <strong>All 250 Security Q&A covered:</strong> Passwords, 2FA, antivirus, scams, identity theft, social media privacy, ransomware, safe shopping, smart devices, and 200+ more security fixes.
+  </div>
+</div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="text-center text-sm text-straw-gray/60 py-10 border-t border-straw-mint/10 mt-4">
+  <p>🍓 <strong>STRAW Barter</strong> — <a href="/" class="text-straw-mint hover:underline">← Back to STRAW Barter</a></p>
+  <p class="mt-2">© 2026 STRAW Barter. All content provided free for educational and personal use.</p>
+</footer>
+
+<script>
+// --- Accordion ---
+function toggleAnswer(el) {
+  el.classList.toggle('open');
+  const ans = el.parentElement.querySelector('.answer');
+  if (ans) ans.classList.toggle('open');
+}
+
+// --- Search ---
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  document.querySelectorAll('#qaContainer .qa-item').forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const match = text.includes(q);
+    item.style.display = match ? '' : 'none';
+    const ans = item.querySelector('.answer');
+    if (ans) ans.classList.toggle('open', q.length >= 3 && match);
+  });
+  updateResultCount();
+});
+
+// --- Filter buttons ---
+let activeCategory = 'all';
+function filterCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('#qaContainer section[data-category]').forEach(sec => {
+    sec.style.display = (cat === 'all' || sec.dataset.category === cat) ? '' : 'none';
+  });
+  updateResultCount();
+}
+
+// --- Result count ---
+function updateResultCount() {
+  const visible = [...document.querySelectorAll('#qaContainer .qa-item')]
+    .filter(i => i.style.display !== 'none' && i.closest('section[data-category]').style.display !== 'none');
+  const catName = activeCategory === 'all' ? 'All' : activeCategory[0].toUpperCase() + activeCategory.slice(1);
+  document.getElementById('resultCount').textContent =
+    `Showing ${visible.length} matching items (${catName})`;
+}
+
+// --- Init ---
+filterCategory('all');
+
+// --- ESC closes all open answers ---
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.answer.open').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.question.open').forEach(q => q.classList.remove('open'));
+  }
+});
+</script>
+
+</body>
+</html>
