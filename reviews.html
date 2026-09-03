@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💻 Top 5 Best — Reviews & Buying Guides — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3498db', purple: '#9b59b6', orange: '#f97316', cyan: '#06b6d4'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .review-card { transition: all 0.25s ease; }
+    .review-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(6,182,212,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(127,232,160,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #7FE8A0; }
+    .rank-badge { background: linear-gradient(135deg, #f97316, #eab308); }
+    .affiliate-badge { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+    .star-rating { color: #fbbf24; }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-cyan/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-cyan transition">← Back</a>
+      <span class="text-xs text-straw-gray hidden sm:inline">
+        <i class="fa-solid fa-bolt text-straw-gold"></i> Updated Daily
+      </span>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-cyan/10 via-transparent to-straw-blue/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">💻</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Top 5 Best — Reviews & Buying Guides</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Honest Comparisons · Best Picks · Direct to Retailers</strong><br>
+      Save time & money — we do the research so you don't have to 🛒
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6">
+      <input type="text" id="searchInput" placeholder="🔍 Search: headphones, laptop, mattress, coffee maker..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-cyan/20 text-white text-lg">
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-cyan/20 text-straw-cyan">✅ Unbiased</span>
+      <span class="tag bg-straw-green/20 text-straw-green">💰 Best Prices</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">🔗 Direct Links</span>
+      <span class="tag bg-straw-orange/20 text-straw-orange">⚡ Updated Weekly</span>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterAll()" class="bg-straw-cyan text-white px-4 py-2 rounded-full text-sm font-semibold">All Categories</button>
+    <button onclick="filterCat('tech')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-cyan/10 hover:text-straw-cyan">📱 Tech & Gadgets</button>
+    <button onclick="filterCat('home')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-cyan/10 hover:text-straw-cyan">🏠 Home & Living</button>
+    <button onclick="filterCat('kitchen')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-cyan/10 hover:text-straw-cyan">🍳 Kitchen</button>
+    <button onclick="filterCat('garden')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-cyan/10 hover:text-straw-cyan">🌿 Garden</button>
+    <button onclick="filterCat('fitness')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-cyan/10 hover:text-straw-cyan">💪 Fitness</button>
+    <button onclick="filterCat('kids')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-cyan/10 hover:text-straw-cyan">🧸 Kids & Toys</button>
+  </div>
+</section>
+
+<!-- 📦 REVIEWS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="reviewsGrid">
+
+    <!-- REVIEW 1 → Wireless Headphones -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="tech">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#1</span>
+        <span class="text-xs text-straw-gray">Updated: Sep 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🎧</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Wireless Headphones UK 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Top noise-cancelling, battery life & comfort picks for every budget — under £50 / £100 / £200+.</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></span>
+        <span class="text-sm text-straw-gray">4.8/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£49.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 2 → Air Fryer -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="kitchen">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#1</span>
+        <span class="text-xs text-straw-gray">Updated: Sep 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🍟</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Air Fryer UK 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Crispiest results, easiest to clean, best value. Compact & family-sized picks — energy-efficient!</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+        <span class="text-sm text-straw-gray">5.0/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£39.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 3 → Robot Vacuum -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="home">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#2</span>
+        <span class="text-xs text-straw-gray">Updated: Sep 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🤖</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Robot Vacuum UK 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Smart mapping, pet hair performance, battery & auto-empty. Budget to premium — works on carpets & hard floors.</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></span>
+        <span class="text-sm text-straw-gray">4.7/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£129.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 4 → Garden Tools Set -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="garden">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#1</span>
+        <span class="text-xs text-straw-gray">Updated: Aug 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🌱</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Garden Tool Sets 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Durable, comfortable handles, rust-resistant — essential hand tools for every gardener. Great gift idea too!</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+        <span class="text-sm text-straw-gray">4.9/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£24.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 5 → Yoga Mat -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="fitness">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#1</span>
+        <span class="text-xs text-straw-gray">Updated: Sep 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🧘</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Yoga Mats UK 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Non-slip, thick, eco-friendly, easy to clean. For hot yoga, pilates, home workouts — all budgets covered.</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></span>
+        <span class="text-sm text-straw-gray">4.8/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£16.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 6 → Educational Toys -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="kids">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#1</span>
+        <span class="text-xs text-straw-gray">Updated: Sep 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🧩</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Educational Toys 2026 — Ages 2–10</h3>
+      <p class="text-straw-gray text-sm mb-3">STEM, learning through play, screen-free. Safe, durable, parent-approved picks for every age group.</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+        <span class="text-sm text-straw-gray">4.9/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£12.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 7 → Home (second entry — smart speaker) -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="home">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#1</span>
+        <span class="text-xs text-straw-gray">Updated: Aug 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🔊</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Smart Speakers UK 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Voice assistants, sound quality & privacy controls — compact and full-size picks for every room.</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></span>
+        <span class="text-sm text-straw-gray">4.6/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£44.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 8 → Kitchen (second entry — coffee maker) -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="kitchen">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#2</span>
+        <span class="text-xs text-straw-gray">Updated: Aug 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">☕</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Filter Coffee Machines 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Programmable timers, thermal jugs & budget-friendly models — barista-quality brews at home.</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></span>
+        <span class="text-sm text-straw-gray">4.5/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£24.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVIEW 9 → Fitness (second entry — dumbbells) -->
+    <div class="bg-straw-card rounded-2xl p-5 review-card border border-straw-cyan/10" data-cat="fitness">
+      <div class="flex justify-between items-start mb-3">
+        <span class="rank-badge text-white text-sm font-bold px-3 py-1 rounded-full">#2</span>
+        <span class="text-xs text-straw-gray">Updated: Aug 2026</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🏋️</div>
+      <h3 class="text-xl font-bold text-white mb-1">Best Adjustable Dumbbells 2026</h3>
+      <p class="text-straw-gray text-sm mb-3">Space-saving home gym weights — quick-change dials, sturdy grips, and 2–24kg options for all levels.</p>
+      <div class="flex items-center gap-1 mb-3">
+        <span class="star-rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></span>
+        <span class="text-sm text-straw-gray">4.7/5</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">From:</span> <span class="text-straw-green font-bold">£59.99</span>
+      </div>
+      <div class="flex gap-2">
+        <a href="#" class="flex-1 bg-straw-cyan text-white py-2 rounded-lg font-semibold text-sm hover:bg-cyan-600 text-center">
+          <i class="fa-solid fa-magnifying-glass mr-1"></i> Full Review
+        </a>
+        <a href="https://www.amazon.co.uk/dp/B09XYZ?tag=straw09-21" target="_blank" class="affiliate-badge text-white px-3 py-2 rounded-lg hover:opacity-90">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-cyan/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-cyan/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Guides
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER — AFFILIATE NOTICE -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-cyan/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-straw-cyan"></i>
+      How It Works — Affiliate Disclosure
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-cyan/5 border border-straw-cyan/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-cyan mb-2">💰 Affiliate Links — At No Extra Cost To You</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>When you click a blue shopping button,</strong> it uses an affiliate link — this means we may earn a small commission if you buy, <strong>at zero extra cost to you.</strong></li>
+          <li>• <strong>It does NOT affect our rankings or reviews.</strong> Products are chosen honestly — we only recommend what we'd buy ourselves.</li>
+          <li>• <strong>Price is the same for you.</strong> The retailer pays the commission — you pay the standard price.</li>
+          <li>• <strong>Supports STRAW Barter!</strong> These commissions help keep the site free and growing — thank you 💚</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-green mb-2">✅ Our Promise</h4>
+          <ul class="space-y-1.5">
+            <li>• We never rank products just for commission</li>
+            <li>• Always include budget & premium options</li>
+            <li>• Prices checked daily & updated</li>
+            <li>• Full specs, pros & cons in each guide</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-blue mb-2">🛒 How To Use</h4>
+          <ul class="space-y-1.5">
+            <li>• Click "Full Review" for deep comparison</li>
+            <li>• Click shopping icon → goes direct to retailer</li>
+            <li>• Bookmark & compare before buying</li>
+            <li>• Check price — it can change!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Affiliate Disclosure:</strong> This page contains affiliate links. If you click through and make a purchase, we may receive a commission — at no additional cost to you. This helps support STRAW Barter and allows us to keep creating free, honest guides. Prices correct at time of checking but subject to change. Always verify price on retailer's site. Thank you for your support! 💙 © 2026 Reviews Hub — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>💻 Top 5 Best — Reviews & Buying Guides — <span class="text-straw-cyan">Honest Picks · Smart Shopping · Supports Our Community 💙</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('reviewsGrid');
+  const allReviews = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = 'all';
+
+  // Combined filter: search + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    allReviews.forEach(r => {
+      const matchSearch = r.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCat === 'all' || r.dataset.cat === activeCat);
+      r.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  function filterAll() {
+    activeCat = 'all';
+    applyFilters();
+  }
+
+  function filterCat(c) {
+    activeCat = c;
+    applyFilters();
+  }
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💬 Community Forum — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', orange: '#f97316', teal: '#14b8a6',
+              lime: '#84cc16', sky: '#0ea5e9', rose: '#f43f5e', amber: '#f59e0b'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .topic-card { transition: all 0.2s ease; }
+    .topic-card:hover { transform: translateX(4px); border-color: #22c55e; }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select, textarea { background: #0A0C0B; border: 1px solid rgba(34,197,94,0.2); color: white; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #22c55e; }
+    .new-badge { background: linear-gradient(135deg, #22c55e, #84cc16); animation: pulse 2s infinite; }
+    .hot-badge { background: linear-gradient(135deg, #f97316, #eab308); }
+    .sticky-badge { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-green/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-green transition">← Back</a>
+      <button onclick="openNewTopicModal()" class="bg-straw-green text-white px-3 py-1.5 rounded-full font-semibold hover:bg-green-600 transition">
+        <i class="fa-solid fa-pen-to-square mr-1"></i> New Topic
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-10 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-green/10 via-transparent to-straw-mint/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">💬</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Community Forum</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Connect · Share · Ask · Help — All In One Place</strong><br>
+      Barter ideas, learn skills, ask questions, find collaborators — friendly, respectful community 🤝
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6">
+      <input type="text" id="searchInput" placeholder="🔍 Search topics, posts, keywords..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-green/20 text-white text-lg">
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-green/20 text-straw-green">✅ 100% Free</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">✅ All Welcome</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">✅ Respect First</span>
+      <span class="tag bg-straw-orange/20 text-straw-orange">✅ No Spam</span>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORIES -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <h2 class="text-xl font-bold text-white mb-4">📂 Browse by Category</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+    <button onclick="filterCat('all')" class="bg-straw-green text-white p-3 rounded-xl text-center transition">
+      <span class="text-2xl block mb-1">📋</span>
+      <span class="text-sm font-semibold">All Topics</span>
+    </button>
+    <button onclick="filterCat('general')" class="bg-straw-card hover:bg-straw-green/10 hover:text-straw-green p-3 rounded-xl text-center transition">
+      <span class="text-2xl block mb-1">💬</span>
+      <span class="text-sm font-semibold">General Chat</span>
+    </button>
+    <button onclick="filterCat('barter')" class="bg-straw-card hover:bg-straw-green/10 hover:text-straw-green p-3 rounded-xl text-center transition">
+      <span class="text-2xl block mb-1">🔄</span>
+      <span class="text-sm font-semibold">Barter & Trade</span>
+    </button>
+    <button onclick="filterCat('tech')" class="bg-straw-card hover:bg-straw-green/10 hover:text-straw-green p-3 rounded-xl text-center transition">
+      <span class="text-2xl block mb-1">💻</span>
+      <span class="text-sm font-semibold">Tech & AI</span>
+    </button>
+    <button onclick="filterCat('offgrid')" class="bg-straw-card hover:bg-straw-green/10 hover:text-straw-green p-3 rounded-xl text-center transition">
+      <span class="text-2xl block mb-1">⚡</span>
+      <span class="text-sm font-semibold">Off-Grid & Energy</span>
+    </button>
+    <button onclick="filterCat('business')" class="bg-straw-card hover:bg-straw-green/10 hover:text-straw-green p-3 rounded-xl text-center transition">
+      <span class="text-2xl block mb-1">💼</span>
+      <span class="text-sm font-semibold">Business & Side Hustles</span>
+    </button>
+    <button onclick="filterCat('help')" class="bg-straw-card hover:bg-straw-green/10 hover:text-straw-green p-3 rounded-xl text-center transition">
+      <span class="text-2xl block mb-1">🆘</span>
+      <span class="text-sm font-semibold">Help & Questions</span>
+    </button>
+  </div>
+</section>
+
+<!-- 📄 TOPICS LIST -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-bold text-white">🔥 Latest Topics</h2>
+    <select id="sortFilter" class="px-3 py-2 rounded-lg bg-straw-card border border-straw-green/20 text-white text-sm">
+      <option value="latest">Latest First</option>
+      <option value="popular">Most Popular</option>
+      <option value="unanswered">Unanswered</option>
+    </select>
+  </div>
+
+  <div class="space-y-3" id="topicsList">
+
+    <!-- TOPIC 1 — Welcome -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-green/10 topic-card" data-cat="general" data-pinned="true">
+      <div class="flex items-start gap-4">
+        <div class="avatar bg-straw-green text-white text-sm shrink-0">🍓</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="sticky-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">📌 PINNED</span>
+            <h3 class="text-lg font-bold text-white">Welcome to the STRAW Barter Community! 👋</h3>
+          </div>
+          <p class="text-straw-gray text-sm mb-2">Introduce yourself — who you are, where you're from, what you bring to the community. Let's build something together!</p>
+          <div class="flex items-center gap-4 text-xs text-straw-gray flex-wrap">
+            <span class="tag bg-straw-green/20 text-straw-green">General</span>
+            <span><i class="fa-solid fa-user mr-1"></i> Admin • 3 days ago</span>
+            <span><i class="fa-solid fa-comments mr-1"></i> 42 replies</span>
+            <span><i class="fa-solid fa-eye mr-1"></i> 892 views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPIC 2 — Hydro Help -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-green/10 topic-card" data-cat="offgrid" data-hot="true">
+      <div class="flex items-start gap-4">
+        <div class="avatar bg-straw-blue text-white text-sm shrink-0">A</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="hot-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">🔥 HOT</span>
+            <h3 class="text-lg font-bold text-white">56 × 80V Hydro Setup — Pressure Tank Question?</h3>
+          </div>
+          <p class="text-straw-gray text-sm mb-2">Running 56 mini 80V hydro units in series. Currently using 24L tank — how many can I run before pressure drops? Should I go to 200L? Any advice appreciated!</p>
+          <div class="flex items-center gap-4 text-xs text-straw-gray flex-wrap">
+            <span class="tag bg-straw-green/20 text-straw-green">Off-Grid Energy</span>
+            <span><i class="fa-solid fa-user mr-1"></i> AnthonyD • 5 hours ago</span>
+            <span><i class="fa-solid fa-comments mr-1"></i> 18 replies</span>
+            <span><i class="fa-solid fa-eye mr-1"></i> 156 views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPIC 3 — AI Tools -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-green/10 topic-card" data-cat="tech">
+      <div class="flex items-start gap-4">
+        <div class="avatar bg-straw-purple text-white text-sm shrink-0">S</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="new-badge text-white text-xs font-bold px-2 py-0.5 rounded-full">✨ NEW</span>
+            <h3 class="text-lg font-bold text-white">Best Free AI Tools for Small Business — Your Picks?</h3>
+          </div>
+          <p class="text-straw-gray text-sm mb-2">Looking for genuinely free AI tools that actually save time. Not just "free trial" — truly free tiers. What's everyone using daily?</p>
+          <div class="flex items-center gap-4 text-xs text-straw-gray flex-wrap">
+            <span class="tag bg-straw-purple/20 text-straw-purple">Tech & AI</span>
+            <span><i class="fa-solid fa-user mr-1"></i> SarahM • 2 hours ago</span>
+            <span><i class="fa-solid fa-comments mr-1"></i> 24 replies</span>
+            <span><i class="fa-solid fa-eye mr-1"></i> 341 views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPIC 4 — Barter Item -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-green/10 topic-card" data-cat="barter">
+      <div class="flex items-start gap-4">
+        <div class="avatar bg-straw-orange text-white text-sm shrink-0">J</div>
+        <div class="flex-1 min-w-0">
+          <h3 class="text-lg font-bold text-white">🔄 Barter: 12V 100Ah Lithium Battery — Swap for Solar Panels?</h3>
+          <p class="text-straw-gray text-sm mb-2">Brand new, still sealed. Looking for 100W+ solar panels or charge controller. Based in Manchester — can meet locally. £0 cash, just barter!</p>
+          <div class="flex items-center gap-4 text-xs text-straw-gray flex-wrap">
+            <span class="tag bg-straw-amber/20 text-straw-amber">Barter & Trade</span>
+            <span><i class="fa-solid fa-user mr-1"></i> JimW • 1 day ago</span>
+            <span><i class="fa-solid fa-comments mr-1"></i> 7 replies</span>
+            <span><i class="fa-solid fa-eye mr-1"></i> 208 views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPIC 5 — Side Hustle -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-green/10 topic-card" data-cat="business">
+      <div class="flex items-start gap-4">
+        <div class="avatar bg-straw-teal text-white text-sm shrink-0">L</div>
+        <div class="flex-1 min-w-0">
+          <h3 class="text-lg font-bold text-white">Opinions on Print-on-Demand — Still Worth It in 2026?</h3>
+          <p class="text-straw-gray text-sm mb-2">Thinking of starting a POD store. Niche ideas, profit margins, best platforms? Is it saturated or still room for newbies? Real experiences only please!</p>
+          <div class="flex items-center gap-4 text-xs text-straw-gray flex-wrap">
+            <span class="tag bg-straw-teal/20 text-straw-teal">Business & Hustles</span>
+            <span><i class="fa-solid fa-user mr-1"></i> LisaC • 2 days ago</span>
+            <span><i class="fa-solid fa-comments mr-1"></i> 31 replies</span>
+            <span><i class="fa-solid fa-eye mr-1"></i> 512 views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPIC 6 — Help Needed -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-green/10 topic-card" data-cat="help">
+      <div class="flex items-start gap-4">
+        <div class="avatar bg-straw-rose text-white text-sm shrink-0">K</div>
+        <div class="flex-1 min-w-0">
+          <h3 class="text-lg font-bold text-white">🆘 Need Help — Factory Reset Dell Laptop No Password</h3>
+          <p class="text-straw-gray text-sm mb-2">Old company Dell, no admin password. Can't get past login screen. Tried Shift+Restart but still asks. Any way to wipe & fresh install Windows? Thanks in advance!</p>
+          <div class="flex items-center gap-4 text-xs text-straw-gray flex-wrap">
+            <span class="tag bg-straw-rose/20 text-straw-rose">Help & Questions</span>
+            <span><i class="fa-solid fa-user mr-1"></i> KevinB • 1 day ago</span>
+            <span><i class="fa-solid fa-comments mr-1"></i> 9 replies</span>
+            <span><i class="fa-solid fa-eye mr-1"></i> 145 views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-8">
+    <button class="bg-straw-card border border-straw-green/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-green/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Topics
+    </button>
+  </div>
+</section>
+
+<!-- 📋 FORUM RULES & INFO -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-green/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-book text-straw-green"></i>
+      Community Guidelines — Keep It Friendly & Useful
+    </h3>
+    <div class="grid md:grid-cols-2 gap-6 text-sm">
+      <div>
+        <h4 class="font-bold text-straw-green mb-2">✅ DO</h4>
+        <ul class="space-y-1.5 text-straw-gray">
+          <li>• Be kind, respectful & supportive — all welcome</li>
+          <li>• Share knowledge, skills & experiences freely</li>
+          <li>• Search before posting — avoid duplicates</li>
+          <li>• Use clear titles — help people find answers</li>
+          <li>• Report spam — keep the community clean</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-straw-red mb-2">❌ DON'T</h4>
+        <ul class="space-y-1.5 text-straw-gray">
+          <li>• No spam, ads, or self-promotion without permission</li>
+          <li>• No harassment, discrimination, or toxic language</li>
+          <li>• No illegal, dangerous, or harmful content</li>
+          <li>• No sharing others' personal info without consent</li>
+          <li>• No off-site payment links — keep trades safe here</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>💡 Community First:</strong> This forum is for everyone. We're here to help each other, learn, trade, and grow together. All posts are moderated — we aim to approve within 24 hours. Repeated rule-breaking = permanent ban. Affiliate links in posts must be clearly disclosed. © 2026 STRAW Barter Community Forum.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>💬 Community Forum — <span class="text-straw-green">Ask · Share · Help · Grow Together 🤝</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const list = document.getElementById('topicsList');
+  const allTopics = list.querySelectorAll('div[data-cat]');
+
+  let activeCat = 'all';
+
+  // Combined filter: search + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    allTopics.forEach(t => {
+      const matchSearch = t.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCat === 'all' || t.dataset.cat === activeCat);
+      t.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  function filterCat(c) {
+    activeCat = c;
+    applyFilters();
+  }
+
+  // Sort filter
+  document.getElementById('sortFilter').addEventListener('change', e => {
+    const val = e.target.value;
+    alert(`🔄 Sorting by: ${val === 'latest' ? 'Latest First' : val === 'popular' ? 'Most Popular' : 'Unanswered'}\n\nFull sorting coming soon! ✅`);
+  });
+
+  // New topic modal
+  function openNewTopicModal() {
+    const title = prompt('📝 New Topic — Title:');
+    if (!title) return;
+    alert(`✅ Topic Created!\n\n📝 Title: ${title}\n\n⏳ Waiting for approval...\n\nThank you for contributing to the community! 🤝🍓`);
+  }
+</script>
+
+</body>
+</html>
+

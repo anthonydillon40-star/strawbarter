@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌿 Homegrown & Homemade — Trade · Swap · Buy · Sell</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210',
+              card: '#1A241E',
+              mint: '#7FE8A0',
+              green: '#22c55e',
+              gold: '#F2C14E',
+              red: '#e84a5f',
+              gray: '#B0B8B0',
+              dark: '#0A0C0B'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(127,232,160,0.15); }
+    .tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    .mode-swap { background: linear-gradient(135deg, #7FE8A0, #22c55e); }
+    .mode-cash { background: linear-gradient(135deg, #F2C14E, #f59e0b); }
+    .mode-b2b { background: linear-gradient(135deg, #3498db, #2563eb); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🌿 HEADER / NAV -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-mint/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🌿</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">Homegrown Exchange</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-mint transition">← Back</a>
+      <button onclick="openPostModal()" class="bg-straw-mint/20 text-straw-mint px-3 py-1.5 rounded-full font-semibold hover:bg-straw-mint/30 transition">
+        <i class="fa-solid fa-plus mr-1"></i> Post Item
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-14 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-mint/10 via-transparent to-straw-gold/5"></div>
+  <div class="max-w-5xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🌿</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Homegrown & Homemade Exchange</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Person-to-Person · Business-to-Business</strong><br>
+      No middleman — <span class="text-straw-mint font-bold">All deals direct between buyer & seller</span>
+    </p>
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+      <span class="tag mode-swap text-white px-3 py-1.5">🔄 Swap / Trade</span>
+      <span class="tag mode-cash text-white px-3 py-1.5">💷 Cash / Bank Transfer</span>
+      <span class="tag mode-b2b text-white px-3 py-1.5">🤝 Business Terms</span>
+    </div>
+    <div class="max-w-xl mx-auto relative">
+      <input type="text" id="searchInput" placeholder="🔍 Search: tomatoes, jam, plants, seeds, eggs..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-mint/20 text-white text-lg focus:outline-none focus:border-straw-mint">
+    </div>
+    <p class="text-xs text-straw-gray mt-3">💬 Contact directly → Arrange deal → Exchange in person — Platform never handles payments</p>
+  </div>
+</section>
+
+<!-- 📍 FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-6">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterCategory('all')" class="bg-straw-mint/20 text-straw-mint px-4 py-2 rounded-full text-sm font-semibold hover:bg-straw-mint/40 transition">All Items</button>
+    <button onclick="filterCategory('produce')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🥦 Fresh Produce</button>
+    <button onclick="filterCategory('plants')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🌱 Plants & Cuttings</button>
+    <button onclick="filterCategory('seeds')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🌾 Seeds & Bulbs</button>
+    <button onclick="filterCategory('preserves')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🍯 Preserves & Jars</button>
+    <button onclick="filterCategory('baking')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🍞 Baking & Treats</button>
+    <button onclick="filterCategory('crafts')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🧶 Handmade</button>
+    <button onclick="filterCategory('business')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-blue-500/10 transition">🏢 Business</button>
+  </div>
+  <div class="flex flex-wrap gap-2 justify-center">
+    <button onclick="filterType('all')" class="bg-straw-mint/20 text-straw-mint px-3 py-1.5 rounded-full text-sm font-semibold">All Types</button>
+    <button onclick="filterType('swap')" class="bg-green-500/20 text-green-400 px-3 py-1.5 rounded-full text-sm font-semibold">🔄 Swap Only</button>
+    <button onclick="filterType('sale')" class="bg-yellow-500/20 text-yellow-400 px-3 py-1.5 rounded-full text-sm font-semibold">💷 For Sale</button>
+    <button onclick="filterType('both')" class="bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-sm font-semibold">🔄💷 Either</button>
+    <button onclick="filterType('b2b')" class="bg-indigo-500/20 text-indigo-400 px-3 py-1.5 rounded-full text-sm font-semibold">🏢 B2B</button>
+  </div>
+</section>
+
+<!-- 📦 LISTINGS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-12">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="listingsGrid">
+
+    <!-- Item 1 — Swap + Cash → Direct Contact -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="produce" data-type="both">
+      <div class="h-48 bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center text-6xl relative">
+        🍅
+        <span class="absolute top-3 right-3 tag bg-blue-500/80 text-white">Swap or £4</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Homegrown Tomatoes — Mixed Varieties</h3>
+        <p class="text-straw-gray text-sm mb-3">Beefsteak, cherry & heirloom. Sun-ripened, pesticide-free. 500g bag.</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Manchester, M24 · <span class="text-straw-mint">Today</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-straw-gold font-bold">🔄 Swap welcome or £4 — <span class="text-xs text-straw-gray">Agree direct</span></span>
+          <button class="bg-straw-mint text-straw-dark px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-envelope mr-1"></i> Contact
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 2 — Swap Only -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="plants" data-type="swap">
+      <div class="h-48 bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center text-6xl relative">
+        🌿
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">Swap Only</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Mint & Basil Plants — Hardy Perennials</h3>
+        <p class="text-straw-gray text-sm mb-3">Established pots, strong roots. Perfect for windowsill or garden. 2 plants.</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Bolton · <span class="text-straw-mint">2hr ago</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-straw-green font-bold">🔄 Swap for herbs/seeds</span>
+          <button class="bg-straw-mint text-straw-dark px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-handshake mr-1"></i> Offer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 3 — For Sale → Direct Payment -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="preserves" data-type="sale">
+      <div class="h-48 bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center text-6xl relative">
+        🍯
+        <span class="absolute top-3 right-3 tag bg-yellow-500/80 text-white">£5</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Wild Blackberry Jam — Homemade 340g</h3>
+        <p class="text-straw-gray text-sm mb-3">Foraged berries, low sugar, no additives. Batch made this week. Sealed jar.</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Bury · <span class="text-straw-mint">Yesterday</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-straw-gold font-bold">£5 per jar — <span class="text-xs text-straw-gray">Pay direct</span></span>
+          <button class="bg-straw-mint text-straw-dark px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-comment mr-1"></i> Buy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 4 — Free -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="seeds" data-type="swap">
+      <div class="h-48 bg-gradient-to-br from-lime-500/20 to-green-500/20 flex items-center justify-center text-6xl relative">
+        🌻
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">Free</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Mixed Wildflower Seeds — Bee Friendly</h3>
+        <p class="text-straw-gray text-sm mb-3">Saved from last year — 20+ varieties. Pollinator mix. Enough for 3m².</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Oldham · <span class="text-straw-mint">1d ago</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-straw-green font-bold">Free to good home 🐝</span>
+          <button class="bg-straw-mint text-straw-dark px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-gift mr-1"></i> Request
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 5 — B2B → Direct Terms -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="business" data-type="b2b">
+      <div class="h-48 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center text-6xl relative">
+        🥬
+        <span class="absolute top-3 right-3 tag bg-indigo-500/80 text-white">B2B</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Wholesale Seasonal Veg Boxes — Restaurant Supply</h3>
+        <p class="text-straw-gray text-sm mb-3">Certified local grower — weekly deliveries. Mixed seasonal boxes, 10kg minimum. Trade accounts available.</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Rochdale · <span class="text-blue-400">Business Terms</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-blue-400 font-bold">Agree terms direct</span>
+          <button class="bg-blue-500 text-white px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-blue-600 transition">
+            <i class="fa-solid fa-building mr-1"></i> Enquire
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 6 — Baking -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="baking" data-type="both">
+      <div class="h-48 bg-gradient-to-br from-amber-600/20 to-orange-500/20 flex items-center justify-center text-6xl relative">
+        🍞
+        <span class="absolute top-3 right-3 tag bg-blue-500/80 text-white">Swap or £3.50</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Sourdough Loaf — Fresh Daily</h3>
+        <p class="text-straw-gray text-sm mb-3">48hr ferment, organic flour, no yeast. Crusty crust, soft inside. Collection only.</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Stockport · <span class="text-straw-mint">Today</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-straw-gold font-bold">Swap or £3.50 — Arrange direct</span>
+          <button class="bg-straw-mint text-straw-dark px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-reply mr-1"></i> Contact
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 7 — Crafts -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="crafts" data-type="sale">
+      <div class="h-48 bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center text-6xl relative">
+        🧶
+        <span class="absolute top-3 right-3 tag bg-yellow-500/80 text-white">£12</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Hand-Knitted Wool Blanket — Chunky Throw</h3>
+        <p class="text-straw-gray text-sm mb-3">100% British wool. Made to order in your colour choice. Approx 1.2m × 1.5m.</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Salford · <span class="text-straw-mint">2d ago</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-straw-gold font-bold">£12 each — Pay direct</span>
+          <button class="bg-straw-mint text-straw-dark px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-comment mr-1"></i> Buy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 8 — Produce swap -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="produce" data-type="swap">
+      <div class="h-48 bg-gradient-to-br from-green-500/20 to-lime-500/20 flex items-center justify-center text-6xl relative">
+        🥚
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">Swap Only</span>
+      </div>
+      <div class="p-5">
+        <h3 class="text-xl font-bold text-white mb-2">Free-Range Eggs — Half Dozen</h3>
+        <p class="text-straw-gray text-sm mb-3">From our own hens, collected daily. Swap for veg, jam, or plants.</p>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-3">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Wigan · <span class="text-straw-mint">Today</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-straw-green font-bold">🔄 Swap for garden produce</span>
+          <button class="bg-straw-mint text-straw-dark px-3 py-1.5 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-handshake mr-1"></i> Offer
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-mint/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-mint/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Listings
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER — NO PAYMENT INVOLVED -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-mint/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-shield-halved text-straw-mint"></i>
+      Important — No Payments Handled · All Deals Direct
+    </h3>
+
+    <div class="grid md:grid-cols-2 gap-6 text-sm text-straw-gray">
+      <!-- 🔑 KEY NOTICE -->
+      <div class="md:col-span-2 bg-straw-mint/5 border border-straw-mint/20 rounded-xl p-4 mb-2">
+        <h4 class="font-bold text-straw-mint mb-2">🔑 How It Works — Direct Only</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>This platform NEVER handles payments.</strong> No money, no cards, no bank transfers, no holding funds — ever.</li>
+          <li>• <strong>All deals are 100% direct between buyer and seller.</strong> Agree price, payment method, and exchange entirely between yourselves.</li>
+          <li>• <strong>Payment options are private between parties:</strong> Cash on collection, bank transfer, PayPal, payment apps, or in-person exchange — your choice, not ours.</li>
+          <li>• <strong>Meet in public where possible.</strong> Inspect items before handing over any money or goods. Exchange safely.</li>
+        </ul>
+      </div>
+
+      <!-- P2P -->
+      <div>
+        <h4 class="font-bold text-straw-mint mb-2">👤 Person-to-Person Trades</h4>
+        <ul class="space-y-1.5">
+          <li>• All listings are between independent users. This platform acts only as a listing service — it does not own, inspect, guarantee, or warrant any item.</li>
+          <li>• <strong>Price & value are fully negotiable between parties.</strong> Listed prices are suggestions only — agree your own deal directly.</li>
+          <li>• <strong>Agreement is solely between you and the other party.</strong> We are not part of any contract, trade, or transaction.</li>
+          <li>• Always inspect items in person before exchanging money or goods. Meet in safe, public locations.</li>
+        </ul>
+      </div>
+
+      <!-- B2B -->
+      <div>
+        <h4 class="font-bold text-straw-mint mb-2">🏢 Business-to-Business Trades</h4>
+        <ul class="space-y-1.5">
+          <li>• Businesses are solely responsible for compliance with all laws, trading standards, descriptions, weights, and pricing.</li>
+          <li>• <strong>Tax, VAT, and legal obligations</strong> are the full responsibility of the trading businesses — not this platform.</li>
+          <li>• Any credit terms, invoicing, or payment schedules are agreed directly between businesses. We have no involvement in payments or terms.</li>
+          <li>• Businesses must ensure all descriptions, quantities, origin, and safety information are accurate and complete.</li>
+        </ul>
+      </div>
+
+      <!-- Food Safety -->
+      <div>
+        <h4 class="font-bold text-straw-gold mb-2">🍽️ Food Safety & Home-Produced Goods</h4>
+        <ul class="space-y-1.5">
+          <li>• Home-produced food is prepared by individuals and small businesses. Sellers are responsible for hygiene, allergen disclosure, and safety.</li>
+          <li>• <strong>Always ask about allergens</strong> — nuts, dairy, gluten, etc. Consumption is at your own discretion.</li>
+          <li>• This platform does not inspect, test, or certify food. Buyers and traders accept full responsibility.</li>
+          <li>• Foraged items must be positively identified. Never consume unknown plants.</li>
+        </ul>
+      </div>
+
+      <!-- Liability -->
+      <div>
+        <h4 class="font-bold text-red-400 mb-2">📋 No Liability — Platform Terms</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>We accept NO liability whatsoever.</strong> No responsibility for quality, safety, legality, accuracy, or any loss, damage, or injury.</li>
+          <li>• <strong>We do NOT process, hold, or guarantee payments.</strong> All payments and exchanges happen entirely between the parties — off-platform.</li>
+          <li>• Disputes, refunds, returns, and quality issues must be resolved directly between the buyer and seller.</li>
+          <li>• Prohibited items — illegal goods, counterfeits, restricted items — must not be listed. We may remove listings at any time.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>By using this platform, you agree:</strong> All transactions, payments, and exchanges are arranged directly between parties. This platform provides a listing service only — it does not handle payments, guarantee transactions, or act as an intermediary. <strong>Trading is entirely at your own risk.</strong> © 2026 Homegrown Exchange — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🌿 Homegrown & Homemade Exchange — <span class="text-straw-mint">All deals direct · No middleman · No payments handled</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const grid = document.getElementById('listingsGrid');
+  const allCards = grid.querySelectorAll('div[data-category]');
+
+  let activeCategory = 'all';
+  let activeType = 'all';
+
+  // Combined filter: search + category + type applied together
+  function applyFilters() {
+    const term = searchInput.value.toLowerCase().trim();
+    allCards.forEach(card => {
+      const matchSearch = card.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCategory === 'all' || card.dataset.category === activeCategory);
+      const matchType = (activeType === 'all' || card.dataset.type === activeType);
+      card.style.display = (matchSearch && matchCat && matchType) ? '' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  function filterCategory(cat) {
+    activeCategory = cat;
+    applyFilters();
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  }
+
+  function filterType(type) {
+    activeType = type;
+    applyFilters();
+  }
+
+  // Post Item — direct contact only
+  function openPostModal() {
+    alert('📋 To list an item: Contact us directly. All listings are free. All deals remain direct between buyers and sellers.');
+  }
+</script>
+
+</body>
+</html>
+

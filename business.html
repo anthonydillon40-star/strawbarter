@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🏢 Business Directory — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210',
+              card: '#1A241E',
+              mint: '#7FE8A0',
+              green: '#22c55e',
+              gold: '#F2C14E',
+              red: '#e84a5f',
+              gray: '#B0B8B0',
+              dark: '#0A0C0B',
+              blue: '#3498db'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(127,232,160,0.12); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    .star-filled { color: #F2C14E; }
+    .star-empty { color: #333; }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER / NAV -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-mint/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-mint transition">← Back</a>
+      <button onclick="openAddModal()" class="bg-straw-blue/20 text-straw-blue px-3 py-1.5 rounded-full font-semibold hover:bg-straw-blue/30 transition">
+        <i class="fa-solid fa-plus mr-1"></i> Add Business
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-14 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-blue/10 via-transparent to-straw-mint/5"></div>
+  <div class="max-w-5xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🏢</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Local & Traded Business Directory</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Find · Connect · Trade</strong><br>
+      Independent businesses, traders & services — all deals direct. No payments handled.
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-8">
+      <input type="text" id="searchInput" placeholder="🔍 Search: plumber, bakery, web design, electrician, garden..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-mint/20 text-white text-lg focus:outline-none focus:border-straw-mint">
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-green/20 text-straw-green">🤝 Barter Accepted</span>
+      <span class="tag bg-straw-gold/20 text-straw-gold">💷 Cash & Trade</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">📍 Local UK</span>
+      <span class="tag bg-purple-500/20 text-purple-400">🌐 Online</span>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterCategory('all')" class="bg-straw-mint/20 text-straw-mint px-4 py-2 rounded-full text-sm font-semibold hover:bg-straw-mint/40 transition">All Businesses</button>
+    <button onclick="filterCategory('trades')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🔧 Trades & Services</button>
+    <button onclick="filterCategory('food')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🍽️ Food & Drink</button>
+    <button onclick="filterCategory('creative')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🎨 Creative & Media</button>
+    <button onclick="filterCategory('tech')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">💻 Tech & Digital</button>
+    <button onclick="filterCategory('retail')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🛒 Retail & Goods</button>
+    <button onclick="filterCategory('home')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🏠 Home & Garden</button>
+    <button onclick="filterCategory('wellness')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-mint/10 transition">🧘 Wellness & Services</button>
+  </div>
+  <div class="flex flex-wrap gap-2 justify-center">
+    <button onclick="filterType('all')" class="bg-straw-mint/20 text-straw-mint px-3 py-1.5 rounded-full text-sm font-semibold">All Types</button>
+    <button onclick="filterType('barter')" class="bg-green-500/20 text-green-400 px-3 py-1.5 rounded-full text-sm font-semibold">🤝 Accepts Barter</button>
+    <button onclick="filterType('cash')" class="bg-yellow-500/20 text-yellow-400 px-3 py-1.5 rounded-full text-sm font-semibold">💷 Cash Only</button>
+    <button onclick="filterType('local')" class="bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-full text-sm font-semibold">📍 Local</button>
+    <button onclick="filterType('online')" class="bg-purple-500/20 text-purple-400 px-3 py-1.5 rounded-full text-sm font-semibold">🌐 Online</button>
+  </div>
+</section>
+
+<!-- 📦 BUSINESS LISTINGS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="businessGrid">
+
+    <!-- Business 1 -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="trades" data-type="barter local">
+      <div class="h-40 bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center text-5xl relative">
+        🔧
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">🤝 Barter</span>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Dillon’s Handyman Services</h3>
+          <div class="text-sm">
+            <i class="fa-solid fa-star star-filled"></i>
+            <span class="text-straw-gray">4.9</span>
+          </div>
+        </div>
+        <p class="text-straw-gray text-sm mb-3">General repairs, painting, fencing, garden maintenance. 15+ years experience. Happy to consider trade/swaps.</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Carpentry</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Painting</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Fencing</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Bolton · <span class="text-straw-mint">Local</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-straw-mint text-straw-dark py-2 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-envelope mr-1"></i> Contact
+          </button>
+          <button class="bg-straw-card border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10 transition">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 2 -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="food" data-type="barter local">
+      <div class="h-40 bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center text-5xl relative">
+        🍞
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">🤝 Barter</span>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Artisan Sourdough Bakery</h3>
+          <div class="text-sm">
+            <i class="fa-solid fa-star star-filled"></i>
+            <span class="text-straw-gray">5.0</span>
+          </div>
+        </div>
+        <p class="text-straw-gray text-sm mb-3">Handmade sourdough, pastries & preserves. Organic ingredients. Happy to trade for produce, firewood, or services.</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Bakery</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Preserves</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Manchester · <span class="text-straw-mint">Local Delivery</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-straw-mint text-straw-dark py-2 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-envelope mr-1"></i> Contact
+          </button>
+          <button class="bg-straw-card border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10 transition">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 3 -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="tech" data-type="cash online">
+      <div class="h-40 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center text-5xl relative">
+        💻
+        <span class="absolute top-3 right-3 tag bg-yellow-500/80 text-white">💷 Cash</span>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Web & Digital Solutions</h3>
+          <div class="text-sm">
+            <i class="fa-solid fa-star star-filled"></i>
+            <span class="text-straw-gray">4.8</span>
+          </div>
+        </div>
+        <p class="text-straw-gray text-sm mb-3">Web design, hosting, SEO, social media. Small business specialists. Fixed price packages. Cash/invoice only.</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Web Design</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">SEO</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Nationwide · <span class="text-purple-400">Online</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-straw-mint text-straw-dark py-2 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-envelope mr-1"></i> Enquire
+          </button>
+          <button class="bg-straw-card border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10 transition">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 4 -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="creative" data-type="barter online">
+      <div class="h-40 bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center text-5xl relative">
+        🎨
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">🤝 Barter</span>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Graphic Design & Branding</h3>
+          <div class="text-sm">
+            <i class="fa-solid fa-star star-filled"></i>
+            <span class="text-straw-gray">4.7</span>
+          </div>
+        </div>
+        <p class="text-straw-gray text-sm mb-3">Logos, branding, print, social media graphics. Open to creative trades — let's talk!</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Logos</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Branding</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> UK · <span class="text-purple-400">Online</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-straw-mint text-straw-dark py-2 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-handshake mr-1"></i> Propose Trade
+          </button>
+          <button class="bg-straw-card border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10 transition">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 5 -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="home" data-type="barter local">
+      <div class="h-40 bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center text-5xl relative">
+        🌿
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">🤝 Barter</span>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Green Thumb Landscaping</h3>
+          <div class="text-sm">
+            <i class="fa-solid fa-star star-filled"></i>
+            <span class="text-straw-gray">4.9</span>
+          </div>
+        </div>
+        <p class="text-straw-gray text-sm mb-3">Garden design, planting, patios, fencing. Supply & plant. Happy to trade for materials, tools, or other services.</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Landscaping</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Fencing</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Oldham · <span class="text-straw-mint">Local</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-straw-mint text-straw-dark py-2 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-envelope mr-1"></i> Contact
+          </button>
+          <button class="bg-straw-card border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10 transition">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 6 -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="wellness" data-type="cash local">
+      <div class="h-40 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center text-5xl relative">
+        🧘
+        <span class="absolute top-3 right-3 tag bg-yellow-500/80 text-white">💷 Cash</span>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Holistic Therapies & Massage</h3>
+          <div class="text-sm">
+            <i class="fa-solid fa-star star-filled"></i>
+            <span class="text-straw-gray">5.0</span>
+          </div>
+        </div>
+        <p class="text-straw-gray text-sm mb-3">Swedish, deep tissue, aromatherapy. Relaxation & pain relief. Appointments only. Cash payment.</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Massage</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Wellness</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Bury · <span class="text-straw-mint">By Appointment</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-straw-mint text-straw-dark py-2 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-calendar mr-1"></i> Book
+          </button>
+          <button class="bg-straw-card border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10 transition">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business 7 — retail (was unrepresented) -->
+    <div class="bg-straw-card rounded-2xl overflow-hidden card-hover border border-straw-mint/5" data-category="retail" data-type="barter local">
+      <div class="h-40 bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center text-5xl relative">
+        🪴
+        <span class="absolute top-3 right-3 tag bg-green-500/80 text-white">🤝 Barter</span>
+      </div>
+      <div class="p-5">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-bold text-white">Second-Hand Tools & Garden Goods</h3>
+          <div class="text-sm">
+            <i class="fa-solid fa-star star-filled"></i>
+            <span class="text-straw-gray">4.6</span>
+          </div>
+        </div>
+        <p class="text-straw-gray text-sm mb-3">Quality used power tools, hand tools, pots & garden equipment. Everything tested. Trade welcomed — try me!</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Tools</span>
+          <span class="tag bg-straw-mint/10 text-straw-mint text-xs">Garden</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-straw-gray mb-4">
+          <i class="fa-solid fa-location-dot text-straw-red"></i> Salford · <span class="text-straw-mint">Local</span>
+        </div>
+        <div class="flex gap-2">
+          <button class="flex-1 bg-straw-mint text-straw-dark py-2 rounded-lg font-semibold text-sm hover:bg-straw-green transition">
+            <i class="fa-solid fa-comment mr-1"></i> Contact
+          </button>
+          <button class="bg-straw-card border border-straw-mint/20 text-white px-3 py-2 rounded-lg hover:bg-straw-mint/10 transition">
+            <i class="fa-solid fa-globe"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-mint/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-mint/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Businesses
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER — DIRECT DEALS ONLY -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-mint/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-shield-halved text-straw-mint"></i>
+      Directory Terms — All Deals Direct
+    </h3>
+
+    <div class="grid md:grid-cols-2 gap-6 text-sm text-straw-gray">
+      <div class="md:col-span-2 bg-straw-blue/5 border border-straw-blue/20 rounded-xl p-4 mb-2">
+        <h4 class="font-bold text-straw-blue mb-2">🔑 How It Works — No Middleman</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>This directory NEVER handles payments.</strong> No money, no transactions, no processing — ever.</li>
+          <li>• <strong>All agreements are directly between you and the business.</strong> Contact, quote, agree price/payment method — entirely between yourselves.</li>
+          <li>• <strong>Payment options are private:</strong> Cash, bank transfer, invoice, trade, barter — whatever you both agree.</li>
+          <li>• <strong>Verify before committing.</strong> Check references, reviews, qualifications, and insurance — your responsibility.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-straw-mint mb-2">✅ Listing Standards</h4>
+        <ul class="space-y-1.5">
+          <li>• Businesses must provide accurate descriptions, pricing, and contact details.</li>
+          <li>• Accepting barter means the business is open to trade — not guaranteed, always ask.</li>
+          <li>• Ratings are user-submitted — we do not verify or endorse.</li>
+          <li>• We reserve the right to remove misleading, illegal, or inappropriate listings.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-straw-gold mb-2">📋 Liability & Responsibility</h4>
+        <ul class="space-y-1.5">
+          <li>• This is a <strong>directory only</strong> — we do not employ, guarantee, or certify any business listed.</li>
+          <li>• All work, products, services, and warranties are the sole responsibility of the business.</li>
+          <li>• Disputes, refunds, and quality issues must be resolved directly between parties.</li>
+          <li>• We accept no liability for loss, damage, injury, or financial loss arising from any engagement.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>By using this directory:</strong> You acknowledge this platform provides listing information only. All business, payments, and agreements are made directly between the customer and the business — off-platform and entirely at your own risk. © 2026 Business Directory — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🏢 Business Directory — <span class="text-straw-mint">Connect Direct · Trade Fair · Support Local</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const grid = document.getElementById('businessGrid');
+  const allCards = grid.querySelectorAll('div[data-category]');
+
+  let activeCategory = 'all';
+  let activeType = 'all';
+
+  // Combined filter: search + category + type applied together
+  function applyFilters() {
+    const term = searchInput.value.toLowerCase().trim();
+    allCards.forEach(card => {
+      const matchSearch = card.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCategory === 'all' || card.dataset.category === activeCategory);
+      const types = card.dataset.type.split(' ');
+      const matchType = (activeType === 'all' || types.includes(activeType));
+      card.style.display = (matchSearch && matchCat && matchType) ? '' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  function filterCategory(cat) {
+    activeCategory = cat;
+    applyFilters();
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  }
+
+  function filterType(type) {
+    activeType = type;
+    applyFilters();
+  }
+
+  // Add Business — direct submission
+  function openAddModal() {
+    alert('📋 Add Your Business: Contact us with your business name, category, description, location, and contact details. Listing is free. All deals remain direct.');
+  }
+</script>
+
+</body>
+</html>
+

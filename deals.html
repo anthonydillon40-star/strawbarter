@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📈 Daily Deals & Price Compare — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3498db', purple: '#9b59b6', orange: '#f97316'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .deal-card { transition: all 0.25s ease; }
+    .deal-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(249,115,22,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    .price-old { text-decoration: line-through; color: #666; }
+    .savings-badge { background: linear-gradient(135deg, #e84a5f, #f97316); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-mint/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-mint transition">← Back</a>
+      <span class="text-straw-gold text-sm font-semibold">
+        <i class="fa-solid fa-bolt mr-1"></i> Updated Daily
+      </span>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-orange/10 via-transparent to-straw-gold/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">📈</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Daily Deals & Price Compare</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Best Prices · Compare Across Retailers · Save Every Day</strong><br>
+      Click → Buy Direct → We earn a small commission at no extra cost to you ❤️
+    </p>
+    <div class="max-w-xl mx-auto relative mb-6">
+      <input type="text" id="searchInput" placeholder="🔍 Search deals: headphones, tools, kitchen, garden, tech..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-orange/20 text-white text-lg">
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-orange-500/20 text-orange-400 px-3 py-1.5">📦 Amazon</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue px-3 py-1.5">🛒 Argos</span>
+      <span class="tag bg-straw-green/20 text-straw-green px-3 py-1.5">🔧 B&Q</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple px-3 py-1.5">🎁 eBay</span>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center">
+    <button onclick="filterAll()" class="bg-straw-orange text-white px-4 py-2 rounded-full text-sm font-semibold">🔥 All Deals</button>
+    <button onclick="filterCat('tech')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-orange/10 hover:text-straw-orange">📱 Tech & Electronics</button>
+    <button onclick="filterCat('home')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-orange/10 hover:text-straw-orange">🏠 Home & Kitchen</button>
+    <button onclick="filterCat('garden')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-orange/10 hover:text-straw-orange">🌱 Garden & DIY</button>
+    <button onclick="filterCat('tools')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-orange/10 hover:text-straw-orange">🔧 Tools & Hardware</button>
+    <button onclick="filterCat('fashion')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-orange/10 hover:text-straw-orange">👕 Fashion</button>
+    <button onclick="filterCat('books')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-orange/10 hover:text-straw-orange">📚 Books & Media</button>
+  </div>
+</section>
+
+<!-- 📦 DEALS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="dealsGrid">
+
+    <!-- 🔥 FEATURED DEAL -->
+    <div class="bg-gradient-to-br from-straw-orange/20 to-straw-red/20 rounded-2xl p-5 border-2 border-straw-orange deal-card relative" data-cat="tech">
+      <div class="absolute top-3 right-3 savings-badge text-white text-xs font-bold px-3 py-1 rounded-full">
+        🔥 FEATURED
+      </div>
+      <div class="text-center py-4 text-6xl mb-3">🎧</div>
+      <h3 class="text-xl font-bold text-white mb-2">Wireless Noise-Cancelling Headphones</h3>
+      <p class="text-sm text-straw-gray mb-3">30hr battery · Bluetooth 5.3 · Hi-Fi Sound · Comfort Fit</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£49.99</span>
+        <span class="price-old text-sm">£89.99</span>
+        <span class="tag bg-straw-red text-white">Save 44%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded">📦 Amazon</span>
+        <span>⭐ 4.7 (2,841 reviews)</span>
+      </div>
+      <a href="https://www.amazon.co.uk/dp/B09XYZ1234?tag=straw09-21" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View & Buy →
+      </a>
+    </div>
+
+    <!-- DEAL 2 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="home">
+      <div class="text-center py-4 text-5xl mb-3">☕</div>
+      <h3 class="text-xl font-bold text-white mb-2">Programmable Coffee Maker — 1.5L</h3>
+      <p class="text-sm text-straw-gray mb-3">Timer · Auto Shut-Off · Keep Warm Function · Dishwasher Safe</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£24.99</span>
+        <span class="price-old text-sm">£45.00</span>
+        <span class="tag bg-straw-red text-white">Save 44%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded">🛒 Argos</span>
+        <span>⭐ 4.5 (1,203)</span>
+      </div>
+      <a href="https://www.awin1.com/cread.php?awinmid=3062179&awinaffid=3062179&p=https%3A%3F%2Fwww.argos.co.uk/product/12345" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View Deal →
+      </a>
+    </div>
+
+    <!-- DEAL 3 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="garden">
+      <div class="text-center py-4 text-5xl mb-3">🌿</div>
+      <h3 class="text-xl font-bold text-white mb-2">Large Raised Garden Bed — 120x60cm</h3>
+      <p class="text-sm text-straw-gray mb-3">Weather-resistant PP · No tools needed · Deep Soil Depth — Perfect for Veg</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£19.99</span>
+        <span class="price-old text-sm">£35.99</span>
+        <span class="tag bg-straw-red text-white">Save 44%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-green-500/10 text-green-400 px-2 py-0.5 rounded">🔧 B&Q</span>
+        <span>⭐ 4.8 (562)</span>
+      </div>
+      <a href="https://www.awin1.com/cread.php?awinmid=3062179&awinaffid=3062179&p=https%3A%3F%2Fwww.diy.com/departments/raised-beds" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View Deal →
+      </a>
+    </div>
+
+    <!-- DEAL 4 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="tools">
+      <div class="text-center py-4 text-5xl mb-3">🔧</div>
+      <h3 class="text-xl font-bold text-white mb-2">Cordless Drill Set — 2 Batteries + 42pc Kit</h3>
+      <p class="text-sm text-straw-gray mb-3">18V · 2-Speed · 45Nm Torque · LED Worklight · Carry Case</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£39.99</span>
+        <span class="price-old text-sm">£69.99</span>
+        <span class="tag bg-straw-red text-white">Save 43%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded">📦 Amazon</span>
+        <span>⭐ 4.6 (4,291)</span>
+      </div>
+      <a href="https://www.amazon.co.uk/dp/B08XYZ7890?tag=straw09-21" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View & Buy →
+      </a>
+    </div>
+
+    <!-- DEAL 5 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="tech">
+      <div class="text-center py-4 text-5xl mb-3">🔋</div>
+      <h3 class="text-xl font-bold text-white mb-2">20000mAh Portable Power Bank — Fast Charge</h3>
+      <p class="text-sm text-straw-gray mb-3">22.5W PD · USB-C + USB-A · LED Display · Charge 3 Devices At Once</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£15.99</span>
+        <span class="price-old text-sm">£29.99</span>
+        <span class="tag bg-straw-red text-white">Save 47%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded">🎁 eBay</span>
+        <span>⭐ 4.8 (9,402)</span>
+      </div>
+      <a href="https://www.awin1.com/cread.php?awinmid=3062179&awinaffid=3062179&p=https%3A%3F%2Fwww.ebay.co.uk/itm/12345" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View Deal →
+      </a>
+    </div>
+
+    <!-- DEAL 6 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="fashion">
+      <div class="text-center py-4 text-5xl mb-3">🧥</div>
+      <h3 class="text-xl font-bold text-white mb-2">Men's Waterproof Windbreaker — Lightweight</h3>
+      <p class="text-sm text-straw-gray mb-3">Breathable · Quick Dry · Hooded · S-3XL · 5 Colours</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£22.99</span>
+        <span class="price-old text-sm">£49.99</span>
+        <span class="tag bg-straw-red text-white">Save 54%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded">📦 Amazon</span>
+        <span>⭐ 4.4 (1,832)</span>
+      </div>
+      <a href="https://www.amazon.co.uk/dp/B07XYZ4567?tag=straw09-21" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View & Buy →
+      </a>
+    </div>
+
+    <!-- DEAL 7 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="home">
+      <div class="text-center py-4 text-5xl mb-3">🧊</div>
+      <h3 class="text-xl font-bold text-white mb-2">4-Tier Clear Storage Drawers — Home/Office</h3>
+      <p class="text-sm text-straw-gray mb-3">Stackable · Easy-Clean · 30x35x60cm — Perfect for Organising</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£18.00</span>
+        <span class="price-old text-sm">£32.00</span>
+        <span class="tag bg-straw-red text-white">Save 44%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded">🛒 Argos</span>
+        <span>⭐ 4.3 (892)</span>
+      </div>
+      <a href="https://www.awin1.com/cread.php?awinmid=3062179&awinaffid=3062179&p=https%3A%3F%2Fwww.argos.co.uk/product/78901" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View Deal →
+      </a>
+    </div>
+
+    <!-- DEAL 8 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="books">
+      <div class="text-center py-4 text-5xl mb-3">📚</div>
+      <h3 class="text-xl font-bold text-white mb-2">3-Book Bestseller Bundle — Fiction Top 3</h3>
+      <p class="text-sm text-straw-gray mb-3">Paperback — All 3 Current Sunday Times Top 10 — Great Reviews!</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£12.99</span>
+        <span class="price-old text-sm">£29.97</span>
+        <span class="tag bg-straw-red text-white">Save 57%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded">📦 Amazon</span>
+        <span>⭐ 4.9 (12,403)</span>
+      </div>
+      <a href="https://www.amazon.co.uk/dp/B0CXZ12345?tag=straw09-21" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View & Buy →
+      </a>
+    </div>
+
+    <!-- DEAL 9 -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-orange/10" data-cat="garden">
+      <div class="text-center py-4 text-5xl mb-3">💧</div>
+      <h3 class="text-xl font-bold text-white mb-2">50ft Expandable Garden Hose + Spray Nozzle</h3>
+      <p class="text-sm text-straw-gray mb-3">Lightweight · Kink-Free · 8 Spray Patterns · Brass Fittings — Compact Storage</p>
+      <div class="flex items-baseline gap-2 mb-4">
+        <span class="text-2xl font-bold text-straw-green">£14.99</span>
+        <span class="price-old text-sm">£34.99</span>
+        <span class="tag bg-straw-red text-white">Save 57%</span>
+      </div>
+      <div class="flex gap-2 text-xs text-straw-gray mb-4">
+        <span class="bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded">📦 Amazon</span>
+        <span>⭐ 4.5 (6,721)</span>
+      </div>
+      <a href="https://www.amazon.co.uk/dp/B09XYZ9999?tag=straw09-21" target="_blank" rel="noopener sponsored"
+         class="block w-full bg-straw-orange text-white text-center py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> View & Buy →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-orange/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-orange/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Deals
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER — AFFILIATE, NO PAYMENTS HANDLED -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-orange/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-straw-orange"></i>
+      How It Works — Shop Direct, We Earn a Commission
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-orange/5 border border-straw-orange/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-orange mb-2">🤝 Affiliate Links — No Extra Cost To You</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>Click any "View & Buy" button</strong> — you go directly to the retailer (Amazon, Argos, B&Q, etc.)</li>
+          <li>• <strong>We earn a small commission</strong> if you buy — at NO extra cost to you! Prices stay exactly the same</li>
+          <li>• <strong>STRAW Barter NEVER handles payments or holds funds.</strong> All transactions are 100% direct between you and the retailer</li>
+          <li>• <strong>Your purchase supports this site</strong> — thank you! ❤️</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-mint mb-2">✅ Price & Availability</h4>
+          <ul class="space-y-1.5">
+            <li>• Prices updated daily — but may change anytime</li>
+            <li>• Always check final price on retailer site before buying</li>
+            <li>• "Savings %" based on RRP / previous price</li>
+            <li>• Stock levels subject to retailer availability</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-blue mb-2">🛒 Your Benefits</h4>
+          <ul class="space-y-1.5">
+            <li>• Best prices all in one place — no need to search 10+ sites</li>
+            <li>• Go straight to trusted retailers — safe & secure checkout</li>
+            <li>• Fast delivery, returns & warranty — all from retailer</li>
+            <li>• Help keep strawbarter.com free — every purchase supports us!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Affiliate Disclosure:</strong> This page contains affiliate links. If you click through and make a purchase, we may earn a commission from Amazon Associates, AWIN, and other affiliate programs — at no additional cost to you. All prices and availability are correct at time of publishing but are subject to change by the retailer. © 2026 Daily Deals — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>📈 Daily Deals & Price Compare — <span class="text-straw-orange">Find It · Compare It · Save It</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+  <p class="mt-2 text-xs">Affiliate links support this site — thank you for shopping through them! ❤️</p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('dealsGrid');
+  const allDeals = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = 'all';
+
+  // Combined filter: search + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    allDeals.forEach(deal => {
+      const matchSearch = deal.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCat === 'all' || deal.dataset.cat === activeCat);
+      deal.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  // Show all
+  function filterAll() {
+    activeCat = 'all';
+    applyFilters();
+  }
+
+  // Filter by category
+  function filterCat(cat) {
+    activeCat = cat;
+    applyFilters();
+  }
+</script>
+
+</body>
+</html>
+
