@@ -140,6 +140,7 @@
           <a href="#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
           <a href="#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
           <a href="#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
+          <a href="#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
           <a href="#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
           <a href="#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
           <a href="#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
@@ -169,6 +170,7 @@
       <a href="#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
       <a href="#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
       <a href="#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
+      <a href="#books" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Book Exchange</a>
       <a href="#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
       <a href="#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
       <a href="#legal" class="py-2 px-3 rounded-lg hover:bg-s-card">⚖️ Legal</a>
@@ -441,6 +443,157 @@
   </div>
 </section>
 
+<!-- ====================================== -->
+<!-- 📚 BOOK EXCHANGE — STRAW Barter Style -->
+<!-- ====================================== -->
+<section id="books" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <div class="text-center mb-8">
+    <h2 class="text-2xl font-bold mb-2">📚 Book Exchange</h2>
+    <p class="text-s-muted text-sm">Trade, swap, lend, or give books away — zero fees, direct between members</p>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="bg-s-card/50 rounded-2xl p-5 mb-8 border border-s-border">
+    <div class="flex flex-col gap-3 mb-4">
+      <input type="text" id="bookSearch" placeholder="Search by title, author, or ISBN..."
+        class="w-full px-5 py-3 rounded-full bg-s-dark border border-s-border text-white placeholder-s-muted focus:outline-none focus:border-s-green">
+      <div class="flex flex-wrap gap-3">
+        <select id="bookCategory" class="flex-1 min-w-[140px] px-4 py-2 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+          <option value="all">📖 All Categories</option>
+          <option value="fiction">Fiction</option>
+          <option value="non-fiction">Non-Fiction</option>
+          <option value="children">Children's</option>
+          <option value="textbooks">Textbooks</option>
+          <option value="self-help">Self-Help</option>
+          <option value="cookery">Cookery</option>
+        </select>
+        <select id="bookCondition" class="flex-1 min-w-[140px] px-4 py-2 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+          <option value="all">✨ Any Condition</option>
+          <option value="like-new">Like New</option>
+          <option value="good">Good</option>
+          <option value="fair">Fair</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 text-sm">
+      <label class="flex items-center gap-2 text-s-muted cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="onlySwap" class="accent-s-green"> 🔄 Swap Only
+      </label>
+      <label class="flex items-center gap-2 text-s-muted cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="onlyFree" class="accent-s-green"> 🎁 Free Only
+      </label>
+      <span class="ml-auto text-s-muted"><span id="bookCount">8</span> books listed</span>
+    </div>
+  </div>
+
+  <!-- Action Buttons — Matches Main Menu Style -->
+  <div class="grid grid-cols-3 gap-4 mb-8 max-w-xl mx-auto">
+    <button onclick="openPostModal()" class="bg-s-green/10 border border-s-green/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-s-green/20 transition text-center">
+      ➕ Post Book
+    </button>
+    <button onclick="openWishlistModal()" class="bg-s-green/10 border border-s-green/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-s-green/20 transition text-center">
+      💭 Wishlist
+    </button>
+    <button onclick="openLocalModal()" class="bg-s-green/10 border border-s-green/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-s-green/20 transition text-center">
+      📍 Near Me
+    </button>
+  </div>
+
+  <!-- Books Grid -->
+  <div id="booksGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+    <!-- Dynamically populated -->
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center">
+    <button onclick="loadMoreBooks()" class="bg-s-green/10 border border-s-green/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-green/20 transition">
+      Load More →
+    </button>
+  </div>
+
+  <!-- Stats Banner — Matches "Zero funds held" style -->
+  <div class="mt-12 bg-s-gold/10 border border-s-gold/30 rounded-2xl p-5 text-center">
+    <p class="text-s-gold font-semibold">
+      📖 Zero fees — all swaps & sales direct between members
+    </p>
+  </div>
+</section>
+
+<!-- ========== MODALS — Matching Style ========== -->
+<div id="postBookModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-green/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ Post a Book</h3>
+      <button onclick="closePostModal()" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="postBookForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Book Title *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none focus:border-s-green">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Author *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none focus:border-s-green">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>Fiction</option>
+            <option>Non-Fiction</option>
+            <option>Children's</option>
+            <option>Textbooks</option>
+            <option>Self-Help</option>
+            <option>Cookery</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Condition *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>Like New</option>
+            <option>Good</option>
+            <option>Fair</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Offer Type</label>
+        <div class="grid grid-cols-3 gap-3">
+          <label class="flex items-center justify-center gap-2 bg-s-dark border border-s-border rounded-full py-3 cursor-pointer hover:border-s-green transition">
+            <input type="radio" name="offerType" value="swap" class="accent-s-green"> 🔄 Swap
+          </label>
+          <label class="flex items-center justify-center gap-2 bg-s-dark border border-s-border rounded-full py-3 cursor-pointer hover:border-s-green transition">
+            <input type="radio" name="offerType" value="free" class="accent-s-green"> 🎁 Free
+          </label>
+          <label class="flex items-center justify-center gap-2 bg-s-dark border border-s-border rounded-full py-3 cursor-pointer hover:border-s-green transition">
+            <input type="radio" name="offerType" value="sell" class="accent-s-green"> 💰 Sell
+          </label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Location *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none focus:border-s-green" placeholder="Postcode or City">
+      </div>
+      <button type="submit" class="w-full bg-s-green text-s-dark py-3 rounded-full font-bold hover:bg-green-400 transition text-lg mt-2">
+        ✅ Post Book
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Book Detail Modal -->
+<div id="bookDetailModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-green/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 id="detailTitle" class="text-2xl font-bold text-white">Book Title</h3>
+      <button onclick="closeDetailModal()" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
 <!-- Sign-Up / Referral -->
 <section id="signup" class="section-compact px-4 max-w-3xl mx-auto text-center border-t border-s-border">
   <div class="card rounded-2xl p-6">
@@ -524,10 +677,12 @@ function toggleDropdown(id, e) {
   menu.classList.toggle('open');
 }
 
-// Close dropdown when clicking outside
+// Close dropdown when clicking outside or on a menu item
 document.addEventListener('click', (e) => {
   document.querySelectorAll('.dropdown-menu').forEach(menu => {
-    if (!menu.parentElement.contains(e.target)) menu.classList.remove('open');
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
   });
 });
 
@@ -567,6 +722,132 @@ function confirmAge(isAdult) {
     showToast('🔞 This section is 18+ only');
   }
 }
+
+// ======================================
+// 📚 BOOK EXCHANGE
+// ======================================
+const books = [
+  { id:1, title:"Atomic Habits", author:"James Clear", category:"self-help", condition:"like-new", type:"swap", price:null, location:"London, SE1", image:"📘", poster:"Sarah M.", posted:"2h ago" },
+  { id:2, title:"Harry Potter — Complete Set", author:"J.K. Rowling", category:"children", condition:"good", type:"sell", price:25, location:"Manchester, M4", image:"📚", poster:"Dave T.", posted:"1d ago" },
+  { id:3, title:"The Psychology of Money", author:"Morgan Housel", category:"non-fiction", condition:"good", type:"free", price:null, location:"Birmingham, B5", image:"📗", poster:"Emma L.", posted:"3h ago" },
+  { id:4, title:"University Physics Textbook", author:"Young & Freedman", category:"textbooks", condition:"fair", type:"swap", price:null, location:"Leeds, LS2", image:"📕", poster:"Mark R.", posted:"5h ago" },
+  { id:5, title:"Great British Bake Off", author:"Various", category:"cookery", condition:"like-new", type:"sell", price:8, location:"Bristol, BS3", image:"📖", poster:"Lisa K.", posted:"6h ago" },
+  { id:6, title:"1984", author:"George Orwell", category:"fiction", condition:"good", type:"free", price:null, location:"Edinburgh, EH1", image:"📙", poster:"John P.", posted:"1d ago" },
+  { id:7, title:"Deep Work", author:"Cal Newport", category:"self-help", condition:"good", type:"swap", price:null, location:"Glasgow, G1", image:"📘", poster:"Jenny W.", posted:"4h ago" },
+  { id:8, title:"Python Programming 3rd Ed", author:"Mark Lutz", category:"textbooks", condition:"fair", type:"sell", price:15, location:"Cardiff, CF1", image:"📕", poster:"Alex H.", posted:"2d ago" }
+];
+
+function renderBooks(list) {
+  const grid = document.getElementById('booksGrid');
+  grid.innerHTML = list.map(book => {
+    const badge = book.type === 'free'
+      ? '<span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-xs font-semibold">🎁 FREE</span>'
+      : book.type === 'swap'
+        ? '<span class="bg-s-gold/20 text-s-gold px-3 py-1 rounded-full text-xs font-semibold">🔄 Swap</span>'
+        : `<span class="bg-s-purple/20 text-s-purple px-3 py-1 rounded-full text-xs font-semibold">£${book.price}</span>`;
+
+    return `
+      <div class="bg-s-card rounded-2xl p-5 border border-s-border cursor-pointer hover:border-s-green/50 transition" onclick="openBookDetail(${book.id})">
+        <div class="h-36 bg-s-green/10 rounded-xl flex items-center justify-center text-5xl mb-4">${book.image}</div>
+        <h3 class="text-lg font-bold text-white mb-1">${book.title}</h3>
+        <p class="text-s-muted text-sm mb-3">${book.author}</p>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-s-muted">${book.condition}</span>
+          ${badge}
+        </div>
+        <div class="mt-3 text-xs text-s-muted">📍 ${book.location}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('bookCount').textContent = list.length;
+}
+
+function filterBooks() {
+  const search = document.getElementById('bookSearch').value.toLowerCase();
+  const cat = document.getElementById('bookCategory').value;
+  const cond = document.getElementById('bookCondition').value;
+  const swapOnly = document.getElementById('onlySwap').checked;
+  const freeOnly = document.getElementById('onlyFree').checked;
+
+  const filtered = books.filter(b => {
+    const matchSearch = !search || b.title.toLowerCase().includes(search) || b.author.toLowerCase().includes(search);
+    const matchCat = cat === 'all' || b.category === cat;
+    const matchCond = cond === 'all' || b.condition === cond;
+    const matchSwap = !swapOnly || b.type === 'swap';
+    const matchFree = !freeOnly || b.type === 'free';
+    return matchSearch && matchCat && matchCond && matchSwap && matchFree;
+  });
+  renderBooks(filtered);
+}
+
+function openBookDetail(id) {
+  const book = books.find(b => b.id === id);
+  if (!book) return;
+  document.getElementById('detailTitle').textContent = book.title;
+  document.getElementById('detailContent').innerHTML = `
+    <div class="h-44 bg-s-green/10 rounded-xl flex items-center justify-center text-6xl mb-6">${book.image}</div>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Author</span><span class="font-semibold text-white">${book.author}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Category</span><span class="font-semibold text-white">${book.category}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Condition</span><span class="font-semibold text-white">${book.condition}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Available for</span><span class="font-semibold text-white">${book.type === 'free' ? '🎁 Free' : book.type === 'swap' ? '🔄 Swap' : '£' + book.price}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Location</span><span class="font-semibold text-white">${book.location}</span>
+      </div>
+      <div class="flex justify-between py-2">
+        <span class="text-s-muted">Posted by</span><span class="font-semibold text-white">${book.poster} · ${book.posted}</span>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="flex-1 bg-s-green text-s-dark py-3 rounded-full font-bold hover:bg-green-400 transition">💬 Message</button>
+      <button class="flex-1 bg-s-green/10 border border-s-green/40 text-white py-3 rounded-full font-semibold hover:bg-s-green/20 transition">🤝 Arrange</button>
+    </div>
+  `;
+  openModal('bookDetailModal');
+}
+
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+function closeDetailModal() { closeModal('bookDetailModal'); }
+function openPostModal() { openModal('postBookModal'); }
+function closePostModal() { closeModal('postBookModal'); }
+function openWishlistModal() { showToast('💭 Wishlist — Coming Soon! Save books you want.'); }
+function openLocalModal() { showToast('📍 Local Swaps — Find events near you!'); }
+function loadMoreBooks() { showToast('📚 Loading more books...'); }
+
+document.getElementById('postBookForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Book posted! It will appear in listings shortly.');
+  closePostModal();
+  e.target.reset();
+});
+
+// Attach filter listeners
+document.getElementById('bookSearch')?.addEventListener('input', filterBooks);
+document.getElementById('bookCategory')?.addEventListener('change', filterBooks);
+document.getElementById('bookCondition')?.addEventListener('change', filterBooks);
+document.getElementById('onlySwap')?.addEventListener('change', filterBooks);
+document.getElementById('onlyFree')?.addEventListener('change', filterBooks);
+
+// Initial load
+renderBooks(books);
 </script>
 
 </body>
