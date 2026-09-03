@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Skills & Time Bank — trade hours, not money. 1 hour = 1 Time Credit on STRAW Barter.">
+  <title>Skills & Time Bank — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+            },
+            straw: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              blue: '#3b82f6',
+              green: '#22c55e',
+              amber: '#f59e0b',
+              gray: '#94a3b8',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    @media (min-width: 768px) {
+      section, .scroll-anchor { scroll-margin-top: 120px; }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <!-- Row 1: Brand + account actions -->
+  <div class="max-w-7xl mx-auto px-4 pt-3 pb-1 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <div class="flex items-center gap-2">
+      <a href="index.html#signup" class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</a>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <!-- Row 2: Main navigation -->
+  <div class="max-w-7xl mx-auto px-4 pb-2 hidden md:block">
+    <nav class="flex items-center justify-center flex-wrap gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="index.html#rwa" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔐 RWA</a>
+      <a href="skills.html" class="px-3 py-2 rounded-lg bg-s-green/10 text-s-green transition">⏱️ Time Bank</a>
+      <a href="index.html#books" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">📚 Books</a>
+      <a href="index.html#dating" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">☕ Dating</a>
+      <a href="index.html#builder" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🏗️ Builders</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="skills.html" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-green">⏱️ Skills & Time Bank</a>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="index.html#rwa" class="py-2 px-3 rounded-lg hover:bg-s-card">🔐 RWA Registry</a>
+      <a href="index.html#dating" class="py-2 px-3 rounded-lg hover:bg-s-card">☕ Coffee Dating</a>
+      <a href="index.html#builder" class="py-2 px-3 rounded-lg hover:bg-s-card">🏗️ Find a Builder</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#books" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Book Exchange</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <a href="index.html#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
+      <a href="index.html#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
+      <a href="index.html#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
+      <a href="index.html#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
+      <a href="index.html#legal" class="py-2 px-3 rounded-lg hover:bg-s-card">⚖️ Legal</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🤝 SKILLS & TIME BANK — STRAW Barter   -->
+<!-- ====================================== -->
+<section id="skills-time-bank" class="px-4 py-12 scroll-mt-0 border-t border-straw-blue/20 max-w-6xl mx-auto">
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-white mb-2">🤝 Skills & Time Bank</h2>
+    <p class="text-straw-gray text-lg">Trade hours, not money — 1 hour = 1 Time Credit. Everyone's time has equal value</p>
+  </div>
+
+  <!-- Currency Info Banner -->
+  <div class="bg-straw-blue/10 border border-straw-blue/30 rounded-3xl p-5 mb-8 text-center">
+    <p class="text-straw-blue font-semibold text-lg">⏱️ 1 Hour = 1 Time Credit — Everyone's time is valued equally</p>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="bg-straw-card rounded-3xl p-5 mb-8 border border-straw-blue/20">
+    <div class="flex flex-col gap-3 mb-4">
+      <input type="text" id="skillsSearch" placeholder="Search: plumbing, gardening, tutoring, tech help, cooking..." 
+        class="w-full px-5 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white placeholder-straw-gray focus:outline-none focus:border-straw-blue">
+      <div class="flex flex-wrap gap-3">
+        <select id="skillsCategory" class="flex-1 min-w-[140px] px-4 py-2 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none">
+          <option value="all">📂 All Categories</option>
+          <option value="home">🏠 Home & Repairs</option>
+          <option value="garden">🌱 Garden & Outdoor</option>
+          <option value="teaching">📚 Teaching & Tutoring</option>
+          <option value="tech">💻 Tech & Digital</option>
+          <option value="creative">🎨 Creative & Design</option>
+          <option value="food">🍳 Food & Cooking</option>
+          <option value="care">❤️ Care & Support</option>
+          <option value="transport">🚗 Transport & Moving</option>
+          <option value="other">📦 Other</option>
+        </select>
+        <select id="skillsType" class="flex-1 min-w-[140px] px-4 py-2 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none">
+          <option value="all">🔄 Offering / Seeking</option>
+          <option value="offer">🙋 I Offer</option>
+          <option value="want">🤲 I Need</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 text-sm mt-2">
+      <label class="flex items-center gap-2 text-straw-gray cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="skillsRemote" class="accent-straw-blue"> 💻 Remote / Online
+      </label>
+      <label class="flex items-center gap-2 text-straw-gray cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="skillsVerified" class="accent-straw-blue"> ✅ Verified Only
+      </label>
+      <span class="ml-auto text-straw-gray"><span id="skillsCount">8</span> skills listed</span>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="grid grid-cols-3 gap-4 mb-8 max-w-xl mx-auto">
+    <button onclick="openSkillsOfferModal()" class="bg-straw-blue/10 border border-straw-blue/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-blue/20 transition text-center">
+      🙋 Offer Skill
+    </button>
+    <button onclick="openSkillsNeedModal()" class="bg-straw-blue/10 border border-straw-blue/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-blue/20 transition text-center">
+      🤲 Need Help
+    </button>
+    <button onclick="openSkillsWallet()" class="bg-straw-blue/10 border border-straw-blue/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-blue/20 transition text-center">
+      💰 My Credits
+    </button>
+  </div>
+
+  <!-- Skills Grid -->
+  <div id="skillsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+    <!-- Dynamically populated -->
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center">
+    <button onclick="loadMoreSkills()" class="bg-straw-blue/10 border border-straw-blue/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-straw-blue/20 transition">
+      Load More →
+    </button>
+  </div>
+
+  <!-- How It Works -->
+  <div class="mt-12 bg-straw-card rounded-3xl p-6 border border-straw-blue/20">
+    <h3 class="text-xl font-bold text-white mb-4 text-center">📖 How Time Bank Works</h3>
+    <div class="grid md:grid-cols-3 gap-6 text-center">
+      <div>
+        <div class="text-3xl mb-2">🙋</div>
+        <h4 class="font-bold text-white mb-1">1. Offer Your Skill</h4>
+        <p class="text-straw-gray text-sm">List what you can do — 1 hour = 1 Credit earned</p>
+      </div>
+      <div>
+        <div class="text-3xl mb-2">🤲</div>
+        <h4 class="font-bold text-white mb-1">2. Get Help When Needed</h4>
+        <p class="text-straw-gray text-sm">Spend your credits on skills others offer</p>
+      </div>
+      <div>
+        <div class="text-3xl mb-2">⏱️</div>
+        <h4 class="font-bold text-white mb-1">3. Time Is Equal</h4>
+        <p class="text-straw-gray text-sm">Every hour is valued equally — fair for everyone</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== OFFER SKILL MODAL ========== -->
+<div id="skillsOfferModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-blue/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">🙋 Offer a Skill</h3>
+      <button onclick="closeSkillsOfferModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="skillsOfferForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">What can you help with? *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none focus:border-straw-blue" placeholder="e.g. Gardening, Maths Tutoring, IT Support">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>🏠 Home & Repairs</option>
+            <option>🌱 Garden & Outdoor</option>
+            <option>📚 Teaching & Tutoring</option>
+            <option>💻 Tech & Digital</option>
+            <option>🎨 Creative & Design</option>
+            <option>🍳 Food & Cooking</option>
+            <option>❤️ Care & Support</option>
+            <option>🚗 Transport & Moving</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Time Needed *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none">
+            <option value="1">1 Hour = 1 Credit</option>
+            <option value="2">2 Hours = 2 Credits</option>
+            <option value="3">3 Hours = 3 Credits</option>
+            <option value="half">½ Hour = 0.5 Credit</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Location / Availability *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none focus:border-straw-blue" placeholder="Postcode, or 'Remote / Online'">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Description — what can you do?</label>
+        <textarea rows="3" class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none focus:border-straw-blue" placeholder="Experience, what's included, availability..."></textarea>
+      </div>
+      <button type="submit" class="w-full bg-straw-blue text-white py-3 rounded-full font-bold hover:bg-blue-500 transition text-lg mt-2">
+        ✅ Offer Skill
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== NEED HELP MODAL ========== -->
+<div id="skillsNeedModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-blue/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">🤲 Need Help?</h3>
+      <button onclick="closeSkillsNeedModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="skillsNeedForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">What do you need? *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none focus:border-straw-blue" placeholder="e.g. Fence repair, French lessons, website help">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>🏠 Home & Repairs</option>
+            <option>🌱 Garden & Outdoor</option>
+            <option>📚 Teaching & Tutoring</option>
+            <option>💻 Tech & Digital</option>
+            <option>🎨 Creative & Design</option>
+            <option>🍳 Food & Cooking</option>
+            <option>❤️ Care & Support</option>
+            <option>🚗 Transport & Moving</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Offering Credits *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none">
+            <option value="1">1 Credit (1 Hour)</option>
+            <option value="2">2 Credits (2 Hours)</option>
+            <option value="3">3 Credits (3 Hours)</option>
+            <option value="5">5 Credits (5 Hours)</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Location *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-blue/20 text-white focus:outline-none focus:border-straw-blue" placeholder="Postcode or 'Remote'">
+      </div>
+      <button type="submit" class="w-full bg-straw-blue text-white py-3 rounded-full font-bold hover:bg-blue-500 transition text-lg mt-2">
+        ✅ Post Request
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== SKILL DETAIL MODAL ========== -->
+<div id="skillsDetailModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-blue/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 id="skillsDetailTitle" class="text-2xl font-bold text-white">Skill Title</h3>
+      <button onclick="closeSkillsDetailModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <div id="skillsDetailContent"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="index.html#books" class="hover:text-s-green">Book Exchange</a> &nbsp;|&nbsp;
+      <a href="index.html#legal" class="hover:text-s-green">Legal & Risk</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ======================================
+// 🤝 SKILLS & TIME BANK
+// ======================================
+// Sample Skills Data
+const skillsData = [
+  { id:1, title:"Gardening & Landscaping Help", category:"garden", type:"offer", credits:2, location:"London, N1", icon:"🌱", provider:"GreenFingers", verified:true, rating:4.9, posted:"1h ago" },
+  { id:2, title:"Maths Tutoring — GCSE & A-Level", category:"teaching", type:"offer", credits:1, location:"Manchester, M14", icon:"📐", provider:"TeacherSarah", verified:true, rating:5.0, posted:"2h ago" },
+  { id:3, title:"Plumbing — Tap repairs, leaks, installs", category:"home", type:"offer", credits:2, location:"Birmingham, B6", icon:"🔧", provider:"FixItMike", verified:false, rating:4.7, posted:"3h ago" },
+  { id:4, title:"Need help moving house — lifting boxes", category:"transport", type:"want", credits:3, location:"Leeds, LS3", icon:"📦", provider:"MovingHome", verified:true, rating:null, posted:"1h ago" },
+  { id:5, title:"Website & Tech Help — computers, emails, setup", category:"tech", type:"offer", credits:1, location:"Remote / Online", icon:"💻", provider:"TechHelper", verified:true, rating:4.8, posted:"4h ago" },
+  { id:6, title:"Cooking & Meal Prep — batch cook, recipes", category:"food", type:"offer", credits:2, location:"Bristol, BS5", icon:"🍳", provider:"ChefAnna", verified:false, rating:5.0, posted:"5h ago" },
+  { id:7, title:"French Conversation Practice", category:"teaching", type:"offer", credits:1, location:"Remote / Online", icon:"🇫🇷", provider:"ParisBorn", verified:true, rating:4.9, posted:"6h ago" },
+  { id:8, title:"Need garden fence built — help needed", category:"garden", type:"want", credits:4, location:"Edinburgh, EH4", icon:"🏗️", provider:"NewFence", verified:true, rating:null, posted:"2h ago" }
+];
+
+// Render Skills
+function renderSkills(list) {
+  const grid = document.getElementById('skillsGrid');
+  grid.innerHTML = list.map(skill => {
+    const typeBadge = skill.type === 'offer'
+      ? '<span class="bg-straw-green/20 text-straw-green px-3 py-1 rounded-full text-xs font-semibold">🙋 Offering</span>'
+      : '<span class="bg-straw-amber/20 text-straw-amber px-3 py-1 rounded-full text-xs font-semibold">🤲 Seeking</span>';
+    const verifiedBadge = skill.verified ? '<span class="text-xs text-straw-blue">✅ Verified</span>' : '';
+    const ratingStars = skill.rating ? `<span class="text-yellow-400 text-xs">⭐ ${skill.rating}</span>` : '';
+
+    return `
+      <div class="bg-straw-card rounded-3xl p-5 border border-straw-blue/10 cursor-pointer hover:border-straw-blue/30 transition" onclick="openSkillsDetail(${skill.id})">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-4xl">${skill.icon}</span>
+          ${typeBadge}
+        </div>
+        <h3 class="text-lg font-bold text-white mb-1 line-clamp-1">${skill.title}</h3>
+        <p class="text-straw-gray text-sm mb-3">${skill.credits} Credit${skill.credits > 1 ? 's' : ''} · ${skill.location}</p>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-xs">
+            ${verifiedBadge}
+            ${ratingStars}
+          </div>
+          <span class="text-xs text-straw-gray">${skill.provider}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('skillsCount').textContent = list.length;
+}
+
+// Filter Skills
+function filterSkills() {
+  const search = document.getElementById('skillsSearch').value.toLowerCase();
+  const cat = document.getElementById('skillsCategory').value;
+  const type = document.getElementById('skillsType').value;
+  const remote = document.getElementById('skillsRemote').checked;
+  const verified = document.getElementById('skillsVerified').checked;
+
+  let filtered = skillsData.filter(s => {
+    const matchSearch = !search || s.title.toLowerCase().includes(search) || s.category.toLowerCase().includes(search);
+    const matchCat = cat === 'all' || s.category === cat;
+    const matchType = type === 'all' || s.type === type;
+    const matchRemote = !remote || s.location.toLowerCase().includes('remote');
+    const matchVerified = !verified || s.verified;
+    return matchSearch && matchCat && matchType && matchRemote && matchVerified;
+  });
+  renderSkills(filtered);
+}
+
+// Open Detail
+function openSkillsDetail(id) {
+  const skill = skillsData.find(s => s.id === id);
+  if (!skill) return;
+  document.getElementById('skillsDetailTitle').textContent = skill.title;
+  document.getElementById('skillsDetailContent').innerHTML = `
+    <div class="flex items-center gap-4 mb-6">
+      <span class="text-5xl">${skill.icon}</span>
+      <div>
+        <h4 class="text-xl font-bold text-white">${skill.provider}</h4>
+        <p class="text-straw-gray text-sm">${skill.verified ? '✅ Verified Member' : 'Unverified'} ${skill.rating ? `· ⭐ ${skill.rating}` : ''}</p>
+      </div>
+    </div>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between py-2 border-b border-straw-blue/10">
+        <span class="text-straw-gray">Type</span><span class="font-semibold text-white">${skill.type === 'offer' ? '🙋 Offering' : '🤲 Seeking'}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-blue/10">
+        <span class="text-straw-gray">Time Credits</span><span class="font-semibold text-white">${skill.credits} Credit${skill.credits > 1 ? 's' : ''} (${skill.credits} Hour${skill.credits > 1 ? 's' : ''})</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-blue/10">
+        <span class="text-straw-gray">Location</span><span class="font-semibold text-white">${skill.location}</span>
+      </div>
+      <div class="flex justify-between py-2">
+        <span class="text-straw-gray">Posted</span><span class="font-semibold text-white">${skill.posted}</span>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="flex-1 bg-straw-blue text-white py-3 rounded-full font-bold hover:bg-blue-500 transition">💬 Message</button>
+      <button class="flex-1 bg-straw-blue/10 border border-straw-blue/40 text-white py-3 rounded-full font-semibold hover:bg-straw-blue/20 transition">🤝 Arrange Swap</button>
+    </div>
+  `;
+  document.getElementById('skillsDetailModal').classList.remove('hidden');
+}
+
+function closeSkillsDetailModal() {
+  document.getElementById('skillsDetailModal').classList.add('hidden');
+}
+
+// Modal Functions
+function openSkillsOfferModal() { document.getElementById('skillsOfferModal').classList.remove('hidden'); }
+function closeSkillsOfferModal() { document.getElementById('skillsOfferModal').classList.add('hidden'); }
+function openSkillsNeedModal() { document.getElementById('skillsNeedModal').classList.remove('hidden'); }
+function closeSkillsNeedModal() { document.getElementById('skillsNeedModal').classList.add('hidden'); }
+function openSkillsWallet() { showToast('💰 You have 5.5 Time Credits — offer a skill to earn more'); }
+function loadMoreSkills() { showToast('🤝 Loading more skills...'); }
+
+// Form Submits
+document.getElementById('skillsOfferForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Skill offered! 🎉 It will appear in listings shortly.');
+  closeSkillsOfferModal();
+  e.target.reset();
+});
+document.getElementById('skillsNeedForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Request posted! 🎉 Someone will contact you soon.');
+  closeSkillsNeedModal();
+  e.target.reset();
+});
+
+// Attach Filter Listeners
+['skillsSearch','skillsCategory','skillsType','skillsRemote','skillsVerified'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', filterSkills);
+  document.getElementById(id)?.addEventListener('change', filterSkills);
+});
+
+// Initial Load
+renderSkills(skillsData);
+</script>
+
+</body>
+</html>
