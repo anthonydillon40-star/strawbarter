@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Goods & Codes Exchange — STRAW Barter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+            },
+            straw: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              amber: '#f59e0b',
+              text: '#f8fafc',
+              gray: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #AB5FFB; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #AB5FFB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #AB5FFB; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #AB5FFB;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .token-address { font-family: monospace; font-size: 0.85rem; word-break: break-all; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="digital-exchange.html" class="px-3 py-2 rounded-lg bg-s-purple/10 text-s-purple transition">📱 Digital Exchange</a>
+      <a href="index.html#dating" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">☕ Dating</a>
+      <a href="index.html#builder" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🏗️ Builders</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <a href="https://phantom.app/" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-purple/40 rounded-lg hover:bg-s-purple/10 transition text-xs text-s-purple">Phantom</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="digital-exchange.html" class="py-2 px-3 rounded-lg bg-s-purple/10 text-s-purple">📱 Digital Exchange</a>
+      <a href="index.html#dating" class="py-2 px-3 rounded-lg hover:bg-s-card">☕ Coffee Dating</a>
+      <a href="index.html#builder" class="py-2 px-3 rounded-lg hover:bg-s-card">🏗️ Find a Builder</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <a href="index.html#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
+      <a href="index.html#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
+      <a href="index.html#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
+      <a href="index.html#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
+      <a href="index.html#books" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Book Exchange</a>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
+      <a href="index.html#legal" class="py-2 px-3 rounded-lg hover:bg-s-card">⚖️ Legal</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 📱 DIGITAL GOODS EXCHANGE — STRAW Barter -->
+<!-- ====================================== -->
+<section id="digital-exchange" class="px-4 py-12 scroll-mt-0">
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-white mb-2">📱 Digital Goods & Codes Exchange</h2>
+    <p class="text-straw-gray text-lg">Instant delivery — no shipping, no post, no wait. Trade game keys, gift cards, subscriptions, courses & more</p>
+  </div>
+
+  <!-- Instant Trade Banner -->
+  <div class="bg-straw-purple/10 border border-straw-purple/30 rounded-3xl p-5 mb-8 text-center max-w-6xl mx-auto">
+    <p class="text-straw-purple font-semibold text-lg">⚡ 100% Instant — 24/7 trading — no collection, no postage — verify code before you confirm!</p>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="bg-straw-card rounded-3xl p-5 mb-8 border border-straw-purple/20 max-w-6xl mx-auto">
+    <div class="flex flex-col gap-3 mb-4">
+      <input type="text" id="digitalSearch" placeholder="Search: Steam, PSN, Xbox, Amazon, Netflix, course, software, gift card..."
+        class="w-full px-5 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white placeholder-straw-gray focus:outline-none focus:border-straw-purple">
+      <div class="flex flex-wrap gap-3">
+        <select id="digitalCategory" class="flex-1 min-w-[130px] px-4 py-2 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none">
+          <option value="all">📂 All Categories</option>
+          <option value="games">🎮 Game Keys & Accounts</option>
+          <option value="giftcards">🎁 Gift Cards & Vouchers</option>
+          <option value="subs">🔄 Subscriptions & Memberships</option>
+          <option value="courses">📚 Courses & E-Books</option>
+          <option value="software">💻 Software & Licenses</option>
+          <option value="art">🎨 Digital Art & Assets</option>
+          <option value="other">📦 Other Digital</option>
+        </select>
+        <select id="digitalPlatform" class="flex-1 min-w-[130px] px-4 py-2 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none">
+          <option value="all">🖥️ All Platforms</option>
+          <option value="Steam">Steam</option>
+          <option value="PlayStation">PlayStation</option>
+          <option value="Xbox">Xbox</option>
+          <option value="Nintendo">Nintendo</option>
+          <option value="PC">PC / Windows</option>
+          <option value="Mobile">Mobile</option>
+          <option value="Multi-Platform">Multi-Platform</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 text-sm mt-2">
+      <label class="flex items-center gap-2 text-straw-gray cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="digitalVerified" class="accent-straw-purple"> ✅ Verified Sellers Only
+      </label>
+      <label class="flex items-center gap-2 text-straw-gray cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="digitalNoFee" class="accent-straw-purple"> 🆓 No Fee
+      </label>
+      <span class="ml-auto text-straw-gray"><span id="digitalCount">8</span> listings live</span>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="grid grid-cols-2 gap-4 mb-8 max-w-lg mx-auto">
+    <button onclick="openDigitalSellModal()" class="bg-straw-purple/10 border border-straw-purple/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-purple/20 transition text-center text-lg">
+      📤 List Item
+    </button>
+    <button onclick="openDigitalBuyModal()" class="bg-straw-purple/10 border border-straw-purple/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-purple/20 transition text-center text-lg">
+      📥 Request Item
+    </button>
+  </div>
+
+  <!-- Items Grid -->
+  <div id="digitalGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8 max-w-6xl mx-auto">
+    <!-- Dynamically populated -->
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center">
+    <button onclick="loadMoreDigital()" class="bg-straw-purple/10 border border-straw-purple/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-straw-purple/20 transition">
+      Load More →
+    </button>
+  </div>
+
+  <!-- Safety & Escrow -->
+  <div class="mt-12 bg-straw-card rounded-3xl p-6 border border-straw-purple/20 max-w-6xl mx-auto">
+    <h3 class="text-xl font-bold text-white mb-4 text-center">🛡️ Safe Trading — How It Works</h3>
+    <div class="grid md:grid-cols-3 gap-6 text-center">
+      <div>
+        <div class="text-3xl mb-2">📤</div>
+        <h4 class="font-bold text-white mb-1">1. Seller Uploads Code</h4>
+        <p class="text-straw-gray text-sm">Code is securely held — never visible until trade is confirmed</p>
+      </div>
+      <div>
+        <div class="text-3xl mb-2">🔍</div>
+        <h4 class="font-bold text-white mb-1">2. Buyer Verifies</h4>
+        <p class="text-straw-gray text-sm">Test the code — works? Confirm. Doesn't work? Instant refund</p>
+      </div>
+      <div>
+        <div class="text-3xl mb-2">✅</div>
+        <h4 class="font-bold text-white mb-1">3. Trade Complete</h4>
+        <p class="text-straw-gray text-sm">Funds/release sent — both rated — trust built</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIST ITEM MODAL ========== -->
+<div id="digitalSellModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">📤 List Digital Item</h3>
+      <button onclick="closeDigitalSellModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="digitalSellForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title / Item Name *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none focus:border-straw-purple" placeholder="e.g. Steam £20 Wallet Code, Netflix 1-Month Subscription, Photoshop License">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>🎮 Game Keys & Accounts</option>
+            <option>🎁 Gift Cards & Vouchers</option>
+            <option>🔄 Subscriptions & Memberships</option>
+            <option>📚 Courses & E-Books</option>
+            <option>💻 Software & Licenses</option>
+            <option>🎨 Digital Art & Assets</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Platform / Region</label>
+          <select class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none">
+            <option>Steam (Global)</option><option>Steam (UK/EU)</option>
+            <option>PlayStation Store UK</option><option>Xbox Store UK</option>
+            <option>Amazon UK</option><option>Netflix UK</option>
+            <option>Global / Multi-Platform</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Value / Amount</label>
+        <input type="text" class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none focus:border-straw-purple" placeholder="e.g. £25, 1-Month, Lifetime License">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Trade For — What do you want in return?</label>
+        <textarea rows="2" class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none focus:border-straw-purple" placeholder="Specific game, gift card, cash equivalent, or open to offers..."></textarea>
+      </div>
+      <div class="bg-straw-purple/10 rounded-xl p-4 text-sm">
+        <label class="flex items-start gap-2 text-white cursor-pointer">
+          <input type="checkbox" required class="mt-1 accent-straw-purple"> I confirm this code is unused, valid, and not stolen. I understand invalid codes result in instant trade cancellation & rating penalty.
+        </label>
+      </div>
+      <button type="submit" class="w-full bg-straw-purple text-white py-3 rounded-full font-bold hover:bg-purple-500 transition text-lg mt-2">
+        ✅ List for Trade
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== REQUEST ITEM MODAL ========== -->
+<div id="digitalBuyModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">📥 Request Digital Item</h3>
+      <button onclick="closeDigitalBuyModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="digitalBuyForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">What are you looking for? *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none focus:border-straw-purple" placeholder="e.g. Spotify Premium 12 months, £50 Amazon card, Minecraft Java key">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">What can you offer in return?</label>
+        <textarea rows="3" class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-purple/20 text-white focus:outline-none focus:border-straw-purple" placeholder="Describe what you're offering — codes, cash, items, barter..."></textarea>
+      </div>
+      <button type="submit" class="w-full bg-straw-purple text-white py-3 rounded-full font-bold hover:bg-purple-500 transition text-lg mt-2">
+        ✅ Post Request
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== ITEM DETAIL MODAL ========== -->
+<div id="digitalDetailModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 id="digitalDetailTitle" class="text-2xl font-bold text-white">Item Title</h3>
+      <button onclick="closeDigitalDetailModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <div id="digitalDetailContent"></div>
+  </div>
+</div>
+
+<!-- Sign-Up / Referral -->
+<section id="signup" class="section-compact px-4 max-w-3xl mx-auto text-center border-t border-s-border">
+  <div class="card rounded-2xl p-6">
+    <h2 class="text-3xl font-bold mb-3">🎁 Join — It's Free!</h2>
+    <p class="text-s-muted mb-5 text-sm">Start trading today. No fees, no hidden costs.</p>
+    <div class="grid md:grid-cols-2 gap-4 mb-5">
+      <div class="p-4 bg-s-purple/10 rounded-xl border border-s-purple/20">
+        <div class="text-2xl font-bold text-s-purple mb-1">10,000</div>
+        <div class="text-s-muted text-sm">Free on Sign-Up</div>
+      </div>
+      <div class="p-4 bg-s-gold/10 rounded-xl border border-s-gold/20">
+        <div class="text-2xl font-bold text-s-gold mb-1">10,000</div>
+        <div class="text-s-muted text-sm">Per Friend Referred</div>
+      </div>
+    </div>
+    <div id="referral" class="scroll-anchor bg-s-dark rounded-lg p-4 mb-5">
+      <p class="text-xs text-s-muted mb-2">Your Referral Link:</p>
+      <div class="flex items-center gap-2 mb-3">
+        <input type="text" value="https://strawbarter.com/ref/yourname" id="refLink" class="flex-1 px-3 py-2 rounded-lg bg-s-card border border-s-border text-xs" readonly>
+        <button onclick="copyRefLink()" class="bg-s-purple px-3 py-2 rounded-lg font-medium text-xs btn whitespace-nowrap">📋 Copy</button>
+      </div>
+      <div class="flex justify-center gap-3 text-xl">
+        <a href="#" class="hover:text-s-purple transition">📘</a>
+        <a href="#" class="hover:text-s-purple transition">🐦</a>
+        <a href="#" class="hover:text-s-purple transition">💬</a>
+        <a href="#" class="hover:text-s-purple transition">📧</a>
+      </div>
+    </div>
+    <button class="bg-s-purple px-8 py-3 rounded-xl text-lg font-semibold btn w-full max-w-md mb-4">
+      🎁 Claim Free Welcome Bonus
+    </button>
+    <p class="text-xs text-s-muted">
+      👻 <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a> &nbsp;|&nbsp;
+      💎 <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a>
+    </p>
+  </div>
+</section>
+
+<!-- Legal -->
+<section id="legal" class="section-compact px-4 max-w-4xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3 text-center">⚖️ Legal & Risk</h2>
+  <div class="card rounded-xl p-5 text-sm text-s-muted space-y-2">
+    <p>⚠️ <strong>Digital Asset Warning:</strong> STRAW is a digital token — value can go down as well as up. Not regulated by the FCA or any financial authority. You may lose your entire investment. Not financial advice.</p>
+    <p>🔒 <strong>Digital Trade Safety:</strong> All trades are between users. Verify every code before confirming a trade — never share codes outside the platform escrow flow.</p>
+    <p>📜 <strong>Terms & Privacy:</strong> By using this site, you agree to our Terms of Service and Privacy Policy.</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="#" class="hover:text-s-purple">Terms</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-purple">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-purple">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Copy Referral Link
+function copyRefLink() {
+  navigator.clipboard.writeText(document.getElementById('refLink').value)
+    .then(() => showToast('✅ Referral link copied!'));
+}
+
+// Modal helpers
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Sample Digital Data
+const digitalData = [
+  { id:1, title:"Steam Wallet — £20 Code (UK)", category:"giftcards", platform:"Steam", value:"£20", icon:"🎮", seller:"KeyTrader", verified:true, rating:4.9, posted:"30 mins ago", tradeFor:"£18 cash or £20 Amazon", noFee:true },
+  { id:2, title:"Netflix Premium — 1 Month Subscription", category:"subs", platform:"Netflix", value:"£15.99", icon:"🎬", seller:"ShareSub", verified:false, rating:null, posted:"1h ago", tradeFor:"Spotify or £12 cash", noFee:true },
+  { id:3, title:"Minecraft Java Edition — Official Key", category:"games", platform:"PC", value:"£29.99", icon:"⛏️", seller:"GameSwapUK", verified:true, rating:5.0, posted:"2h ago", tradeFor:"Offers welcome", noFee:false },
+  { id:4, title:"Amazon UK Gift Card — £50", category:"giftcards", platform:"Amazon", value:"£50", icon:"📦", seller:"CardExchange", verified:true, rating:4.8, posted:"3h ago", tradeFor:"£45 cash or any gift card", noFee:false },
+  { id:5, title:"Complete Photography Masterclass — Lifetime Access", category:"courses", platform:"Online", value:"£199", icon:"📷", seller:"SkillShare", verified:false, rating:null, posted:"5h ago", tradeFor:"£80 or other courses", noFee:true },
+  { id:6, title:"Windows 11 Pro — Digital License Key", category:"software", platform:"PC", value:"£179", icon:"🪟", seller:"TechLicence", verified:true, rating:4.7, posted:"6h ago", tradeFor:"£60 cash or trade", noFee:false },
+  { id:7, title:"PlayStation Network — £25 Wallet", category:"giftcards", platform:"PlayStation", value:"£25", icon:"🎮", seller:"PSNTrader", verified:true, rating:4.9, posted:"4h ago", tradeFor:"Xbox credit or £22", noFee:true },
+  { id:8, title:"Procreate Brush Pack — 500+ Brushes", category:"art", platform:"iPad", value:"£25", icon:"🎨", seller:"DesignAssets", verified:false, rating:null, posted:"8h ago", tradeFor:"£15 or other assets", noFee:true }
+];
+
+// Render Items
+function renderDigital(list) {
+  const grid = document.getElementById('digitalGrid');
+  grid.innerHTML = list.map(item => {
+    const verifiedBadge = item.verified
+      ? '<span class="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">✅ Verified</span>'
+      : '<span class="bg-straw-gray/20 text-straw-gray px-2 py-1 rounded-full text-xs">⚠️ Unverified</span>';
+    const ratingStars = item.rating ? `<span class="text-yellow-400 text-xs">⭐ ${item.rating}</span>` : '';
+
+    return `
+      <div class="bg-straw-card rounded-3xl p-5 border border-straw-purple/10 cursor-pointer hover:border-straw-purple/30 transition" onclick="openDigitalDetail(${item.id})">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-4xl">${item.icon}</span>
+          ${verifiedBadge}
+        </div>
+        <h3 class="text-lg font-bold text-white mb-1 line-clamp-1">${item.title}</h3>
+        <p class="text-straw-gray text-sm mb-2">${item.platform} · ${item.value}</p>
+        <p class="text-straw-purple text-xs mb-3">Trade for: ${item.tradeFor}</p>
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-straw-gray">${item.seller}</span>
+          ${ratingStars}
+        </div>
+        <div class="mt-2 text-xs text-straw-gray">Posted ${item.posted}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('digitalCount').textContent = list.length;
+}
+
+// Filter Items
+function filterDigital() {
+  const search = document.getElementById('digitalSearch').value.toLowerCase();
+  const cat = document.getElementById('digitalCategory').value;
+  const platform = document.getElementById('digitalPlatform').value;
+  const verified = document.getElementById('digitalVerified').checked;
+  const noFeeOnly = document.getElementById('digitalNoFee').checked;
+
+  let filtered = digitalData.filter(item => {
+    const matchSearch = !search || item.title.toLowerCase().includes(search) || item.platform.toLowerCase().includes(search);
+    const matchCat = cat === 'all' || item.category === cat;
+    const matchPlatform = platform === 'all' || item.platform.includes(platform);
+    const matchVerified = !verified || item.verified;
+    const matchNoFee = !noFeeOnly || item.noFee;
+    return matchSearch && matchCat && matchPlatform && matchVerified && matchNoFee;
+  });
+  renderDigital(filtered);
+}
+
+// Open Detail
+function openDigitalDetail(id) {
+  const item = digitalData.find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('digitalDetailTitle').textContent = item.title;
+  document.getElementById('digitalDetailContent').innerHTML = `
+    <div class="h-44 bg-straw-purple/10 rounded-2xl flex items-center justify-center text-6xl mb-6">${item.icon}</div>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between py-2 border-b border-straw-purple/10">
+        <span class="text-straw-gray">Category</span><span class="font-semibold text-white">${item.category}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-purple/10">
+        <span class="text-straw-gray">Platform</span><span class="font-semibold text-white">${item.platform}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-purple/10">
+        <span class="text-straw-gray">Value</span><span class="font-semibold text-white">${item.value}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-purple/10">
+        <span class="text-straw-gray">Seller</span><span class="font-semibold text-white">${item.seller} ${item.verified ? '✅ Verified' : '⚠️ Unverified'}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-purple/10">
+        <span class="text-straw-gray">Trade For</span><span class="font-semibold text-white">${item.tradeFor}</span>
+      </div>
+      <div class="flex justify-between py-2">
+        <span class="text-straw-gray">Posted</span><span class="font-semibold text-white">${item.posted}</span>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="flex-1 bg-straw-purple text-white py-3 rounded-full font-bold hover:bg-purple-500 transition">💬 Make Offer</button>
+      <button class="flex-1 bg-straw-purple/10 border border-straw-purple/40 text-white py-3 rounded-full font-semibold hover:bg-straw-purple/20 transition">🤝 Start Trade</button>
+    </div>
+  `;
+  openModal('digitalDetailModal');
+}
+
+// Modal Functions
+function openDigitalSellModal() { openModal('digitalSellModal'); }
+function closeDigitalSellModal() { closeModal('digitalSellModal'); }
+function openDigitalBuyModal() { openModal('digitalBuyModal'); }
+function closeDigitalBuyModal() { closeModal('digitalBuyModal'); }
+function closeDigitalDetailModal() { closeModal('digitalDetailModal'); }
+function loadMoreDigital() { showToast('📱 Loading more digital items...'); }
+
+// Form Submits
+document.getElementById('digitalSellForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Listed! ⚡ Instant digital trading — 24/7!');
+  closeDigitalSellModal();
+  e.target.reset();
+});
+document.getElementById('digitalBuyForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Request posted! Someone may have exactly what you need.');
+  closeDigitalBuyModal();
+  e.target.reset();
+});
+
+// Attach Filter Listeners
+['digitalSearch','digitalCategory','digitalPlatform','digitalVerified','digitalNoFee'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', filterDigital);
+  document.getElementById(id)?.addEventListener('change', filterDigital);
+});
+
+// Initial Load
+renderDigital(digitalData);
+</script>
+
+</body>
+</html>
