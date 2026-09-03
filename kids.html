@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids & Baby Exchange — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+            },
+            straw: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              gray: '#94a3b8',
+              pink: '#ec4899',
+              green: '#22c55e',
+              amber: '#f59e0b',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+    <nav class="flex items-center gap-2 text-sm font-medium">
+      <a href="index.html#marketplace" class="hidden sm:block px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="hidden sm:block px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="index.html#books" class="hidden sm:block px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">📚 Books</a>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🧸 KIDS & BABY EXCHANGE — STRAW Barter -->
+<!-- ====================================== -->
+<section id="kids-baby-exchange" class="px-4 py-12 scroll-mt-0 border-t border-straw-pink/20">
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-white mb-2">🧸 Kids & Baby Exchange</h2>
+    <p class="text-straw-gray text-lg">Swap, give, or sell pre-loved items — outgrown in months, don't buy new</p>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="bg-straw-card rounded-3xl p-5 mb-8 border border-straw-pink/20">
+    <div class="flex flex-col gap-3 mb-4">
+      <input type="text" id="kidsSearch" placeholder="Search: clothes, prams, toys, cots, books..."
+        class="w-full px-5 py-3 rounded-full bg-straw-dark border border-straw-pink/20 text-white placeholder-straw-gray focus:outline-none focus:border-straw-pink">
+      <div class="flex flex-wrap gap-3">
+        <select id="kidsCategory" class="flex-1 min-w-[130px] px-4 py-2 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none">
+          <option value="all">👶 All Categories</option>
+          <option value="clothes">👕 Clothes & Shoes</option>
+          <option value="toys">🧸 Toys & Games</option>
+          <option value="prams">🚗 Prams & Strollers</option>
+          <option value="furniture">🛏️ Nursery Furniture</option>
+          <option value="car-seats">🚗 Car Seats</option>
+          <option value="books">📚 Books & CDs</option>
+          <option value="feeding">🍼 Feeding & High Chairs</option>
+          <option value="bedding">🛏️ Bedding & Blankets</option>
+          <option value="other">📦 Other</option>
+        </select>
+        <select id="kidsAge" class="flex-1 min-w-[130px] px-4 py-2 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none">
+          <option value="all">🎂 Any Age</option>
+          <option value="newborn">Newborn (0–3m)</option>
+          <option value="0-6">0–6 Months</option>
+          <option value="6-12">6–12 Months</option>
+          <option value="1-2">1–2 Years</option>
+          <option value="2-4">2–4 Years</option>
+          <option value="4-7">4–7 Years</option>
+          <option value="7-11">7–11 Years</option>
+          <option value="11-16">11–16 Years</option>
+        </select>
+        <select id="kidsCondition" class="flex-1 min-w-[130px] px-4 py-2 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none">
+          <option value="all">✨ Any Condition</option>
+          <option value="like-new">Like New</option>
+          <option value="excellent">Excellent</option>
+          <option value="good">Good</option>
+          <option value="playful">Playful / Preloved</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 text-sm mt-2">
+      <label class="flex items-center gap-2 text-straw-gray cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="kidsOnlySwap" class="accent-straw-pink"> 🔄 Swap Only
+      </label>
+      <label class="flex items-center gap-2 text-straw-gray cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="kidsOnlyFree" class="accent-straw-pink"> 🎁 Free Only
+      </label>
+      <label class="flex items-center gap-2 text-straw-gray cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="kidsGender" class="accent-straw-pink"> ⚧️ Gender Neutral
+      </label>
+      <span class="ml-auto text-straw-gray"><span id="kidsCount">8</span> items listed</span>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="grid grid-cols-3 gap-4 mb-8 max-w-xl mx-auto">
+    <button onclick="openKidsPostModal()" class="bg-straw-pink/10 border border-straw-pink/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-pink/20 transition text-center">
+      ➕ Post Item
+    </button>
+    <button onclick="openKidsWishlist()" class="bg-straw-pink/10 border border-straw-pink/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-pink/20 transition text-center">
+      💭 Wishlist
+    </button>
+    <button onclick="openKidsNearby()" class="bg-straw-pink/10 border border-straw-pink/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-straw-pink/20 transition text-center">
+      📍 Near Me
+    </button>
+  </div>
+
+  <!-- Items Grid -->
+  <div id="kidsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+    <!-- Dynamically populated -->
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center">
+    <button onclick="loadMoreKids()" class="bg-straw-pink/10 border border-straw-pink/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-straw-pink/20 transition">
+      Load More →
+    </button>
+  </div>
+
+  <!-- Info Banner -->
+  <div class="mt-12 bg-straw-amber/10 border border-straw-amber/30 rounded-3xl p-5 text-center">
+    <p class="text-straw-amber font-semibold">
+      ⚠️ Safety First — Car seats & travel systems: check UK safety standards & expiry dates before passing on
+    </p>
+  </div>
+</section>
+
+<!-- ========== POST ITEM MODAL ========== -->
+<div id="kidsPostModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-pink/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ Post Item</h3>
+      <button onclick="closeKidsPostModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="kidsPostForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Item Title *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none focus:border-straw-pink" placeholder="e.g. Baby Bjorn Carrier — Excellent Condition">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>👕 Clothes & Shoes</option>
+            <option>🧸 Toys & Games</option>
+            <option>🚗 Prams & Strollers</option>
+            <option>🛏️ Nursery Furniture</option>
+            <option>🚗 Car Seats</option>
+            <option>📚 Books & CDs</option>
+            <option>🍼 Feeding & High Chairs</option>
+            <option>🛏️ Bedding & Blankets</option>
+            <option>📦 Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Age Range *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>Newborn – 3m</option>
+            <option>0–6 Months</option>
+            <option>6–12 Months</option>
+            <option>1–2 Years</option>
+            <option>2–4 Years</option>
+            <option>4–7 Years</option>
+            <option>7–11 Years</option>
+            <option>11–16 Years</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Condition *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>Like New</option>
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Playful / Preloved</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Gender</label>
+          <select class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none">
+            <option>Neutral / Unisex</option>
+            <option>👧 Girl</option>
+            <option>👦 Boy</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Offer Type *</label>
+        <div class="grid grid-cols-3 gap-3">
+          <label class="flex items-center justify-center gap-2 bg-straw-dark border border-straw-pink/20 rounded-full py-3 cursor-pointer hover:border-straw-pink transition">
+            <input type="radio" name="kidsOffer" value="swap" class="accent-straw-pink"> 🔄 Swap
+          </label>
+          <label class="flex items-center justify-center gap-2 bg-straw-dark border border-straw-pink/20 rounded-full py-3 cursor-pointer hover:border-straw-pink transition">
+            <input type="radio" name="kidsOffer" value="free" class="accent-straw-pink"> 🎁 Free
+          </label>
+          <label class="flex items-center justify-center gap-2 bg-straw-dark border border-straw-pink/20 rounded-full py-3 cursor-pointer hover:border-straw-pink transition">
+            <input type="radio" name="kidsOffer" value="sell" class="accent-straw-pink"> 💰 Sell
+          </label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Location *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-straw-dark border border-straw-pink/20 text-white focus:outline-none focus:border-straw-pink" placeholder="Postcode or City">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Photo</label>
+        <div class="border-2 border-dashed border-straw-pink/30 rounded-full p-4 text-center cursor-pointer hover:border-straw-pink/60 transition">
+          <p class="text-straw-gray">📷 Click to upload photo</p>
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-straw-pink text-straw-dark py-3 rounded-full font-bold hover:bg-pink-400 transition text-lg mt-2">
+        ✅ Post Item
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Item Detail Modal -->
+<div id="kidsDetailModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-straw-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-straw-pink/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 id="kidsDetailTitle" class="text-2xl font-bold text-white">Item Title</h3>
+      <button onclick="closeKidsDetailModal()" class="text-straw-gray hover:text-white text-2xl">&times;</button>
+    </div>
+    <div id="kidsDetailContent"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="index.html" class="hover:text-s-green">Home</a></p>
+  </div>
+</footer>
+
+<script>
+// Sample Kids & Baby Items Data
+const kidsItems = [
+  { id:1, title:"Bugaboo Cameleon Pram", category:"prams", age:"0–4y", condition:"excellent", type:"sell", price:120, location:"London, SW1", image:"🚼", poster:"MumOfTwo", posted:"1h ago", gender:"neutral" },
+  { id:2, title:"Wooden Train Set — Brio compatible", category:"toys", age:"1–5y", condition:"good", type:"swap", price:null, location:"Manchester, M15", image:"🚂", poster:"Sarah J.", posted:"3h ago", gender:"neutral" },
+  { id:3, title:"Baby Clothes Bundle — 0–3m Unisex (50+ items)", category:"clothes", age:"0–3m", condition:"like-new", type:"free", price:null, location:"Birmingham, B13", image:"👶", poster:"Emma R.", posted:"2h ago", gender:"neutral" },
+  { id:4, title:"IKEA Cotbed + Mattress", category:"furniture", age:"0–6y", condition:"good", type:"sell", price:45, location:"Leeds, LS6", image:"🛏️", poster:"Dave T.", posted:"5h ago", gender:"neutral" },
+  { id:5, title:"Maxi-Cosi Car Seat — Group 1", category:"car-seats", age:"9m–4y", condition:"excellent", type:"swap", price:null, location:"Bristol, BS2", image:"🚗", poster:"Lisa M.", posted:"1d ago", gender:"neutral" },
+  { id:6, title:"LEGO Duplo Big Box", category:"toys", age:"1.5–5y", condition:"good", type:"sell", price:20, location:"Edinburgh, EH8", image:"🧱", poster:"Kenny B.", posted:"4h ago", gender:"neutral" },
+  { id:7, title:"High Chair — IKEA Antilop", category:"feeding", age:"6m+", condition:"like-new", type:"free", price:null, location:"Cardiff, CF5", image:"🪑", poster:"Anna L.", posted:"6h ago", gender:"neutral" },
+  { id:8, title:"Girls Dresses Bundle — 3–4 Years", category:"clothes", age:"3–4y", condition:"excellent", type:"swap", price:null, location:"Glasgow, G42", image:"👗", poster:"Jen P.", posted:"8h ago", gender:"girl" }
+];
+
+// Render Items
+function renderKids(list) {
+  const grid = document.getElementById('kidsGrid');
+  grid.innerHTML = list.map(item => {
+    const badge = item.type === 'free'
+      ? '<span class="bg-straw-green/20 text-straw-green px-3 py-1 rounded-full text-xs font-semibold">🎁 FREE</span>'
+      : item.type === 'swap'
+        ? '<span class="bg-straw-pink/20 text-straw-pink px-3 py-1 rounded-full text-xs font-semibold">🔄 Swap</span>'
+        : `<span class="bg-straw-amber/20 text-straw-amber px-3 py-1 rounded-full text-xs font-semibold">£${item.price}</span>`;
+
+    return `
+      <div class="bg-straw-card rounded-3xl p-5 border border-straw-pink/10 cursor-pointer hover:border-straw-pink/30 transition" onclick="openKidsDetail(${item.id})">
+        <div class="h-36 bg-straw-pink/10 rounded-2xl flex items-center justify-center text-5xl mb-4">${item.image}</div>
+        <h3 class="text-lg font-bold text-white mb-1 line-clamp-1">${item.title}</h3>
+        <p class="text-straw-gray text-sm mb-2">${item.age} · ${item.category}</p>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-straw-gray">${item.condition}</span>
+          ${badge}
+        </div>
+        <div class="mt-3 text-xs text-straw-gray">📍 ${item.location}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('kidsCount').textContent = list.length;
+}
+
+// Filter Items
+function filterKids() {
+  const search = document.getElementById('kidsSearch').value.toLowerCase();
+  const cat = document.getElementById('kidsCategory').value;
+  const age = document.getElementById('kidsAge').value;
+  const cond = document.getElementById('kidsCondition').value;
+  const swapOnly = document.getElementById('kidsOnlySwap').checked;
+  const freeOnly = document.getElementById('kidsOnlyFree').checked;
+  const neutralOnly = document.getElementById('kidsGender').checked;
+
+  const filtered = kidsItems.filter(item => {
+    const matchSearch = !search || item.title.toLowerCase().includes(search) || item.category.toLowerCase().includes(search);
+    const matchCat = cat === 'all' || item.category === cat;
+    const matchAge = age === 'all' || item.age.includes(age.replace('-', ''));
+    const matchCond = cond === 'all' || item.condition === cond;
+    const matchSwap = !swapOnly || item.type === 'swap';
+    const matchFree = !freeOnly || item.type === 'free';
+    const matchGender = !neutralOnly || item.gender === 'neutral';
+    return matchSearch && matchCat && matchAge && matchCond && matchSwap && matchFree && matchGender;
+  });
+  renderKids(filtered);
+}
+
+// Open Detail
+function openKidsDetail(id) {
+  const item = kidsItems.find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('kidsDetailTitle').textContent = item.title;
+  document.getElementById('kidsDetailContent').innerHTML = `
+    <div class="h-44 bg-straw-pink/10 rounded-2xl flex items-center justify-center text-6xl mb-6">${item.image}</div>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between py-2 border-b border-straw-pink/10">
+        <span class="text-straw-gray">Category</span><span class="font-semibold text-white">${item.category}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-pink/10">
+        <span class="text-straw-gray">Age Range</span><span class="font-semibold text-white">${item.age}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-pink/10">
+        <span class="text-straw-gray">Condition</span><span class="font-semibold text-white">${item.condition}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-pink/10">
+        <span class="text-straw-gray">Available for</span><span class="font-semibold text-white">${item.type === 'free' ? '🎁 Free' : item.type === 'swap' ? '🔄 Swap' : '£' + item.price}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-straw-pink/10">
+        <span class="text-straw-gray">Location</span><span class="font-semibold text-white">${item.location}</span>
+      </div>
+      <div class="flex justify-between py-2">
+        <span class="text-straw-gray">Posted by</span><span class="font-semibold text-white">${item.poster} · ${item.posted}</span>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="flex-1 bg-straw-pink text-straw-dark py-3 rounded-full font-bold hover:bg-pink-400 transition">💬 Message</button>
+      <button class="flex-1 bg-straw-pink/10 border border-straw-pink/40 text-white py-3 rounded-full font-semibold hover:bg-straw-pink/20 transition">🤝 Arrange</button>
+    </div>
+  `;
+  document.getElementById('kidsDetailModal').classList.remove('hidden');
+}
+
+function closeKidsDetailModal() {
+  document.getElementById('kidsDetailModal').classList.add('hidden');
+}
+
+// Modal Functions
+function openKidsPostModal() { document.getElementById('kidsPostModal').classList.remove('hidden'); }
+function closeKidsPostModal() { document.getElementById('kidsPostModal').classList.add('hidden'); }
+function openKidsWishlist() { alert('💭 Wishlist — Save items you want and get notified!'); }
+function openKidsNearby() { alert('📍 Showing items near you...'); }
+function loadMoreKids() { alert('📦 Loading more items...'); }
+
+// Form Submit
+document.getElementById('kidsPostForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  alert('✅ Item posted successfully! 🎉');
+  closeKidsPostModal();
+  e.target.reset();
+});
+
+// Close modals on backdrop click
+['kidsPostModal', 'kidsDetailModal'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', e => {
+    if (e.target.id === id) closeKidsDetailModal(), closeKidsPostModal();
+  });
+});
+
+// Attach Filter Listeners
+['kidsSearch','kidsCategory','kidsAge','kidsCondition','kidsOnlySwap','kidsOnlyFree','kidsGender'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', filterKids);
+  document.getElementById(id)?.addEventListener('change', filterKids);
+});
+
+// Initial Load
+renderKids(kidsItems);
+</script>
+
+</body>
+</html>
