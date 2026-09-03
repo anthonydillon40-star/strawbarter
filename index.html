@@ -677,10 +677,12 @@ function toggleDropdown(id, e) {
   menu.classList.toggle('open');
 }
 
-// Close dropdown when clicking outside
+// Close dropdown when clicking outside or on a menu item
 document.addEventListener('click', (e) => {
   document.querySelectorAll('.dropdown-menu').forEach(menu => {
-    if (!menu.parentElement.contains(e.target)) menu.classList.remove('open');
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
   });
 });
 
