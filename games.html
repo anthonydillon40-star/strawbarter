@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 Games & Entertainment Exchange — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #AB5FFB; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #AB5FFB; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-purple transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-purple transition">🔄 Barter</a>
+      <a href="index.html#books" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-purple transition">📚 Books</a>
+      <a href="games.html" class="px-3 py-2 rounded-lg bg-s-purple/10 text-s-purple transition">🎮 Games</a>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <a href="https://phantom.app/" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-purple/40 rounded-lg hover:bg-s-purple/10 transition text-xs text-s-purple">Phantom</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <button class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</button>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="index.html#books" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Book Exchange</a>
+      <a href="games.html" class="py-2 px-3 rounded-lg bg-s-purple/10 text-s-purple">🎮 Games & Entertainment</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- FCA-style Risk Note -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Trades are between users — verify items before exchanging. Meet in public for in-person trades.</span>
+</div>
+
+<!-- ====================================== -->
+<!-- 🎮 GAMES & ENTERTAINMENT EXCHANGE      -->
+<!-- ====================================== -->
+<section id="games-exchange" class="section-compact px-4 max-w-6xl mx-auto">
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-white mb-2">🎮 Games & Entertainment Exchange</h2>
+    <p class="text-s-muted text-lg">Swap, trade, or sell — games, consoles, movies, vinyl — play more, pay less</p>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="bg-s-card/50 rounded-2xl p-5 mb-8 border border-s-border">
+    <div class="flex flex-col gap-3 mb-4">
+      <input type="text" id="gamesSearch" placeholder="Search: PS5, Zelda, Mario, Switch, Xbox, vinyl..."
+        class="w-full px-5 py-3 rounded-full bg-s-dark border border-s-border text-white placeholder-s-muted focus:outline-none focus:border-s-purple">
+      <div class="flex flex-wrap gap-3">
+        <select id="gamesPlatform" class="flex-1 min-w-[130px] px-4 py-2 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+          <option value="all">🎯 All Platforms</option>
+          <option value="ps5">🎮 PlayStation 5</option>
+          <option value="ps4">🎮 PlayStation 4</option>
+          <option value="xbox-series">🎮 Xbox Series X/S</option>
+          <option value="xbox-one">🎮 Xbox One</option>
+          <option value="switch">🕹️ Nintendo Switch</option>
+          <option value="pc">💻 PC Games</option>
+          <option value="retro">🕹️ Retro / Classic</option>
+          <option value="board">🎲 Board Games</option>
+          <option value="dvd">📀 Movies / TV</option>
+          <option value="vinyl">🎵 Vinyl / Music</option>
+        </select>
+        <select id="gamesCondition" class="flex-1 min-w-[130px] px-4 py-2 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+          <option value="all">✨ Any Condition</option>
+          <option value="like-new">Like New / Sealed</option>
+          <option value="excellent">Excellent</option>
+          <option value="good">Good</option>
+          <option value="acceptable">Acceptable</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 text-sm mt-2">
+      <label class="flex items-center gap-2 text-s-muted cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="gamesOnlySwap" class="accent-s-purple"> 🔄 Swap Only
+      </label>
+      <label class="flex items-center gap-2 text-s-muted cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="gamesOnlyFree" class="accent-s-purple"> 🎁 Free Only
+      </label>
+      <label class="flex items-center gap-2 text-s-muted cursor-pointer hover:text-white transition">
+        <input type="checkbox" id="gamesDigital" class="accent-s-purple"> 🔗 Digital Codes
+      </label>
+      <span class="ml-auto text-s-muted"><span id="gamesCount">8</span> items listed</span>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="grid grid-cols-3 gap-4 mb-8 max-w-xl mx-auto">
+    <button onclick="openGamesPostModal()" class="bg-s-purple/10 border border-s-purple/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-s-purple/20 transition text-center">
+      ➕ Post Item
+    </button>
+    <button onclick="openGamesWishlist()" class="bg-s-purple/10 border border-s-purple/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-s-purple/20 transition text-center">
+      💭 Wishlist
+    </button>
+    <button onclick="openGamesNearby()" class="bg-s-purple/10 border border-s-purple/40 text-white py-4 px-2 rounded-full font-semibold hover:bg-s-purple/20 transition text-center">
+      📍 Near Me
+    </button>
+  </div>
+
+  <!-- Items Grid -->
+  <div id="gamesGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+    <!-- Dynamically populated -->
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center">
+    <button onclick="loadMoreGames()" class="bg-s-purple/10 border border-s-purple/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-purple/20 transition">
+      Load More →
+    </button>
+  </div>
+
+  <!-- Info Banner -->
+  <div class="mt-12 bg-s-gold/10 border border-s-gold/30 rounded-2xl p-5 text-center">
+    <p class="text-s-gold font-semibold">
+      🔒 Digital codes: confirm they're unused before trading — once redeemed, they can't be transferred
+    </p>
+  </div>
+</section>
+
+<!-- ========== POST ITEM MODAL ========== -->
+<div id="gamesPostModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ Post Item</h3>
+      <button onclick="closeGamesPostModal()" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="gamesPostForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none focus:border-s-purple" placeholder="e.g. Zelda: Tears of the Kingdom — Switch">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Platform *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>🎮 PlayStation 5</option>
+            <option>🎮 PlayStation 4</option>
+            <option>🎮 Xbox Series X/S</option>
+            <option>🎮 Xbox One</option>
+            <option>🕹️ Nintendo Switch</option>
+            <option>💻 PC Games</option>
+            <option>🕹️ Retro / Classic</option>
+            <option>🎲 Board Games</option>
+            <option>📀 Movies / TV</option>
+            <option>🎵 Vinyl / Music</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Condition *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none">
+            <option value="">Select...</option>
+            <option>Sealed / New</option>
+            <option>Like New</option>
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Acceptable</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Offer Type *</label>
+        <div class="grid grid-cols-3 gap-3">
+          <label class="flex items-center justify-center gap-2 bg-s-dark border border-s-border rounded-full py-3 cursor-pointer hover:border-s-purple transition">
+            <input type="radio" name="gamesOffer" value="swap" class="accent-s-purple"> 🔄 Swap
+          </label>
+          <label class="flex items-center justify-center gap-2 bg-s-dark border border-s-border rounded-full py-3 cursor-pointer hover:border-s-purple transition">
+            <input type="radio" name="gamesOffer" value="free" class="accent-s-purple"> 🎁 Free
+          </label>
+          <label class="flex items-center justify-center gap-2 bg-s-dark border border-s-border rounded-full py-3 cursor-pointer hover:border-s-purple transition">
+            <input type="radio" name="gamesOffer" value="sell" class="accent-s-purple"> 💰 Sell
+          </label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Location *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-border text-white focus:outline-none focus:border-s-purple" placeholder="Postcode or City">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Photo</label>
+        <div class="border-2 border-dashed border-s-border rounded-2xl p-4 text-center cursor-pointer hover:border-s-purple/60 transition" onclick="showToast('📷 Photo upload — coming soon!')">
+          <p class="text-s-muted">📷 Click to upload photo</p>
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-s-purple text-white py-3 rounded-full font-bold hover:bg-purple-500 transition text-lg mt-2">
+        ✅ Post Item
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Item Detail Modal -->
+<div id="gamesDetailModal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 id="gamesDetailTitle" class="text-2xl font-bold text-white">Item Title</h3>
+      <button onclick="closeGamesDetailModal()" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <div id="gamesDetailContent"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html" class="hover:text-s-purple">Home</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-purple">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-purple">Privacy</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Link copied!</div>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+// Dropdown / Mobile Menu / Toast (mirrors index.html)
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal helpers
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Sample Games & Entertainment Data
+const gamesItems = [
+  { id:1, title:"Zelda: Tears of the Kingdom", platform:"switch", condition:"like-new", type:"swap", price:null, location:"London, W1", image:"🗡️", poster:"GamerGuy", posted:"1h ago" },
+  { id:2, title:"PlayStation 5 Disc Edition + 2 Controllers", platform:"ps5", condition:"excellent", type:"sell", price:380, location:"Manchester, M2", image:"🎮", poster:"TechSwap", posted:"3h ago" },
+  { id:3, title:"Mario Kart 8 Deluxe — Switch", platform:"switch", condition:"good", type:"free", price:null, location:"Birmingham, B4", image:"🏎️", poster:"Lisa G.", posted:"2h ago" },
+  { id:4, title:"Elden Ring — PS5", platform:"ps5", condition:"excellent", type:"swap", price:null, location:"Leeds, LS1", image:"⚔️", poster:"DarkSoulsFan", posted:"5h ago" },
+  { id:5, title:"Xbox Series S — 512GB", platform:"xbox-series", condition:"like-new", type:"sell", price:180, location:"Bristol, BS1", image:"🎮", poster:"Sam X.", posted:"1d ago" },
+  { id:6, title:"Monopoly — Classic Board Game", platform:"board", condition:"good", type:"swap", price:null, location:"Edinburgh, EH2", image:"🎲", poster:"FamilyFun", posted:"4h ago" },
+  { id:7, title:"Pink Floyd — Dark Side of the Moon (Vinyl)", platform:"vinyl", condition:"excellent", type:"sell", price:25, location:"Glasgow, G1", image:"🎵", poster:"VinylCollector", posted:"6h ago" },
+  { id:8, title:"Retro N64 Console + 4 Games", platform:"retro", condition:"acceptable", type:"free", price:null, location:"Cardiff, CF10", image:"🕹️", poster:"RetroKing", posted:"8h ago" }
+];
+
+// Platform label lookup for badges/detail
+const gamesPlatformLabels = {
+  ps5: 'PlayStation 5', ps4: 'PlayStation 4', 'xbox-series': 'Xbox Series X/S',
+  'xbox-one': 'Xbox One', switch: 'Nintendo Switch', pc: 'PC Games',
+  retro: 'Retro / Classic', board: 'Board Games', dvd: 'Movies / TV', vinyl: 'Vinyl / Music'
+};
+const gamesConditionLabels = {
+  'like-new': 'Like New / Sealed', excellent: 'Excellent', good: 'Good', acceptable: 'Acceptable'
+};
+
+// Render Items
+function renderGames(list) {
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = list.map(item => {
+    const badge = item.type === 'free'
+      ? '<span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-xs font-semibold">🎁 FREE</span>'
+      : item.type === 'swap'
+        ? '<span class="bg-s-purple/20 text-s-purple px-3 py-1 rounded-full text-xs font-semibold">🔄 Swap</span>'
+        : `<span class="bg-s-gold/20 text-s-gold px-3 py-1 rounded-full text-xs font-semibold">£${item.price}</span>`;
+
+    return `
+      <div class="bg-s-card rounded-2xl p-5 border border-s-border cursor-pointer hover:border-s-purple/50 transition" onclick="openGamesDetail(${item.id})">
+        <div class="h-36 bg-s-purple/10 rounded-xl flex items-center justify-center text-5xl mb-4">${item.image}</div>
+        <h3 class="text-lg font-bold text-white mb-1">${item.title}</h3>
+        <p class="text-s-muted text-sm mb-3">${gamesPlatformLabels[item.platform] || item.platform}</p>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-s-muted">${gamesConditionLabels[item.condition] || item.condition}</span>
+          ${badge}
+        </div>
+        <div class="mt-3 text-xs text-s-muted">📍 ${item.location}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('gamesCount').textContent = list.length;
+}
+
+// Filter Items
+function filterGames() {
+  const search = document.getElementById('gamesSearch').value.toLowerCase();
+  const platform = document.getElementById('gamesPlatform').value;
+  const cond = document.getElementById('gamesCondition').value;
+  const swapOnly = document.getElementById('gamesOnlySwap').checked;
+  const freeOnly = document.getElementById('gamesOnlyFree').checked;
+
+  let filtered = gamesItems.filter(item => {
+    const matchSearch = !search || item.title.toLowerCase().includes(search) || item.platform.toLowerCase().includes(search);
+    const matchPlatform = platform === 'all' || item.platform === platform;
+    const matchCond = cond === 'all' || item.condition === cond;
+    const matchSwap = !swapOnly || item.type === 'swap';
+    const matchFree = !freeOnly || item.type === 'free';
+    return matchSearch && matchPlatform && matchCond && matchSwap && matchFree;
+  });
+  renderGames(filtered);
+}
+
+// Open Detail
+function openGamesDetail(id) {
+  const item = gamesItems.find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('gamesDetailTitle').textContent = item.title;
+  document.getElementById('gamesDetailContent').innerHTML = `
+    <div class="h-44 bg-s-purple/10 rounded-xl flex items-center justify-center text-6xl mb-6">${item.image}</div>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Platform</span><span class="font-semibold text-white">${gamesPlatformLabels[item.platform] || item.platform}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Condition</span><span class="font-semibold text-white">${gamesConditionLabels[item.condition] || item.condition}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Available for</span><span class="font-semibold text-white">${item.type === 'free' ? '🎁 Free' : item.type === 'swap' ? '🔄 Swap' : '£' + item.price}</span>
+      </div>
+      <div class="flex justify-between py-2 border-b border-s-border">
+        <span class="text-s-muted">Location</span><span class="font-semibold text-white">${item.location}</span>
+      </div>
+      <div class="flex justify-between py-2">
+        <span class="text-s-muted">Posted by</span><span class="font-semibold text-white">${item.poster} · ${item.posted}</span>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="flex-1 bg-s-purple text-white py-3 rounded-full font-bold hover:bg-purple-500 transition" onclick="showToast('💬 Messaging coming soon!')">💬 Message</button>
+      <button class="flex-1 bg-s-purple/10 border border-s-purple/40 text-white py-3 rounded-full font-semibold hover:bg-s-purple/20 transition" onclick="showToast('🤝 Trade request sent!')">🤝 Arrange Trade</button>
+    </div>
+  `;
+  openModal('gamesDetailModal');
+}
+
+function closeGamesDetailModal() {
+  closeModal('gamesDetailModal');
+}
+
+// Modal Functions
+function openGamesPostModal() { openModal('gamesPostModal'); }
+function closeGamesPostModal() { closeModal('gamesPostModal'); }
+function openGamesWishlist() { showToast('💭 Wishlist — Save games you want! Get notified when listed.'); }
+function openGamesNearby() { showToast('📍 Finding games near you...'); }
+function loadMoreGames() { showToast('🎮 Loading more games...'); }
+
+// Form Submit
+document.getElementById('gamesPostForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Item posted successfully! 🎉');
+  closeGamesPostModal();
+  e.target.reset();
+});
+
+// Attach Filter Listeners
+['gamesSearch','gamesPlatform','gamesCondition','gamesOnlySwap','gamesOnlyFree','gamesDigital'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', filterGames);
+  document.getElementById(id)?.addEventListener('change', filterGames);
+});
+
+// Initial Load
+renderGames(gamesItems);
+</script>
+
+</body>
+</html>
