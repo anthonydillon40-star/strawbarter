@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscription & Bill Manager — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .sub-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#subscription-manager" class="px-3 py-2 rounded-lg bg-s-card text-s-gold transition">📋 Bills</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="renovation.html" class="dropdown-item"><i class="fa-solid fa-house-chimney w-5 text-center text-s-muted"></i> 🏠 Home & Renovation</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#subscription-manager" class="py-2 px-3 rounded-lg bg-s-card text-s-gold">📋 Subscription & Bill Manager</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 📋 SUBSCRIPTION & BILL MANAGER — STRAW Barter -->
+<!-- ====================================== -->
+<section id="subscription-manager" class="px-4 py-12 border-t border-s-gold/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">📋 Subscription & Bill Manager</h2>
+      <p class="text-s-muted text-lg">Track all your subs · Compare prices · Cancel or swap · Find cheaper alternatives · Share family plans — save £££!</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-gold/10 border border-s-gold/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-gold font-semibold text-lg">💷 Average user saves £280/year · 🔍 Find hidden costs · 🤝 Share plans & split costs · ✅ Cancel in 1-click links</p>
+    </div>
+
+    <!-- Financial Snapshot -->
+    <div class="bg-s-card rounded-3xl p-6 mb-8 border border-s-gold/20">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">📊 Your Monthly Snapshot</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div class="bg-s-gold/5 rounded-2xl p-4">
+          <div class="text-3xl font-bold text-s-gold mb-1">£68.47</div>
+          <div class="text-s-muted text-sm">Total Monthly</div>
+        </div>
+        <div class="bg-s-green/5 rounded-2xl p-4">
+          <div class="text-3xl font-bold text-s-green mb-1">£12.00</div>
+          <div class="text-s-muted text-sm">Could Save</div>
+        </div>
+        <div class="bg-red-500/5 rounded-2xl p-4">
+          <div class="text-3xl font-bold text-red-400 mb-1">1</div>
+          <div class="text-s-muted text-sm">Unused Sub</div>
+        </div>
+        <div class="bg-s-blue/5 rounded-2xl p-4">
+          <div class="text-3xl font-bold text-s-blue mb-1">8</div>
+          <div class="text-s-muted text-sm">Active Subs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="flex flex-wrap gap-3 mb-8">
+      <button id="openAddSub" class="bg-s-gold text-s-dark px-5 py-3 rounded-full font-bold hover:bg-amber-400 transition flex-1 min-w-[140px]">➕ Add Subscription</button>
+      <button id="showAllSubs" class="bg-s-blue/10 border border-s-blue/30 text-white px-5 py-3 rounded-full font-semibold hover:bg-s-blue/20 transition flex-1 min-w-[140px]">📋 All Subscriptions</button>
+      <button id="showSavings" class="bg-s-green/10 border border-s-green/30 text-white px-5 py-3 rounded-full font-semibold hover:bg-s-green/20 transition flex-1 min-w-[140px]">💰 Savings Ideas</button>
+      <button id="showSharePlans" class="bg-s-purple/10 border border-s-purple/30 text-white px-5 py-3 rounded-full font-semibold hover:bg-s-purple/20 transition flex-1 min-w-[140px]">🤝 Share Plans</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="sub-tab active bg-s-gold text-s-dark px-4 py-2 rounded-full text-sm font-semibold" data-cat="all">📋 All (8)</button>
+      <button class="sub-tab bg-s-gold/10 border border-s-gold/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-gold/20" data-cat="streaming">🎬 Streaming</button>
+      <button class="sub-tab bg-s-gold/10 border border-s-gold/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-gold/20" data-cat="utilities">⚡ Utilities</button>
+      <button class="sub-tab bg-s-gold/10 border border-s-gold/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-gold/20" data-cat="software">💻 Software</button>
+      <button class="sub-tab bg-s-gold/10 border border-s-gold/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-gold/20" data-cat="unused">⚠️ Unused</button>
+    </div>
+
+    <!-- Subscriptions List -->
+    <div id="subsAll" class="sub-content space-y-4 mb-8">
+      <!-- Streaming -->
+      <div class="sub-card bg-s-card rounded-3xl p-5 border border-s-gold/10 hover:border-s-gold/30 transition" data-category="streaming">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="flex items-center gap-4 flex-1">
+            <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white font-bold">N</div>
+            <div>
+              <h4 class="font-bold text-white text-lg">Netflix — Premium</h4>
+              <p class="text-s-muted text-sm">Renews: 18 Sep · Next £15.99</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm">
+            <div class="text-right">
+              <div class="font-bold text-white">£15.99/mo</div>
+              <div class="text-s-muted text-xs">£191.88/yr</div>
+            </div>
+            <div class="flex gap-2">
+              <button class="cheaper-btn bg-s-green/10 text-s-green px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-green/20">Cheaper ↓</button>
+              <a href="https://www.netflix.com/cancelplan" target="_blank" class="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-xs font-semibold hover:bg-red-500/20">Cancel ✕</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-card bg-s-card rounded-3xl p-5 border border-s-gold/10 hover:border-s-gold/30 transition" data-category="streaming">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="flex items-center gap-4 flex-1">
+            <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold">D+</div>
+            <div>
+              <h4 class="font-bold text-white text-lg">Disney+</h4>
+              <p class="text-s-muted text-sm">Renews: 2 Oct · Next £7.99</p>
+              <span class="inline-block mt-1 bg-s-purple/10 text-s-purple px-2 py-0.5 rounded text-xs">🤝 Family Plan shared — 4 people</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm">
+            <div class="text-right">
+              <div class="font-bold text-white">£7.99/mo</div>
+              <div class="text-s-muted text-xs">£95.88/yr</div>
+            </div>
+            <button class="share-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20">Share 👥</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Utilities -->
+      <div class="sub-card bg-s-card rounded-3xl p-5 border border-s-gold/10 hover:border-s-gold/30 transition" data-category="utilities">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="flex items-center gap-4 flex-1">
+            <div class="w-12 h-12 bg-s-green/20 rounded-xl flex items-center justify-center text-2xl">⚡</div>
+            <div>
+              <h4 class="font-bold text-white text-lg">Electricity — Fixed Rate</h4>
+              <p class="text-s-muted text-sm">Renews: 15 Dec · Current £42.50/mo</p>
+              <span class="inline-block mt-1 bg-s-green/10 text-s-green px-2 py-0.5 rounded text-xs">✅ Best rate found — locked in</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm">
+            <div class="text-right">
+              <div class="font-bold text-white">£42.50/mo</div>
+              <div class="text-s-muted text-xs">£510/yr</div>
+            </div>
+            <button class="compare-btn bg-s-blue/10 text-s-blue px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-blue/20">Compare ↓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Software -->
+      <div class="sub-card bg-s-card rounded-3xl p-5 border border-s-gold/10 hover:border-s-gold/30 transition" data-category="software" data-unused="true">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="flex items-center gap-4 flex-1">
+            <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-white font-bold">CC</div>
+            <div>
+              <h4 class="font-bold text-white text-lg">Adobe Creative Cloud</h4>
+              <p class="text-s-muted text-sm">Renews: 5 Oct · Next £49.98</p>
+              <span class="inline-block mt-1 bg-red-500/10 text-red-400 px-2 py-0.5 rounded text-xs">⚠️ Not used in 6 weeks</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm">
+            <div class="text-right">
+              <div class="font-bold text-white">£49.98/mo</div>
+              <div class="text-s-muted text-xs">£599.76/yr</div>
+            </div>
+            <div class="flex gap-2">
+              <button class="alt-btn bg-s-green/10 text-s-green px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-green/20">Alternatives</button>
+              <a href="https://account.adobe.com/subscriptions" target="_blank" class="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-xs font-semibold hover:bg-red-500/20">Cancel ✕</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Streaming 2 -->
+      <div class="sub-card bg-s-card rounded-3xl p-5 border border-s-gold/10 hover:border-s-gold/30 transition" data-category="streaming">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="flex items-center gap-4 flex-1">
+            <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center text-white font-bold">Spot</div>
+            <div>
+              <h4 class="font-bold text-white text-lg">Spotify — Individual</h4>
+              <p class="text-s-muted text-sm">Renews: 22 Sep · Next £10.99</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-sm">
+            <div class="text-right">
+              <div class="font-bold text-white">£10.99/mo</div>
+              <div class="text-s-muted text-xs">£131.88/yr</div>
+            </div>
+            <button class="family-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20">Family Plan ↓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Savings Ideas Section -->
+    <div id="savingsSection" class="hidden bg-s-card rounded-3xl p-6 border border-s-green/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">💰 Top Savings — Switch & Save</h3>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-s-green/5 rounded-2xl p-4 border border-s-green/20">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-bold text-white">Netflix → Standard</h4>
+            <span class="bg-s-green text-white px-2 py-0.5 rounded-full text-sm font-bold">Save £9/mo</span>
+          </div>
+          <p class="text-s-muted text-sm mb-3">Still HD quality — 2 screens — no ads</p>
+          <button class="savings-cta w-full bg-s-green text-s-dark py-2 rounded-full text-sm font-bold hover:bg-green-400">Switch Now →</button>
+        </div>
+        <div class="bg-s-green/5 rounded-2xl p-4 border border-s-green/20">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-bold text-white">Adobe → Affinity Suite</h4>
+            <span class="bg-s-green text-white px-2 py-0.5 rounded-full text-sm font-bold">Save £45/mo</span>
+          </div>
+          <p class="text-s-muted text-sm mb-3">One-time purchase — £54 forever — no subs</p>
+          <button class="savings-cta w-full bg-s-green text-s-dark py-2 rounded-full text-sm font-bold hover:bg-green-400">Get Lifetime →</button>
+        </div>
+        <div class="bg-s-green/5 rounded-2xl p-4 border border-s-green/20">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-bold text-white">Spotify → Family Plan (6 ways)</h4>
+            <span class="bg-s-green text-white px-2 py-0.5 rounded-full text-sm font-bold">Save £8/mo</span>
+          </div>
+          <p class="text-s-muted text-sm mb-3">£16.99 total → £2.83 each — same features</p>
+          <button class="savings-cta w-full bg-s-green text-s-dark py-2 rounded-full text-sm font-bold hover:bg-green-400">Join Group →</button>
+        </div>
+        <div class="bg-s-green/5 rounded-2xl p-4 border border-s-green/20">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-bold text-white">Mobile — Switch Provider</h4>
+            <span class="bg-s-green text-white px-2 py-0.5 rounded-full text-sm font-bold">Save £15/mo</span>
+          </div>
+          <p class="text-s-muted text-sm mb-3">Same coverage — unlimited data — £12/mo deals</p>
+          <button class="savings-cta w-full bg-s-green text-s-dark py-2 rounded-full text-sm font-bold hover:bg-green-400">Compare →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share Plans Section -->
+    <div id="shareSection" class="hidden bg-s-card rounded-3xl p-6 border border-s-purple/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">🤝 Share Plans — Split Cost, Save Together</h3>
+      <p class="text-s-muted text-center mb-6">Join or create a shared family/group plan — pay your share, not full price!</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-s-purple/5 rounded-2xl p-4 border border-s-purple/20">
+          <h4 class="font-bold text-white mb-2">🎬 Netflix Family</h4>
+          <p class="text-s-muted text-sm mb-2">Total £15.99 · 4 spots · <strong>£4.00/each</strong></p>
+          <p class="text-s-green text-sm mb-3">2 spots available</p>
+          <button class="join-plan-btn w-full bg-s-purple text-white py-2 rounded-full text-sm font-bold hover:bg-purple-600">Join →</button>
+        </div>
+        <div class="bg-s-purple/5 rounded-2xl p-4 border border-s-purple/20">
+          <h4 class="font-bold text-white mb-2">🎵 Spotify Family</h4>
+          <p class="text-s-muted text-sm mb-2">Total £16.99 · 6 spots · <strong>£2.83/each</strong></p>
+          <p class="text-s-green text-sm mb-3">3 spots available</p>
+          <button class="join-plan-btn w-full bg-s-purple text-white py-2 rounded-full text-sm font-bold hover:bg-purple-600">Join →</button>
+        </div>
+        <div class="bg-s-purple/5 rounded-2xl p-4 border border-s-purple/20">
+          <h4 class="font-bold text-white mb-2">📺 Amazon Prime</h4>
+          <p class="text-s-muted text-sm mb-2">Total £8.99 · 3 spots · <strong>£3.00/each</strong></p>
+          <p class="text-s-green text-sm mb-3">1 spot available</p>
+          <button class="join-plan-btn w-full bg-s-purple text-white py-2 rounded-full text-sm font-bold hover:bg-purple-600">Join →</button>
+        </div>
+      </div>
+      <div class="text-center mt-6">
+        <button id="createSharedPlanBtn" class="bg-s-purple text-white px-6 py-3 rounded-full font-bold hover:bg-purple-600 transition">➕ Create Your Shared Plan</button>
+      </div>
+    </div>
+
+    <!-- Yearly Summary -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-gold/20 text-center">
+      <h3 class="text-xl font-bold text-white mb-4">📈 Yearly Overview</h3>
+      <p class="text-s-muted mb-4">Current annual spend: <span class="text-2xl font-bold text-white">£821.64</span></p>
+      <p class="text-s-green text-lg mb-6">Potential annual savings: <span class="font-bold text-xl">£288.00</span> — if you take all recommended actions!</p>
+      <button id="downloadReportBtn" class="bg-s-gold text-s-dark px-8 py-3 rounded-full font-bold hover:bg-amber-400 transition text-lg">📄 Download Full Report</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ADD SUBSCRIPTION MODAL ========== -->
+<div id="addSubModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-gold/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ Add Subscription</h3>
+      <button id="closeAddSub" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="addSubForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Service Name *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-gold/20 text-white focus:outline-none" placeholder="e.g. Netflix, Spotify, Mobile, Insurance">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Cost (£) *</label>
+          <input type="number" step="0.01" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-gold/20 text-white focus:outline-none" placeholder="9.99">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Billing Cycle</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-gold/20 text-white focus:outline-none">
+            <option>Monthly</option>
+            <option>Yearly</option>
+            <option>Weekly</option>
+            <option>Quarterly</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Next Renewal Date</label>
+        <input type="date" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-gold/20 text-white focus:outline-none">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Category</label>
+        <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-gold/20 text-white focus:outline-none">
+          <option>🎬 Streaming & Entertainment</option>
+          <option>⚡ Utilities & Bills</option>
+          <option>💻 Software & Tools</option>
+          <option>📱 Mobile & Internet</option>
+          <option>🎮 Gaming</option>
+          <option>📦 Delivery & Shopping</option>
+          <option>🏋️ Fitness & Health</option>
+          <option>📚 Education & Learning</option>
+          <option>🔒 Insurance & Finance</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Notes / Cancel Link</label>
+        <textarea rows="2" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-gold/20 text-white focus:outline-none" placeholder="Account email, URL to cancel, login details..."></textarea>
+      </div>
+      <button type="submit" class="w-full bg-s-gold text-s-dark py-3 rounded-full font-bold hover:bg-amber-400 transition text-lg">
+        ✅ Add Subscription
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a> &nbsp;|&nbsp;
+      <a href="prompts.html" class="hover:text-s-green">AI Prompt Library</a> &nbsp;|&nbsp;
+      <a href="liftshare.html" class="hover:text-s-green">Lift Share</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab Switching
+document.querySelectorAll('.sub-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.sub-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-gold', 'text-s-dark');
+      t.classList.add('bg-s-gold/10', 'border', 'border-s-gold/20', 'text-white');
+    });
+    tab.classList.add('active', 'bg-s-gold', 'text-s-dark');
+    tab.classList.remove('bg-s-gold/10', 'border', 'border-s-gold/20', 'text-white');
+
+    document.querySelectorAll('.sub-content').forEach(c => c.classList.remove('hidden'));
+    document.getElementById('savingsSection').classList.add('hidden');
+    document.getElementById('shareSection').classList.add('hidden');
+
+    const cat = tab.dataset.cat;
+    document.querySelectorAll('.sub-card').forEach(card => {
+      const match = cat === 'all'
+        ? true
+        : cat === 'unused'
+          ? card.dataset.unused === 'true'
+          : card.dataset.category === cat;
+      card.style.display = match ? '' : 'none';
+    });
+  });
+});
+
+// Section Views
+function hideSubLists() {
+  document.querySelectorAll('.sub-content').forEach(c => c.classList.add('hidden'));
+}
+function showAllSubsView() {
+  hideSubLists();
+  document.getElementById('savingsSection').classList.add('hidden');
+  document.getElementById('shareSection').classList.add('hidden');
+  document.querySelectorAll('.sub-content').forEach(c => c.classList.remove('hidden'));
+  document.querySelectorAll('.sub-card').forEach(card => card.style.display = '');
+}
+document.getElementById('showAllSubs')?.addEventListener('click', showAllSubsView);
+document.getElementById('showSavings')?.addEventListener('click', () => {
+  hideSubLists();
+  document.getElementById('savingsSection').classList.remove('hidden');
+  document.getElementById('shareSection').classList.add('hidden');
+});
+document.getElementById('showSharePlans')?.addEventListener('click', () => {
+  hideSubLists();
+  document.getElementById('savingsSection').classList.add('hidden');
+  document.getElementById('shareSection').classList.remove('hidden');
+});
+
+// Modal open/close
+document.getElementById('openAddSub')?.addEventListener('click', () => openModal('addSubModal'));
+document.getElementById('closeAddSub')?.addEventListener('click', () => closeModal('addSubModal'));
+
+// Per-sub demo actions
+document.querySelectorAll('.cheaper-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🔄 Found cheaper tier — save £9/mo!')));
+document.querySelectorAll('.compare-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🔍 Checking 12 providers... best match £39.00/mo — save £42/yr!')));
+document.querySelectorAll('.alt-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🎨 Alternatives: Canva Pro £9.99 · Affinity £54 one-time — save £400+/yr!')));
+document.querySelectorAll('.family-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('👥 Family Plan £16.99 for 6 — your share = £2.83/mo!')));
+document.querySelectorAll('.share-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('👥 Share this plan — invite others to split cost!')));
+document.querySelectorAll('.savings-cta').forEach(b => b.addEventListener('click', () =>
+  showToast('💰 Switch guide — coming soon!')));
+document.querySelectorAll('.join-plan-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Join request sent — the plan owner will confirm!')));
+document.getElementById('createSharedPlanBtn')?.addEventListener('click', () =>
+  showToast('✅ Create your shared plan — invite people & split cost automatically!'));
+document.getElementById('downloadReportBtn')?.addEventListener('click', () =>
+  showToast('📄 Full report generated — download starts soon!'));
+
+// Form Submit
+document.getElementById('addSubForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Subscription Added! 📋 Renewal reminders & savings checks on.');
+  closeModal('addSubModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>

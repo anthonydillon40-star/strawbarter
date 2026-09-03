@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pets & Animals — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+              pink: '#ec4899',
+              orange: '#f97316',
+              teal: '#14b8a6',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .pet-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#pets-animals" class="px-3 py-2 rounded-lg bg-s-card text-s-orange transition">🐾 Pets</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="renovation.html" class="dropdown-item"><i class="fa-solid fa-house-chimney w-5 text-center text-s-muted"></i> 🏠 Home & Renovation</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#pets-animals" class="py-2 px-3 rounded-lg bg-s-card text-s-orange">🐾 Pets & Animals</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="mentorship.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <a href="crafts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧵 Craft & Supply Exchange</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🐾 PETS & ANIMALS — STRAW Barter -->
+<!-- ====================================== -->
+<section id="pets-animals" class="px-4 py-12 border-t border-s-orange/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">🐾 Pets & Animals — Supplies · Care · Rescue</h2>
+      <p class="text-s-muted text-lg">Pre-loved supplies · Food swap · Pet sitting · Rehoming · Vet tips — save money, support animals, build a pet-loving community! 🐶🐱🐰🦜🐠</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-orange/10 border border-s-orange/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-orange font-semibold text-lg">🐕 Save up to 80% on supplies · 🤝 Swap food/toys instead of waste · 🏠 Find loving homes · 🩺 Vet tips & community support · 🆓 Always free to list & connect</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="bg-s-orange/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-orange mb-1">45%</div>
+        <div class="text-s-muted text-sm">UK Households with Pets</div>
+      </div>
+      <div class="bg-s-green/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-green mb-1">£1,500+</div>
+        <div class="text-s-muted text-sm">Avg Yearly Cost Per Pet</div>
+      </div>
+      <div class="bg-s-purple/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-purple mb-1">1,200+</div>
+        <div class="text-s-muted text-sm">Active Listings & Services</div>
+      </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-orange/20">
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="petSearch" class="text-sm font-semibold text-white block mb-2">🔍 Search</label>
+          <input type="text" id="petSearch" placeholder="Food, bed, lead, cage, sitting..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white placeholder-s-muted focus:outline-none focus:border-s-orange">
+        </div>
+        <div>
+          <label for="petTypeFilter" class="text-sm font-semibold text-white block mb-2">🐾 Pet Type</label>
+          <select id="petTypeFilter" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>All Pets</option>
+            <option>🐶 Dogs</option>
+            <option>🐱 Cats</option>
+            <option>🐰 Small Pets (Rabbit, Guinea, Hamster)</option>
+            <option>🦜 Birds & Aviary</option>
+            <option>🐠 Fish & Aquatic</option>
+            <option>🦔 Exotic & Reptiles</option>
+            <option>🐴 Equine & Farm</option>
+          </select>
+        </div>
+        <div>
+          <label for="petSection" class="text-sm font-semibold text-white block mb-2">📂 Section</label>
+          <select id="petSection" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>All — Supplies & Services</option>
+            <option>🛒 Supplies — Buy/Swap</option>
+            <option>🤝 Food Swap — Unopened Bags</option>
+            <option>🏠 Rehoming & Adoption</option>
+            <option>🐾 Care & Services</option>
+            <option>🩺 Health & Advice</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="petPrice" class="text-sm font-semibold text-white block mb-2">💰 Price</label>
+          <select id="petPrice" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🆓 Free / Rehome</option>
+            <option>🤝 Swap Only</option>
+            <option>Under £5</option>
+            <option>£5–£25</option>
+            <option>£25+</option>
+          </select>
+        </div>
+        <div>
+          <label for="petLocation" class="text-sm font-semibold text-white block mb-2">📍 Location</label>
+          <select id="petLocation" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>UK Wide</option>
+            <option>Local — Within 10 miles</option>
+            <option>North West — Manchester</option>
+            <option>Collection Only</option>
+          </select>
+        </div>
+        <div>
+          <label for="petCondition" class="text-sm font-semibold text-white block mb-2">♻️ Condition</label>
+          <select id="petCondition" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>✨ New / Unused</option>
+            <option>♻️ Excellent — Like New</option>
+            <option>Good — Clean & Ready</option>
+            <option>Rehoming — See Description</option>
+          </select>
+        </div>
+        <div>
+          <label for="petSafety" class="text-sm font-semibold text-white block mb-2">✅ Safety Check</label>
+          <select id="petSafety" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>✅ Pet-Safe Verified</option>
+            <option>Non-Smoking Home</option>
+            <option>Pet-Free Home</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="findPetsBtn" class="bg-s-orange text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition flex-1 min-w-[120px]">
+          🔍 Find
+        </button>
+        <button id="listPetBtn" class="bg-s-green text-s-dark px-6 py-3 rounded-full font-bold hover:bg-green-400 transition flex-1 min-w-[120px]">
+          ➕ List — Free!
+        </button>
+        <button id="rehomeBtn" class="bg-s-purple/10 border border-s-purple/30 text-white px-6 py-3 rounded-full font-semibold hover:bg-s-purple/20 transition flex-1 min-w-[120px]">
+          🏠 Rehome Pet
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="pet-tab active bg-s-orange text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">🐾 All (58)</button>
+      <button class="pet-tab bg-s-orange/10 border border-s-orange/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-orange/20" data-tab="supplies">🛒 Supplies</button>
+      <button class="pet-tab bg-s-orange/10 border border-s-orange/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-orange/20" data-tab="food">🍖 Food Swap</button>
+      <button class="pet-tab bg-s-orange/10 border border-s-orange/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-orange/20" data-tab="rehome">🏠 Rehome</button>
+      <button class="pet-tab bg-s-orange/10 border border-s-orange/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-orange/20" data-tab="care">🤝 Care & Services</button>
+    </div>
+
+    <!-- Listings Grid -->
+    <div id="petsAll" class="pet-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <!-- Dog Bed Listing -->
+      <div class="pet-card bg-s-card rounded-3xl p-5 border border-s-orange/10 hover:border-s-orange/30 transition flex flex-col" data-type="supplies">
+        <div class="w-full h-40 bg-s-orange/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🐕🛏️</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Large Orthopaedic Dog Bed — Like New</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£15</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester · ♻️ Excellent — washed, clean, no wear · Large — 90x70cm, memory foam</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-orange/10 text-s-orange px-2 py-1 rounded">🐶 Dog</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🛏️ Bed</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Washed & Clean</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-orange text-white py-2 rounded-full font-semibold hover:bg-orange-600 transition text-sm">View & Message</button>
+          <button class="swap-btn bg-s-green/10 text-s-green px-3 py-2 rounded-full font-semibold hover:bg-s-green/20 text-sm">🤝 Swap</button>
+        </div>
+      </div>
+
+      <!-- Food Swap Listing -->
+      <div class="pet-card bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition flex flex-col" data-type="food">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🍖🐱</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Cat Food — 2kg Chicken (Unopened)</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">🤝 Swap Only</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Bolton · ✨ Unopened — wrong flavour for my fussiest cat! · Best before 2027</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🐱 Cat</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🍖 Dry Food</span>
+          <span class="bg-s-orange/10 text-s-orange px-2 py-1 rounded">✨ Sealed</span>
+        </div>
+        <button class="swap-propose-btn w-full bg-s-green text-s-dark py-2 rounded-full font-bold hover:bg-green-400 transition text-sm mt-auto">Propose Swap →</button>
+      </div>
+
+      <!-- Rehoming Listing -->
+      <div class="pet-card bg-s-card rounded-3xl p-5 border border-s-purple/20 hover:border-s-purple/40 transition flex flex-col" data-type="rehome">
+        <div class="w-full h-40 bg-s-purple/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🐰💕</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">2 Beautiful Female Rabbits — Bonded Pair</h4>
+          <span class="bg-s-purple/20 text-s-purple px-2 py-1 rounded-full text-sm font-bold">🏠 Rehome</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Bury · 2yrs old — spayed, vaccinated, litter trained · Must go together — bonded sisters! Indoor or outdoor home.</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🐰 Rabbit</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Spayed</span>
+          <span class="bg-blue-400/10 text-blue-400 px-2 py-1 rounded">✅ Vaccinated</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ £40 donation requested</span>
+        </div>
+        <button class="adopt-btn w-full bg-s-purple text-white py-2 rounded-full font-bold hover:bg-purple-600 transition text-sm mt-auto">Apply to Adopt →</button>
+      </div>
+
+      <!-- Pet Sitting Listing -->
+      <div class="pet-card bg-s-card rounded-3xl p-5 border border-s-blue/20 hover:border-s-blue/40 transition flex flex-col" data-type="care">
+        <div class="w-full h-40 bg-s-blue/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🏠🐾</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Pet Sitting — In Your Home</h4>
+          <span class="bg-s-blue/20 text-s-blue px-2 py-1 rounded-full text-sm font-bold">£15/day</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 North Manchester · 5+ years experience · Dog walking, feeding, meds, overnight · Fully insured & DBS checked.</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🐕 Sitting</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Insured</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (42)</span>
+        </div>
+        <button class="book-btn w-full bg-s-blue text-white py-2 rounded-full font-bold hover:bg-blue-600 transition text-sm mt-auto">Book & Message →</button>
+      </div>
+
+      <!-- Cat Tree Listing -->
+      <div class="pet-card bg-s-card rounded-3xl p-5 border border-s-orange/10 hover:border-s-orange/30 transition flex flex-col" data-type="supplies">
+        <div class="w-full h-40 bg-s-orange/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🐱🌳</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Large Cat Tree — 5ft, Scratching Posts</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£25</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Oldham · ♻️ Good condition — all posts intact, freshly cleaned · 3 platforms, 2 posts, 1 bed.</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-orange/10 text-s-orange px-2 py-1 rounded">🐱 Cat</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🌳 Furniture</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Cleaned</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-orange text-white py-2 rounded-full font-semibold hover:bg-orange-600 transition text-sm">View & Message</button>
+          <button class="token-btn bg-s-green/10 text-s-green px-3 py-2 rounded-full font-semibold hover:bg-s-green/20 text-sm">🪙 $STRAW</button>
+        </div>
+      </div>
+
+      <!-- Dog Walker Listing -->
+      <div class="pet-card bg-s-card rounded-3xl p-5 border border-s-teal/20 hover:border-s-teal/40 transition flex flex-col" data-type="care">
+        <div class="w-full h-40 bg-s-teal/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🐕🚶</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Reliable Dog Walker — 1-Hour Group Walks</h4>
+          <span class="bg-s-teal/20 text-s-teal px-2 py-1 rounded-full text-sm font-bold">£12/walk</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Stockport · Fully insured · Photos sent every walk · Solo & group options available.</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-teal/10 text-s-teal px-2 py-1 rounded">🐕 Walking</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Insured</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (67)</span>
+        </div>
+        <button class="book-btn w-full bg-s-teal text-white py-2 rounded-full font-bold hover:bg-teal-600 transition text-sm mt-auto">Book Now →</button>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMorePetsBtn" class="bg-s-orange/10 border border-s-orange/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-orange/20 transition">
+        Load More →
+      </button>
+    </div>
+
+    <!-- Quick Browse Categories -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-orange/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🐾 Browse by Pet</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🐶 Dogs</button>
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🐱 Cats</button>
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🐰 Small Pets</button>
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🦜 Birds</button>
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🐠 Fish</button>
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🦔 Reptiles</button>
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🐴 Equine</button>
+        <button class="pet-cat bg-s-orange/10 hover:bg-s-orange/20 text-white py-4 px-4 rounded-xl text-sm font-semibold transition">🏠 Rehome</button>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-orange/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Safe, Kind & Simple</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📸</div>
+          <h4 class="font-bold text-white mb-1">1. List It</h4>
+          <p class="text-s-muted text-sm">Supplies, food, services, or a pet needing a home — <strong>100% Free</strong></p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Connect</h4>
+          <p class="text-s-muted text-sm">Search by pet type, location, price — message directly, no middleman</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Arrange</h4>
+          <p class="text-s-muted text-sm">Swap, collect, meet, or book — all details agreed between you</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">❤️</div>
+          <h4 class="font-bold text-white mb-1">4. Happy Pets!</h4>
+          <p class="text-s-muted text-sm">Save money, reduce waste, help animals — leave a review & repeat</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Safety & Rehoming Standards -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-orange/10">
+        <h4 class="font-bold text-white mb-3">🛡️ Rehoming Rules — We Care About Animals</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ <strong>No selling for profit</strong> — adoption fee only to cover costs</li>
+          <li>✅ All pets must be healthy, vaccinated & treated</li>
+          <li>✅ No rehoming under 8 weeks old</li>
+          <li>✅ Home check & meet-and-greet recommended</li>
+          <li>✅ No breeding listings — pets only, not for sale</li>
+          <li>✅ Report any suspicious listings — animal welfare first</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-orange/10">
+        <h4 class="font-bold text-white mb-3">🛒 Buying & Swapping Safely</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ Clean & wash all pre-loved items before use</li>
+          <li>✅ Food must be sealed, in date & clearly labelled</li>
+          <li>✅ Check for recalls — especially pet food & treats</li>
+          <li>✅ Meet in public places for cash exchanges</li>
+          <li>✅ Check items carefully before taking home</li>
+          <li>✅ Ask questions — honest sellers welcome queries!</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Care & Advice Hub -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-blue/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🩺 Pet Care & Advice Hub — Free Guides</h3>
+      <p class="text-s-muted text-center mb-4">Essential reading for every pet owner — all free to browse & share!</p>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="care-guide bg-s-blue/5 p-4 rounded-xl hover:bg-s-blue/10 transition cursor-pointer">
+          <h4 class="font-bold text-white mb-2">🐶 Dog Essentials</h4>
+          <p class="text-s-muted text-sm">Nutrition, exercise, training, grooming, common health signs</p>
+        </div>
+        <div class="care-guide bg-s-blue/5 p-4 rounded-xl hover:bg-s-blue/10 transition cursor-pointer">
+          <h4 class="font-bold text-white mb-2">🐱 Cat Care Guide</h4>
+          <p class="text-s-muted text-sm">Diet, behaviour, litter, scratching, indoor vs outdoor</p>
+        </div>
+        <div class="care-guide bg-s-blue/5 p-4 rounded-xl hover:bg-s-blue/10 transition cursor-pointer">
+          <h4 class="font-bold text-white mb-2">🚨 Emergency Signs</h4>
+          <p class="text-s-muted text-sm">When to see a vet — poisoning, choking, heatstroke, lethargy</p>
+        </div>
+        <div class="care-guide bg-s-blue/5 p-4 rounded-xl hover:bg-s-blue/10 transition cursor-pointer">
+          <h4 class="font-bold text-white mb-2">🐰 Small Pets Guide</h4>
+          <p class="text-s-muted text-sm">Rabbits, guinea pigs, hamsters — housing, diet, social needs</p>
+        </div>
+        <div class="care-guide bg-s-blue/5 p-4 rounded-xl hover:bg-s-blue/10 transition cursor-pointer">
+          <h4 class="font-bold text-white mb-2">💰 Budget Pet Tips</h4>
+          <p class="text-s-muted text-sm">Save ££ on food, toys, vet bills — safe, healthy, affordable</p>
+        </div>
+        <div class="care-guide bg-s-blue/5 p-4 rounded-xl hover:bg-s-blue/10 transition cursor-pointer">
+          <h4 class="font-bold text-white mb-2">🏥 Vet Costs Help</h4>
+          <p class="text-s-muted text-sm">Charities, insurance, payment plans — where to get support</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Affiliate Supplies -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-purple/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛒 Recommended Supplies — via Affiliate Links</h3>
+      <p class="text-s-muted text-center mb-4">Need new? Buy from trusted partners — small commission supports the community, no extra cost to you!</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🍖</div>
+          <div class="text-white font-semibold text-sm">Pet Food</div>
+        </a>
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🦴</div>
+          <div class="text-white font-semibold text-sm">Toys & Treats</div>
+        </a>
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🛏️</div>
+          <div class="text-white font-semibold text-sm">Beds & Furniture</div>
+        </a>
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🏥</div>
+          <div class="text-white font-semibold text-sm">Health & Care</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="bg-s-orange/10 border border-s-orange/30 rounded-3xl p-6 text-center">
+      <h3 class="text-xl font-bold text-s-orange mb-2">❤️ Every Pet Deserves the Best — For Less!</h3>
+      <p class="text-white mb-4">Don't let unused supplies gather dust — list them today. Know someone looking for a new best friend? Share this page. Together we can help every animal get the love, care & home they deserve — while saving money & reducing waste!</p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button id="listPetBtn2" class="bg-s-orange text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition text-lg">
+          ➕ List Supplies — Free!
+        </button>
+        <button id="rehomeBtn2" class="bg-s-purple text-white px-8 py-3 rounded-full font-bold hover:bg-purple-600 transition text-lg">
+          🏠 Rehome a Pet
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIST PET ITEM MODAL ========== -->
+<div id="listPetModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-orange/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ List Pet Item</h3>
+      <button id="closeListPet" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="listPetForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Pet Type *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>🐶 Dog</option>
+            <option>🐱 Cat</option>
+            <option>🐰 Rabbit/Small Pet</option>
+            <option>🦜 Bird</option>
+            <option>🐠 Fish</option>
+            <option>🦔 Reptile/Exotic</option>
+            <option>🐴 Equine</option>
+            <option>🐾 All Pets</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none">
+            <option>🍖 Food & Treats</option>
+            <option>🛏️ Beds & Furniture</option>
+            <option>🦴 Toys & Enrichment</option>
+            <option>🧵 Collars, Leads & Harnesses</option>
+            <option>🏠 Cages, Hutches & Carriers</option>
+            <option>🛁 Grooming</option>
+            <option>🏥 Health & Meds</option>
+            <option>🎓 Training</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none" placeholder="e.g. Large dog bed — like new, washed & ready">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Description *</label>
+        <textarea rows="3" required class="w-full px-4 py-3 rounded-2xl bg-s-dark border border-s-orange/20 text-white focus:outline-none" placeholder="Size, condition, age, any wear, washed/sanitised, expiry date if food..."></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price (£)</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none" placeholder="0 = Free / Swap">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Location</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-orange/20 text-white focus:outline-none" placeholder="Postcode or area">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Condition & Safety</label>
+        <div class="flex flex-wrap gap-3 text-sm text-white">
+          <label class="flex items-center gap-2"><input type="checkbox"> ✨ New / Unused</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 🧼 Washed / Sanitised</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 🚭 Smoke-Free Home</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 🤝 Open to Swap</label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">📷 Photos</label>
+        <div class="border-2 border-dashed border-s-orange/30 rounded-2xl p-6 text-center text-s-muted cursor-pointer hover:border-s-orange/50 transition">
+          Click or drag to upload — show clearly, any flaws or labels
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-s-orange text-white py-3 rounded-full font-bold hover:bg-orange-600 transition text-lg">
+        ✅ Publish Listing — Free!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== REHOME PET MODAL ========== -->
+<div id="rehomeModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">🏠 Rehome a Pet</h3>
+      <button id="closeRehome" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <div class="bg-s-purple/10 border border-s-purple/30 rounded-xl p-4 mb-6">
+      <p class="text-s-purple font-semibold">❤️ Animal Welfare First — Please Read</p>
+      <p class="text-white text-sm mt-2">Rehoming is a serious commitment. Please ensure your pet is healthy, vaccinated, and you've tried all other options first. Adoption fees should only cover actual costs (vets, food, transport) — <strong>no profit allowed</strong>.</p>
+    </div>
+    <form id="rehomeForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Pet Type *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+            <option>🐶 Dog</option>
+            <option>🐱 Cat</option>
+            <option>🐰 Rabbit</option>
+            <option>🦜 Bird</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Age *</label>
+          <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none" placeholder="e.g. 2 years, 6 months">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> ✅ Vaccinated</label>
+        <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> ✅ Spayed / Neutered</label>
+        <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> ✅ Microchipped</label>
+        <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> ✅ Good with kids/pets</label>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">About the Pet — Personality, Needs, History *</label>
+        <textarea rows="4" required class="w-full px-4 py-3 rounded-2xl bg-s-dark border border-s-purple/20 text-white focus:outline-none" placeholder="Name, personality, likes/dislikes, energy level, any special needs, reason for rehoming..."></textarea>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Adoption Donation Request (£)</label>
+        <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none" placeholder="Recommended: £20–£50 to cover costs">
+      </div>
+      <button type="submit" class="w-full bg-s-purple text-white py-3 rounded-full font-bold hover:bg-purple-600 transition text-lg">
+        ✅ Submit Rehoming Listing
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a> &nbsp;|&nbsp;
+      <a href="crafts.html" class="hover:text-s-green">Craft Exchange</a> &nbsp;|&nbsp;
+      <a href="storage.html" class="hover:text-s-green">Storage & Space</a> &nbsp;|&nbsp;
+      <a href="mentorship.html" class="hover:text-s-green">Mentorship</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab Switching
+document.querySelectorAll('.pet-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.pet-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-orange', 'text-white');
+      t.classList.add('bg-s-orange/10', 'border', 'border-s-orange/20');
+    });
+    tab.classList.add('active', 'bg-s-orange', 'text-white');
+    tab.classList.remove('bg-s-orange/10', 'border', 'border-s-orange/20');
+
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.pet-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('petsAll').classList.remove('hidden');
+
+    document.querySelectorAll('.pet-card').forEach(card => {
+      card.style.display = (tabName === 'all' || card.dataset.type === tabName) ? '' : 'none';
+    });
+  });
+});
+
+// Modal open/close
+document.getElementById('listPetBtn')?.addEventListener('click', () => openModal('listPetModal'));
+document.getElementById('listPetBtn2')?.addEventListener('click', () => openModal('listPetModal'));
+document.getElementById('closeListPet')?.addEventListener('click', () => closeModal('listPetModal'));
+document.getElementById('rehomeBtn2')?.addEventListener('click', () => openModal('rehomeModal'));
+document.getElementById('closeRehome')?.addEventListener('click', () => closeModal('rehomeModal'));
+
+// Demo actions
+document.getElementById('findPetsBtn')?.addEventListener('click', () =>
+  showToast('🔍 Searching pet supplies & services near you — results updated!'));
+document.getElementById('loadMorePetsBtn')?.addEventListener('click', () =>
+  showToast('🐾 Loading more pet listings...'));
+document.querySelectorAll('.view-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📩 Message sent — check your inbox!')));
+document.querySelectorAll('.swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Will swap for cat food or small animal hay!')));
+document.querySelectorAll('.swap-propose-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Swap proposed — they will respond soon!')));
+document.querySelectorAll('.adopt-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🐾 Adoption application sent — good luck!')));
+document.querySelectorAll('.book-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📅 Booking request sent — they will confirm shortly!')));
+document.querySelectorAll('.token-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🪙 Accepts $STRAW!')));
+document.querySelectorAll('.pet-cat').forEach(b => b.addEventListener('click', () =>
+  showToast(`🐾 ${b.textContent.trim()} — listings coming soon!`)));
+document.querySelectorAll('.care-guide').forEach(b => b.addEventListener('click', () =>
+  showToast(`🩺 ${b.querySelector('h4').textContent.trim()} — guide coming soon!`)));
+
+// Form Submits
+document.getElementById('listPetForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Listing Published! 🐾 Pet lovers will find it instantly.');
+  closeModal('listPetModal');
+  e.target.reset();
+});
+
+document.getElementById('rehomeForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Rehoming Listing Submitted! 🏠❤️ Wishing them a wonderful forever home.');
+  closeModal('rehomeModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>

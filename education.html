@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Textbook & Education Exchange — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+              pink: '#ec4899',
+              orange: '#f97316',
+              teal: '#14b8a6',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .edu-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#education-exchange" class="px-3 py-2 rounded-lg bg-s-card text-s-blue transition">📚 Books</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="renovation.html" class="dropdown-item"><i class="fa-solid fa-house-chimney w-5 text-center text-s-muted"></i> 🏠 Home & Renovation</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#education-exchange" class="py-2 px-3 rounded-lg bg-s-card text-s-blue">📚 Textbook & Education Exchange</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="mentorship.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <a href="crafts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧵 Craft & Supply Exchange</a>
+      <a href="pets.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🐾 Pets & Animals</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 📚 TEXTBOOK & EDUCATION EXCHANGE — STRAW Barter -->
+<!-- ====================================== -->
+<section id="education-exchange" class="px-4 py-12 border-t border-s-blue/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">📚 Textbook & Education Exchange — Save ££ on Learning</h2>
+      <p class="text-s-muted text-lg">Buy · Sell · Swap · Share — textbooks, revision guides, course notes, study gear & more. Cut student costs, reduce waste, help each other succeed! 🎓📖✏️</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-blue/10 border border-s-blue/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-blue font-semibold text-lg">🎓 UK students spend £1,000+ per year on books & materials · 📖 Up to 90% cheaper than new · 🤝 Swap, cash, or $STRAW · 🆓 Always free to list · ♻️ Reuse every edition</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="bg-s-blue/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-blue mb-1">2.8M</div>
+        <div class="text-s-muted text-sm">UK Students</div>
+      </div>
+      <div class="bg-s-green/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-green mb-1">£800+</div>
+        <div class="text-s-muted text-sm">Avg Savings Per Year</div>
+      </div>
+      <div class="bg-s-purple/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-purple mb-1">50K+</div>
+        <div class="text-s-muted text-sm">Active Listings</div>
+      </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-blue/20">
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="eduSearch" class="text-sm font-semibold text-white block mb-2">🔍 Search</label>
+          <input type="text" id="eduSearch" placeholder="Subject, ISBN, title, author, uni..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white placeholder-s-muted focus:outline-none focus:border-s-blue">
+        </div>
+        <div>
+          <label for="eduLevel" class="text-sm font-semibold text-white block mb-2">🎓 Level</label>
+          <select id="eduLevel" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>All Levels</option>
+            <option>📕 GCSE / KS4</option>
+            <option>📘 A-Level / KS5</option>
+            <option>📗 University / Degree</option>
+            <option>📙 College / BTEC</option>
+            <option>📖 Professional / Certifications</option>
+            <option>✏️ Language / Learning</option>
+          </select>
+        </div>
+        <div>
+          <label for="eduType" class="text-sm font-semibold text-white block mb-2">📂 Type</label>
+          <select id="eduType" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>All — Books & Resources</option>
+            <option>📚 Textbooks</option>
+            <option>📝 Revision Guides</option>
+            <option>📄 Notes & Study Packs</option>
+            <option>💻 eBooks & Digital</option>
+            <option>🖥️ Tech & Calculators</option>
+            <option>🤝 Swap / Barter Only</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="eduPrice" class="text-sm font-semibold text-white block mb-2">💰 Price</label>
+          <select id="eduPrice" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🆓 Free</option>
+            <option>Under £5</option>
+            <option>£5–£15</option>
+            <option>£15–£30</option>
+            <option>£30+</option>
+          </select>
+        </div>
+        <div>
+          <label for="eduLocation" class="text-sm font-semibold text-white block mb-2">📍 Location</label>
+          <select id="eduLocation" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>UK Wide — Postage OK</option>
+            <option>Local — Within 10 miles</option>
+            <option>Manchester / North West</option>
+            <option>Collection Only</option>
+          </select>
+        </div>
+        <div>
+          <label for="eduEdition" class="text-sm font-semibold text-white block mb-2">📅 Edition / Year</label>
+          <select id="eduEdition" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>✅ Current / Latest Edition</option>
+            <option>2025–2026</option>
+            <option>2024–2025</option>
+            <option>Older — Still Valid</option>
+          </select>
+        </div>
+        <div>
+          <label for="eduCondition" class="text-sm font-semibold text-white block mb-2">📖 Condition</label>
+          <select id="eduCondition" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>✨ Like New</option>
+            <option>📖 Good — Clean, no markings</option>
+            <option>✍️ Fair — Notes/highlighting</option>
+            <option>📦 Digital — Instant Download</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="findEduBtn" class="bg-s-blue text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition flex-1 min-w-[120px]">
+          🔍 Find Resources
+        </button>
+        <button id="listEduBtn" class="bg-s-green text-s-dark px-6 py-3 rounded-full font-bold hover:bg-green-400 transition flex-1 min-w-[120px]">
+          ➕ List Item — Free!
+        </button>
+        <button id="myEduBtn" class="bg-s-purple/10 border border-s-purple/30 text-white px-6 py-3 rounded-full font-semibold hover:bg-s-purple/20 transition flex-1 min-w-[120px]">
+          📋 My Listings
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="edu-tab active bg-s-blue text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">📚 All (64)</button>
+      <button class="edu-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="books">📖 Textbooks</button>
+      <button class="edu-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="notes">📝 Notes & Guides</button>
+      <button class="edu-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="digital">💻 Digital</button>
+      <button class="edu-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="swap">🤝 Swap Only</button>
+    </div>
+
+    <!-- Listings Grid -->
+    <div id="eduAll" class="edu-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <!-- Uni Textbook -->
+      <div class="edu-card bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition flex flex-col" data-type="books">
+        <div class="w-full h-40 bg-s-blue/10 rounded-2xl flex items-center justify-center text-5xl mb-4">📗🧬</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Biology — A Global Approach (Campbell) 12th Ed</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£18</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 University of Manchester · 📖 Good — minimal highlighting · ISBN: 978-1292341633 · Current edition</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">📗 Biology</span>
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🎓 Degree</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Current Ed</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-blue text-white py-2 rounded-full font-semibold hover:bg-blue-600 transition text-sm">View & Message</button>
+          <button class="swap-btn bg-s-green/10 text-s-green px-3 py-2 rounded-full font-semibold hover:bg-s-green/20 text-sm">🤝 Swap</button>
+        </div>
+      </div>
+
+      <!-- A-Level Revision Pack -->
+      <div class="edu-card bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition flex flex-col" data-type="notes">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">📘✏️</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">A-Level Maths — Complete Revision Notes & Past Papers</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£12</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Bolton College · 📄 Digital PDF — 350+ pages · AQA spec, graded A* notes, 10 years past papers</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">📘 Maths</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">✏️ A-Level</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (18)</span>
+        </div>
+        <button class="download-btn w-full bg-s-green text-s-dark py-2 rounded-full font-bold hover:bg-green-400 transition text-sm mt-auto">Buy & Download →</button>
+      </div>
+
+      <!-- Digital eBook -->
+      <div class="edu-card bg-s-card rounded-3xl p-5 border border-s-purple/20 hover:border-s-purple/40 transition flex flex-col" data-type="digital">
+        <div class="w-full h-40 bg-s-purple/10 rounded-2xl flex items-center justify-center text-5xl mb-4">💻📕</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Python for Data Analysis — 2nd Ed (Digital)</h4>
+          <span class="bg-s-purple/20 text-s-purple px-2 py-1 rounded-full text-sm font-bold">£8</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Instant Download · EPUB + PDF formats · 2026 edition — perfect for coding & data science courses</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">💻 Coding</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">📕 Digital</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Instant</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="instant-btn flex-1 bg-s-purple text-white py-2 rounded-full font-bold hover:bg-purple-600 transition text-sm">Get Instant Access</button>
+          <button class="token-btn bg-s-gold/10 text-s-gold px-3 py-2 rounded-full font-semibold hover:bg-s-gold/20 text-sm">🪙 $STRAW</button>
+        </div>
+      </div>
+
+      <!-- Calculator / Tech -->
+      <div class="edu-card bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition flex flex-col" data-type="books">
+        <div class="w-full h-40 bg-s-blue/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🧮✨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Casio fx-991EX Classwiz Scientific Calculator</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£10</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Rochdale · ✨ Like New — batteries included · Approved for GCSE, A-Level & Uni exams</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🧮 Calculator</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">✅ Exam Approved</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (22)</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-blue text-white py-2 rounded-full font-semibold hover:bg-blue-600 transition text-sm">View & Message</button>
+          <button class="swap-btn bg-s-green/10 text-s-green px-3 py-2 rounded-full font-semibold hover:bg-s-green/20 text-sm">🤝 Swap</button>
+        </div>
+      </div>
+
+      <!-- Swap Only Textbook -->
+      <div class="edu-card bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition flex flex-col" data-type="swap">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">📘🔄</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Law for Business Students — 10th Ed</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">🤝 Swap Only</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 MMU · Good condition · Want: Accounting, Finance, or Economics textbooks — message me!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">📘 Law</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🎓 Uni</span>
+          <span class="bg-s-orange/10 text-s-orange px-2 py-1 rounded">🔄 Swap Only</span>
+        </div>
+        <button class="swap-propose-btn w-full bg-s-green text-s-dark py-2 rounded-full font-bold hover:bg-green-400 transition text-sm mt-auto">Propose Swap →</button>
+      </div>
+
+      <!-- Free Study Resources -->
+      <div class="edu-card bg-s-card rounded-3xl p-5 border border-s-teal/20 hover:border-s-teal/40 transition flex flex-col" data-type="notes">
+        <div class="w-full h-40 bg-s-teal/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🆓📚</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">GCSE English Lit — Grade 9 Notes Bundle (Free)</h4>
+          <span class="bg-s-teal/20 text-s-teal px-2 py-1 rounded-full text-sm font-bold">🆓 Free!</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Digital — Instant send · Grade 9 student notes — Macbeth, Jekyll & Hyde, A Christmas Carol · Pay it forward! 💚</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-teal/10 text-s-teal px-2 py-1 rounded">📖 English</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">📕 GCSE</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">💚 Pay It Forward</span>
+        </div>
+        <button class="free-request-btn w-full bg-s-teal text-white py-2 rounded-full font-bold hover:bg-teal-600 transition text-sm mt-auto">Request Free →</button>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreEduBtn" class="bg-s-blue/10 border border-s-blue/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-blue/20 transition">
+        Load More →
+      </button>
+    </div>
+
+    <!-- Quick Browse Categories -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-blue/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">📖 Browse by Subject</h3>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📘 Maths</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📗 Sciences</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📕 English</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📙 History</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">💻 Computing</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📘 Business & Law</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🎨 Art & Design</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🌍 Languages</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🧭 Geography</button>
+        <button class="edu-subject bg-s-blue/10 hover:bg-s-blue/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📚 All Subjects</button>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-blue/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Simple, Affordable, Student-Friendly</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📸</div>
+          <h4 class="font-bold text-white mb-1">1. List It</h4>
+          <p class="text-s-muted text-sm">Textbook, notes, calculator — takes 2 mins · <strong>100% Free</strong></p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find It</h4>
+          <p class="text-s-muted text-sm">Search by ISBN, subject, uni, level — find exactly what you need for less</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Get It</h4>
+          <p class="text-s-muted text-sm">Meet on campus, post, or instant download — pay cash, bank, $STRAW, or swap!</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🎓</div>
+          <h4 class="font-bold text-white mb-1">4. Succeed & Save</h4>
+          <p class="text-s-muted text-sm">Save hundreds, help a fellow student, reduce waste — win win!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment & Trade Options -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10">
+        <h4 class="font-bold text-white mb-3">💰 Payment Options — All Direct, Zero Fees</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>💷 Cash — campus meetup, instant, no fees</li>
+          <li>💳 Bank transfer / PayPal / Revolut</li>
+          <li>🪙 $STRAW — Solana, instant, low fees</li>
+          <li>🤝 Barter — swap books, notes, skills, favours</li>
+          <li>🆓 Free — pay it forward, student kindness</li>
+          <li>✅ We never hold or process payments — <strong>all direct between students</strong></li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10">
+        <h4 class="font-bold text-white mb-3">🛡️ Tips for Students</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ Check ISBN & edition — courses change!</li>
+          <li>✅ Digital = instant, no postage, forever access</li>
+          <li>✅ Meet in public / campus areas for cash</li>
+          <li>✅ Ask for photos / condition notes before buying</li>
+          <li>✅ Postage: Royal Mail 2nd Class = cheapest option</li>
+          <li>✅ Leave feedback — build trust in our community</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Group Buy & Study Hub -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-purple/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">👥 Group Buy & Study Hub — More Ways to Save & Learn Together</h3>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-s-purple/5 p-4 rounded-xl">
+          <h4 class="font-bold text-white mb-2">💰 Bulk Group Buys</h4>
+          <p class="text-s-muted text-sm">Split the cost of expensive textbooks, course access codes, subscriptions, and software licenses. The more students join, the less each pays!</p>
+        </div>
+        <div class="bg-s-purple/5 p-4 rounded-xl">
+          <h4 class="font-bold text-white mb-2">📚 Shared Library Pact</h4>
+          <p class="text-s-muted text-sm">Form a small group — each person buys one core textbook, then rotate them through the term. 5 students = 80% savings each!</p>
+        </div>
+        <div class="bg-s-purple/5 p-4 rounded-xl">
+          <h4 class="font-bold text-white mb-2">👨‍🏫 Peer Tutoring Swap</h4>
+          <p class="text-s-muted text-sm">Good at Maths? Need help with Essays? Swap 1 hour of tutoring for 1 hour of help — no money changes hands, everyone improves!</p>
+        </div>
+        <div class="bg-s-purple/5 p-4 rounded-xl">
+          <h4 class="font-bold text-white mb-2">📅 Study Groups & Revision Partners</h4>
+          <p class="text-s-muted text-sm">Find others on your course — meet up, share notes, quiz each other, stay motivated. Exam season = stronger together!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Affiliate — Recommended New Resources -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-green/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛒 Need New? — Recommended via Affiliate Links</h3>
+      <p class="text-s-muted text-center mb-4">Sometimes you need the latest edition or a new copy — buy from trusted partners, small commission supports our community, no extra cost to you!</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="#" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">📚</div>
+          <div class="text-white font-semibold text-sm">New Textbooks</div>
+        </a>
+        <a href="#" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">✏️</div>
+          <div class="text-white font-semibold text-sm">Stationery & Gear</div>
+        </a>
+        <a href="#" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🧮</div>
+          <div class="text-white font-semibold text-sm">Calculators</div>
+        </a>
+        <a href="#" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">💻</div>
+          <div class="text-white font-semibold text-sm">Laptops & Tech</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="bg-s-blue/10 border border-s-blue/30 rounded-3xl p-6 text-center">
+      <h3 class="text-xl font-bold text-s-blue mb-2">🎓 Education Shouldn't Cost the Earth!</h3>
+      <p class="text-white mb-4">That textbook gathering dust on your shelf could be exactly what another student needs — and vice versa. List it today, find what you need for less, and help build a community where every student can afford to learn. It's free, it's fair, it's smart.</p>
+      <button id="listEduBtn2" class="bg-s-blue text-white px-8 py-3 rounded-full font-bold hover:bg-blue-600 transition text-lg">
+        ➕ List Your Book — Free!
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIST EDUCATION ITEM MODAL ========== -->
+<div id="listEducationModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-blue/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ List Study Resource</h3>
+      <button id="closeListEdu" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="listEducationForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Level *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>📕 GCSE / KS4</option>
+            <option>📘 A-Level / KS5</option>
+            <option>📗 University / Degree</option>
+            <option>📙 College / BTEC</option>
+            <option>📖 Professional / Cert</option>
+            <option>✏️ General / Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Type *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>📚 Textbook</option>
+            <option>📝 Revision Guide</option>
+            <option>📄 Notes / Study Pack</option>
+            <option>💻 Digital / eBook</option>
+            <option>🧮 Calculator / Tech</option>
+            <option>✏️ Stationery / Other</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title & Author *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="e.g. Biology — Campbell & Reece, 12th Edition">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">ISBN (very helpful!)</label>
+        <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="10 or 13 digit ISBN — found on back cover">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Description & Condition *</label>
+        <textarea rows="3" required class="w-full px-4 py-3 rounded-2xl bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="Edition year, condition — clean, notes, highlighting, any damage, modules covered, etc."></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price (£)</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="0 = Free / Swap">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Location / Uni</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="Campus, city, or postcode">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Delivery / Collection</label>
+        <div class="flex flex-wrap gap-3 text-sm text-white">
+          <label class="flex items-center gap-2"><input type="checkbox" checked> 📍 Collection / Meetup</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 📮 Postage — Buyer pays</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 💻 Digital — Instant send</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 🤝 Open to Swap</label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">📷 Photos</label>
+        <div class="border-2 border-dashed border-s-blue/30 rounded-2xl p-6 text-center text-s-muted cursor-pointer hover:border-s-blue/50 transition">
+          Click or drag to upload — front, back, ISBN page, any notes or highlighting
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-s-blue text-white py-3 rounded-full font-bold hover:bg-blue-600 transition text-lg">
+        ✅ Publish Listing — Free!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a> &nbsp;|&nbsp;
+      <a href="mentorship.html" class="hover:text-s-green">Mentorship</a> &nbsp;|&nbsp;
+      <a href="crafts.html" class="hover:text-s-green">Craft Exchange</a> &nbsp;|&nbsp;
+      <a href="pets.html" class="hover:text-s-green">Pets & Animals</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab Switching
+document.querySelectorAll('.edu-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.edu-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-blue', 'text-white');
+      t.classList.add('bg-s-blue/10', 'border', 'border-s-blue/20');
+    });
+    tab.classList.add('active', 'bg-s-blue', 'text-white');
+    tab.classList.remove('bg-s-blue/10', 'border', 'border-s-blue/20');
+
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.edu-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('eduAll').classList.remove('hidden');
+
+    document.querySelectorAll('.edu-card').forEach(card => {
+      card.style.display = (tabName === 'all' || card.dataset.type === tabName) ? '' : 'none';
+    });
+  });
+});
+
+// Modal open/close
+document.getElementById('listEduBtn')?.addEventListener('click', () => openModal('listEducationModal'));
+document.getElementById('listEduBtn2')?.addEventListener('click', () => openModal('listEducationModal'));
+document.getElementById('closeListEdu')?.addEventListener('click', () => closeModal('listEducationModal'));
+
+// Demo actions
+document.getElementById('findEduBtn')?.addEventListener('click', () =>
+  showToast('🔍 Searching study resources near you — results updated!'));
+document.getElementById('myEduBtn')?.addEventListener('click', () =>
+  showToast('📋 Your Listings: Biology Textbook — Active · Maths Notes — Sold · Calculator — Active'));
+document.getElementById('loadMoreEduBtn')?.addEventListener('click', () =>
+  showToast('📚 Loading more study resources...'));
+document.querySelectorAll('.view-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📩 Message sent — check your inbox!')));
+document.querySelectorAll('.swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Will swap for Chemistry or Physics books!')));
+document.querySelectorAll('.swap-propose-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Swap proposed — they will respond soon!')));
+document.querySelectorAll('.download-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📥 Purchase confirmed — download ready soon!')));
+document.querySelectorAll('.instant-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('💻 Instant access coming soon — wallet integration underway!')));
+document.querySelectorAll('.free-request-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('💚 Request sent — pay it forward by listing something free too!')));
+document.querySelectorAll('.token-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🪙 Accepts $STRAW!')));
+document.querySelectorAll('.edu-subject').forEach(b => b.addEventListener('click', () =>
+  showToast(`📖 ${b.textContent.trim()} — listings coming soon!`)));
+
+// Form Submit
+document.getElementById('listEducationForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Listing Published! 📚🎓 Fellow students will find it instantly.');
+  closeModal('listEducationModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>

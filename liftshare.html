@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lift Share & Carpool — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .ride-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#lift-share" class="px-3 py-2 rounded-lg bg-s-card text-s-blue transition">🚗 Lift Share</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="renovation.html" class="dropdown-item"><i class="fa-solid fa-house-chimney w-5 text-center text-s-muted"></i> 🏠 Home & Renovation</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#lift-share" class="py-2 px-3 rounded-lg bg-s-card text-s-blue">🚗 Lift Share & Carpool</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🚗 LIFT SHARE & CARPOOL — STRAW Barter -->
+<!-- ====================================== -->
+<section id="lift-share" class="px-4 py-12 border-t border-s-blue/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">🚗 Lift Share & Carpool</h2>
+      <p class="text-s-muted text-lg">Daily commute · One-off trips · Errands — split fuel costs, meet neighbours, reduce your carbon footprint!</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-blue/10 border border-s-blue/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-blue font-semibold text-lg">💰 Save £££ on fuel · 🤝 Meet local people · 🌱 Cut emissions · ✅ Verified drivers & passengers</p>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-blue/20">
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="liftFrom" class="text-sm font-semibold text-white block mb-2">📍 From</label>
+          <input type="text" id="liftFrom" placeholder="Postcode, area, or place..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white placeholder-s-muted focus:outline-none focus:border-s-blue">
+        </div>
+        <div>
+          <label for="liftTo" class="text-sm font-semibold text-white block mb-2">🎯 To</label>
+          <input type="text" id="liftTo" placeholder="Postcode, work, city, or place..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white placeholder-s-muted focus:outline-none focus:border-s-blue">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="liftDate" class="text-sm font-semibold text-white block mb-2">📅 Date</label>
+          <input type="date" id="liftDate" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+        </div>
+        <div>
+          <label for="liftTime" class="text-sm font-semibold text-white block mb-2">⏰ Time</label>
+          <select id="liftTime" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>Any time</option>
+            <option>Morning (6–10am)</option>
+            <option>Midday (10am–2pm)</option>
+            <option>Afternoon (2–6pm)</option>
+            <option>Evening (6pm+)</option>
+          </select>
+        </div>
+        <div>
+          <label for="liftType" class="text-sm font-semibold text-white block mb-2">🚗 Type</label>
+          <select id="liftType" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>All Rides</option>
+            <option>🚘 Driver — has seats</option>
+            <option>🧍 Passenger — needs ride</option>
+          </select>
+        </div>
+        <div>
+          <label for="liftCost" class="text-sm font-semibold text-white block mb-2">💰 Cost</label>
+          <select id="liftCost" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🆓 Free / Barter</option>
+            <option>Under £2</option>
+            <option>£2–£5</option>
+            <option>£5+</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="searchLiftsBtn" class="bg-s-blue text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition flex-1 min-w-[120px]">
+          🔍 Search Rides
+        </button>
+        <button id="offerRideBtn" class="bg-s-green text-s-dark px-6 py-3 rounded-full font-bold hover:bg-green-400 transition flex-1 min-w-[120px]">
+          🚘 Offer a Ride
+        </button>
+        <button id="findRideBtn" class="bg-s-purple text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-600 transition flex-1 min-w-[120px]">
+          🧍 Find a Ride
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="bg-s-blue/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-blue mb-1">2,450</div>
+        <div class="text-s-muted text-sm">Active Rides Today</div>
+      </div>
+      <div class="bg-s-green/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-green mb-1">£18,400</div>
+        <div class="text-s-muted text-sm">Fuel Saved This Month</div>
+      </div>
+      <div class="bg-s-purple/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-purple mb-1">42 tonnes</div>
+        <div class="text-s-muted text-sm">CO₂ Avoided</div>
+      </div>
+    </div>
+
+    <!-- Tabs: Daily Commute / One-Off / Regular -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="ride-tab active bg-s-blue text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="daily">🏢 Daily Commute</button>
+      <button class="ride-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="oneoff">📍 One-Off Trips</button>
+      <button class="ride-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="regular">🔁 Regular Rides</button>
+    </div>
+
+    <!-- Rides List: Daily -->
+    <div id="ridesDaily" class="ride-content space-y-4 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition cursor-pointer">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="text-center md:text-left">
+            <div class="flex items-center gap-2 text-lg font-bold text-white mb-1">
+              <span>📍 Bolton → Manchester</span>
+              <span class="bg-s-green/20 text-s-green px-2 py-0.5 rounded-full text-xs font-semibold">✅ Driver</span>
+            </div>
+            <p class="text-s-muted text-sm mb-2">Mon–Fri · 07:45 departure · Return 17:00</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span class="text-s-blue">⏰ 45 min</span>
+              <span class="text-s-green font-semibold">💷 £3.50 per person</span>
+              <span class="text-s-purple">🚗 3 seats left</span>
+              <span class="text-amber-400">⭐ 4.9 (28 rides)</span>
+            </div>
+          </div>
+          <button class="md:ml-auto bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition whitespace-nowrap">
+            Request Ride →
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition cursor-pointer">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="text-center md:text-left">
+            <div class="flex items-center gap-2 text-lg font-bold text-white mb-1">
+              <span>📍 Wigan → Salford</span>
+              <span class="bg-s-purple/20 text-s-purple px-2 py-0.5 rounded-full text-xs font-semibold">🧍 Passenger</span>
+            </div>
+            <p class="text-s-muted text-sm mb-2">Mon–Fri · 08:15 · Flexible time</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span class="text-s-blue">⏰ 35 min</span>
+              <span class="text-s-green font-semibold">💷 Up to £3.00</span>
+              <span class="text-s-gold">🗣️ Non-smoker, quiet</span>
+            </div>
+          </div>
+          <button class="md:ml-auto bg-s-purple text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-600 transition whitespace-nowrap">
+            Offer Lift →
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition cursor-pointer">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="text-center md:text-left">
+            <div class="flex items-center gap-2 text-lg font-bold text-white mb-1">
+              <span>📍 Stockport → Manchester Airport</span>
+              <span class="bg-s-green/20 text-s-green px-2 py-0.5 rounded-full text-xs font-semibold">✅ Driver</span>
+            </div>
+            <p class="text-s-muted text-sm mb-2">Every weekday · 06:30 & 15:30 slots</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span class="text-s-blue">⏰ 25 min</span>
+              <span class="text-s-green font-semibold">💷 £4.00</span>
+              <span class="text-s-purple">🚗 2 seats left</span>
+              <span class="text-amber-400">⭐ 5.0 (42 rides)</span>
+            </div>
+          </div>
+          <button class="md:ml-auto bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition whitespace-nowrap">
+            Request Ride →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rides List: One-Off -->
+    <div id="ridesOneoff" class="ride-content hidden space-y-4 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition cursor-pointer">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="text-center md:text-left">
+            <div class="flex items-center gap-2 text-lg font-bold text-white mb-1">
+              <span>📍 Manchester → Liverpool</span>
+              <span class="bg-s-green/20 text-s-green px-2 py-0.5 rounded-full text-xs font-semibold">✅ Driver</span>
+            </div>
+            <p class="text-s-muted text-sm mb-2">Sat 7 Sep · 09:00 · Return 17:00</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span class="text-s-blue">⏰ 50 min</span>
+              <span class="text-s-green font-semibold">💷 £5.00 one way</span>
+              <span class="text-s-purple">🚗 3 seats</span>
+              <span class="text-s-gold">🎒 Can take luggage</span>
+            </div>
+          </div>
+          <button class="md:ml-auto bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition whitespace-nowrap">
+            Book Seat →
+          </button>
+        </div>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition cursor-pointer">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="text-center md:text-left">
+            <div class="flex items-center gap-2 text-lg font-bold text-white mb-1">
+              <span>📍 Oldham → Manchester Piccadilly</span>
+              <span class="bg-s-purple/20 text-s-purple px-2 py-0.5 rounded-full text-xs font-semibold">🧍 Passenger</span>
+            </div>
+            <p class="text-s-muted text-sm mb-2">Fri 6 Sep · 18:00 · Concert trip</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span class="text-s-green font-semibold">💷 Will pay £2.50</span>
+              <span class="text-s-gold">⏰ Flexible ±30 min</span>
+            </div>
+          </div>
+          <button class="md:ml-auto bg-s-purple text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-600 transition whitespace-nowrap">
+            Offer Lift →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rides List: Regular -->
+    <div id="ridesRegular" class="ride-content hidden space-y-4 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition cursor-pointer">
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+          <div class="text-center md:text-left">
+            <div class="flex items-center gap-2 text-lg font-bold text-white mb-1">
+              <span>📍 Rochdale → Bury — Weekly</span>
+              <span class="bg-s-green/20 text-s-green px-2 py-0.5 rounded-full text-xs font-semibold">✅ Driver</span>
+            </div>
+            <p class="text-s-muted text-sm mb-2">Every Thursday · 09:00 · All year round</p>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <span class="text-s-blue">⏰ 20 min</span>
+              <span class="text-s-green font-semibold">💷 £2.00</span>
+              <span class="text-s-purple">🚗 2 seats</span>
+              <span class="text-amber-400">⭐ 4.8</span>
+            </div>
+          </div>
+          <button class="md:ml-auto bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition whitespace-nowrap">
+            Join →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreRidesBtn" class="bg-s-blue/10 border border-s-blue/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-blue/20 transition">
+        Load More Rides →
+      </button>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-blue/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Safe & Simple</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📝</div>
+          <h4 class="font-bold text-white mb-1">1. Create Profile</h4>
+          <p class="text-s-muted text-sm">Verify your ID, car details & preferences</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find or Post</h4>
+          <p class="text-s-muted text-sm">Search routes or offer your own seats</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Connect & Agree</h4>
+          <p class="text-s-muted text-sm">Message, confirm details, agree cost</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">⭐</div>
+          <h4 class="font-bold text-white mb-1">4. Ride & Rate</h4>
+          <p class="text-s-muted text-sm">Pay direct, leave feedback, build trust</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Safety & Options -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10">
+        <h4 class="font-bold text-white mb-3">🛡️ Safety First</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ Verified profiles & ID checks</li>
+          <li>✅ Driver licence + vehicle details visible</li>
+          <li>✅ Ratings & reviews from past rides</li>
+          <li>✅ In-app messaging — no personal contact needed</li>
+          <li>✅ Report & block tools — community moderated</li>
+          <li>✅ Share your live location with contacts</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-blue/10">
+        <h4 class="font-bold text-white mb-3">💰 Payment Options — Zero Fees</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>💷 Cash — direct, no middleman</li>
+          <li>💳 Bank transfer / Revolut / PayPal</li>
+          <li>🪙 $STRAW — instant, low fees</li>
+          <li>🤝 Barter — skills, goods, favours</li>
+          <li>🆓 Free — kindness & community</li>
+          <li>✅ We never hold or process payments</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Eco Bonus -->
+    <div class="bg-s-green/10 border border-s-green/30 rounded-3xl p-5 text-center">
+      <h3 class="text-xl font-bold text-s-green mb-2">🌱 Eco Bonus — Earn Credits for Every Ride!</h3>
+      <p class="text-white mb-3">Every shared ride cuts carbon — automatically earn <strong>Eco Credits</strong> for your green travel! 1 ride = up to 5kg CO₂ saved → track & offset in your Eco Dashboard.</p>
+      <button id="ecoCreditsBtn" class="bg-s-green text-s-dark px-6 py-2 rounded-full font-bold hover:bg-green-400 transition">
+        View My Eco Credits →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== OFFER RIDE MODAL ========== -->
+<div id="offerRideModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-blue/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">🚘 Offer a Ride</h3>
+      <button id="closeOfferRide" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="offerRideForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">From *</label>
+          <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="Start postcode/place">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">To *</label>
+          <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="Destination">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Date *</label>
+          <input type="date" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Departure Time *</label>
+          <input type="time" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Seats Available *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>1 seat</option><option>2 seats</option><option>3 seats</option><option>4+ seats</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price per Person (£)</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="e.g. 2.50 or 0 for free">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Trip Type</label>
+        <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+          <option>One-off / Single Trip</option>
+          <option>Daily Commute (Mon–Fri)</option>
+          <option>Weekly / Regular</option>
+          <option>Return Trip Available</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Notes / Preferences</label>
+        <textarea rows="2" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none" placeholder="Luggage space, smoking, pets, music, pick-up points..."></textarea>
+      </div>
+      <button type="submit" class="w-full bg-s-blue text-white py-3 rounded-full font-bold hover:bg-blue-600 transition text-lg">
+        ✅ Publish Ride
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== FIND RIDE MODAL ========== -->
+<div id="findRideModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">🧍 Find a Ride</h3>
+      <button id="closeFindRide" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="findRideForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Leaving From *</label>
+          <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none" placeholder="Your start point">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Going To *</label>
+          <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none" placeholder="Destination">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Date *</label>
+          <input type="date" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Time Preference</label>
+          <input type="time" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Max Budget (£)</label>
+        <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none" placeholder="e.g. 3.00 or leave blank">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Notes</label>
+        <textarea rows="2" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none" placeholder="Luggage, flexible time, return needed..."></textarea>
+      </div>
+      <button type="submit" class="w-full bg-s-purple text-white py-3 rounded-full font-bold hover:bg-purple-600 transition text-lg">
+        🔍 Post Request
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a> &nbsp;|&nbsp;
+      <a href="prompts.html" class="hover:text-s-green">AI Prompt Library</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Ride Tab Switching
+document.querySelectorAll('.ride-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ride-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-blue', 'text-white');
+      t.classList.add('bg-s-blue/10', 'border', 'border-s-blue/20');
+    });
+    tab.classList.add('active', 'bg-s-blue', 'text-white');
+    tab.classList.remove('bg-s-blue/10', 'border', 'border-s-blue/20');
+
+    document.querySelectorAll('.ride-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById(`rides${tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)}`).classList.remove('hidden');
+  });
+});
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+document.getElementById('offerRideBtn')?.addEventListener('click', () => openModal('offerRideModal'));
+document.getElementById('closeOfferRide')?.addEventListener('click', () => closeModal('offerRideModal'));
+document.getElementById('findRideBtn')?.addEventListener('click', () => openModal('findRideModal'));
+document.getElementById('closeFindRide')?.addEventListener('click', () => closeModal('findRideModal'));
+
+// Search (demo)
+document.getElementById('searchLiftsBtn')?.addEventListener('click', () => {
+  showToast('🔍 Searching rides — matches appear below!');
+});
+
+// Load More (demo)
+document.getElementById('loadMoreRidesBtn')?.addEventListener('click', () => {
+  showToast('🚗 Loading more rides...');
+});
+
+// Eco Credits (demo)
+document.getElementById('ecoCreditsBtn')?.addEventListener('click', () => {
+  showToast('🌱 Eco Dashboard — coming soon!');
+});
+
+// Form Submits
+document.getElementById('offerRideForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Ride Published! 🚗 Neighbours can see it instantly.');
+  closeModal('offerRideModal');
+  e.target.reset();
+});
+document.getElementById('findRideForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Request Posted! 🧍 Drivers will get in touch.');
+  closeModal('findRideModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>

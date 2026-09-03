@@ -21,6 +21,10 @@
               border: '#334155',
               purple: '#AB5FFB',
               solana: '#00FFA3',
+              blue: '#3b82f6',
+              pink: '#ec4899',
+              orange: '#f97316',
+              red: '#ef4444',
             }
           },
           fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
@@ -136,6 +140,19 @@
         <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
         <div id="moreDropdown" class="dropdown-menu">
           <a href="#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="renovation.html" class="dropdown-item"><i class="fa-solid fa-house-chimney w-5 text-center text-s-muted"></i> 🏠 Home & Renovation</a>
           <a href="#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
           <a href="#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
           <a href="#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
@@ -166,6 +183,19 @@
       <a href="#builder" class="py-2 px-3 rounded-lg hover:bg-s-card">🏗️ Find a Builder</a>
       <div class="border-t border-s-border my-1"></div>
       <a href="#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="mentorship.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <a href="crafts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧵 Craft & Supply Exchange</a>
+      <a href="pets.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🐾 Pets & Animals</a>
+      <a href="education.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Textbook & Education Exchange</a>
+      <a href="fitness.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏋️ Fitness & Sports</a>
+      <a href="business.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🎒 Business & Work</a>
+      <a href="upcycle.html" class="py-2 px-3 rounded-lg hover:bg-s-card">♻️ Up-Cycle & Repair</a>
+      <a href="renovation.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home & Renovation</a>
       <a href="#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
       <a href="#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
       <a href="#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
@@ -339,6 +369,21 @@
     <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🏠 Remote Jobs</h3><p class="text-sm text-s-muted">Work from anywhere — curated roles.</p></div>
     <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">💡 Side Hustles</h3><p class="text-sm text-s-muted">Proven ways to earn extra.</p></div>
     <div class="card rounded-xl p-4"><h3 class="font-semibold mb-2">🖥️ Freelance</h3><p class="text-sm text-s-muted">Offer skills — set your rates.</p></div>
+  </div>
+  <div class="text-center mt-5">
+    <a href="network.html" class="inline-block bg-s-blue text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm">💼 Explore the Professional Network →</a>
+    <a href="prompts.html" class="inline-block bg-s-purple text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🤖 AI Prompt Library →</a>
+    <a href="liftshare.html" class="inline-block bg-s-green text-s-dark px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🚗 Lift Share & Carpool →</a>
+    <a href="subscriptions.html" class="inline-block bg-s-gold text-s-dark px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">📋 Bill Manager →</a>
+    <a href="storage.html" class="inline-block bg-s-purple text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">📦 Storage & Space →</a>
+    <a href="mentorship.html" class="inline-block bg-s-blue text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🧑‍🏫 Find a Mentor →</a>
+    <a href="crafts.html" class="inline-block bg-s-pink text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🧵 Craft Exchange →</a>
+    <a href="pets.html" class="inline-block bg-s-orange text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🐾 Pets & Animals →</a>
+    <a href="education.html" class="inline-block bg-s-blue text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">📚 Textbook Exchange →</a>
+    <a href="fitness.html" class="inline-block bg-s-red text-white px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🏋️ Fitness & Sports →</a>
+    <a href="business.html" class="inline-block bg-s-gold text-s-dark px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🎒 Business & Work →</a>
+    <a href="upcycle.html" class="inline-block bg-s-green text-s-dark px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">♻️ Up-Cycle & Repair →</a>
+    <a href="renovation.html" class="inline-block bg-amber-500 text-s-dark px-6 py-2.5 rounded-lg font-semibold btn text-sm sm:ml-3 mt-3 sm:mt-0">🏠 Home & Renovation →</a>
   </div>
 </section>
 

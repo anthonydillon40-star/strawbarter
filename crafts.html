@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Craft & Supply Exchange — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+              pink: '#ec4899',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .craft-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#craft-supply-exchange" class="px-3 py-2 rounded-lg bg-s-card text-s-pink transition">🧵 Crafts</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="renovation.html" class="dropdown-item"><i class="fa-solid fa-house-chimney w-5 text-center text-s-muted"></i> 🏠 Home & Renovation</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#craft-supply-exchange" class="py-2 px-3 rounded-lg bg-s-card text-s-pink">🧵 Craft & Supply Exchange</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="mentorship.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🧵 CRAFT & SUPPLY EXCHANGE — STRAW Barter -->
+<!-- ====================================== -->
+<section id="craft-supply-exchange" class="px-4 py-12 border-t border-s-pink/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">🧵 Craft & Supply Exchange</h2>
+      <p class="text-s-muted text-lg">Destash your stash · Swap materials · Buy handmade — save money, reduce waste, support fellow creators! Zero fees, direct deals.</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-pink/10 border border-s-pink/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-pink font-semibold text-lg">✨ Clear clutter, find treasures · 🤝 Barter, cash, or $STRAW · 🛍️ Handmade marketplace · 🆓 Always free to list · 🌍 Sustainable & creative</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="bg-s-pink/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-pink mb-1">2,400+</div>
+        <div class="text-s-muted text-sm">Active Listings</div>
+      </div>
+      <div class="bg-s-green/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-green mb-1">£12k+</div>
+        <div class="text-s-muted text-sm">Value Swapped/Saved</div>
+      </div>
+      <div class="bg-s-purple/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-purple mb-1">45+</div>
+        <div class="text-s-muted text-sm">Craft Categories</div>
+      </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-pink/20">
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="craftSearch" class="text-sm font-semibold text-white block mb-2">🔍 Search Supplies</label>
+          <input type="text" id="craftSearch" placeholder="Yarn, fabric, paint, beads, wood..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white placeholder-s-muted focus:outline-none focus:border-s-pink">
+        </div>
+        <div>
+          <label for="craftCategory" class="text-sm font-semibold text-white block mb-2">📦 Category</label>
+          <select id="craftCategory" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>All Categories</option>
+            <option>🧶 Yarn & Knitting</option>
+            <option>🪡 Fabric & Sewing</option>
+            <option>🎨 Art & Painting</option>
+            <option>💎 Beads & Jewellery</option>
+            <option>🪵 Wood & Crafts</option>
+            <option>📐 Paper & Card</option>
+            <option>🧼 Soap & Candles</option>
+            <option>🎈 Party & Decor</option>
+            <option>🛠️ Tools & Equipment</option>
+            <option>✨ Handmade Items</option>
+          </select>
+        </div>
+        <div>
+          <label for="craftPrice" class="text-sm font-semibold text-white block mb-2">💰 Price / Trade</label>
+          <select id="craftPrice" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🤝 Swap / Barter Only</option>
+            <option>🆓 Free</option>
+            <option>Under £5</option>
+            <option>£5–£20</option>
+            <option>£20+</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="craftLocation" class="text-sm font-semibold text-white block mb-2">📍 Location</label>
+          <select id="craftLocation" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>UK Wide — Postage OK</option>
+            <option>Local — Within 10 miles</option>
+            <option>North West — Manchester</option>
+            <option>Collection Only</option>
+          </select>
+        </div>
+        <div>
+          <label for="craftCondition" class="text-sm font-semibold text-white block mb-2">📦 Condition</label>
+          <select id="craftCondition" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>✨ New / Unused</option>
+            <option>♻️ Pre-loved / Great Cond.</option>
+            <option>Partially Used</option>
+            <option>Destash — As is</option>
+          </select>
+        </div>
+        <div>
+          <label for="craftColour" class="text-sm font-semibold text-white block mb-2">🎨 Colour Family</label>
+          <select id="craftColour" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🌈 Bright & Multicolour</option>
+            <option>🌿 Naturals & Earth Tones</option>
+            <option>🖤 Monochrome</option>
+            <option>💖 Pastels</option>
+          </select>
+        </div>
+        <div>
+          <label for="craftSize" class="text-sm font-semibold text-white block mb-2">📏 Size / Weight</label>
+          <select id="craftSize" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>Small — Sample / Travel</option>
+            <option>Medium — Standard</option>
+            <option>Large — Bulk / Bundle</option>
+            <option>Job Lot — Clearout</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="findCraftBtn" class="bg-s-pink text-white px-6 py-3 rounded-full font-semibold hover:bg-pink-600 transition flex-1 min-w-[120px]">
+          🔍 Find Supplies
+        </button>
+        <button id="listCraftBtn" class="bg-s-green text-s-dark px-6 py-3 rounded-full font-bold hover:bg-green-400 transition flex-1 min-w-[120px]">
+          ➕ List Item — Free!
+        </button>
+        <button id="myCraftBtn" class="bg-s-purple/10 border border-s-purple/30 text-white px-6 py-3 rounded-full font-semibold hover:bg-s-purple/20 transition flex-1 min-w-[120px]">
+          📋 My Listings
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="craft-tab active bg-s-pink text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">📦 All (42)</button>
+      <button class="craft-tab bg-s-pink/10 border border-s-pink/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-pink/20" data-tab="supplies">🧶 Supplies</button>
+      <button class="craft-tab bg-s-pink/10 border border-s-pink/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-pink/20" data-tab="handmade">🛍️ Handmade</button>
+      <button class="craft-tab bg-s-pink/10 border border-s-pink/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-pink/20" data-tab="swap">🤝 Swap Only</button>
+      <button class="craft-tab bg-s-pink/10 border border-s-pink/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-pink/20" data-tab="free">🆓 Free</button>
+    </div>
+
+    <!-- Listings Grid -->
+    <div id="craftAll" class="craft-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <!-- Yarn Listing -->
+      <div class="craft-card bg-s-card rounded-3xl p-5 border border-s-pink/10 hover:border-s-pink/30 transition flex flex-col" data-type="supplies">
+        <div class="w-full h-40 bg-s-pink/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🧶</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Beautiful Yarn Bundle — 8 Skeins</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£18</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester · ✨ New · 8x 100g acrylic/wool mix — greens, blues, purples</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-pink/10 text-s-pink px-2 py-1 rounded">🧶 Yarn</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">✨ New</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (14)</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-pink text-white py-2 rounded-full font-semibold hover:bg-pink-600 transition text-sm">View & Message</button>
+          <button class="swap-btn bg-s-green/10 text-s-green px-3 py-2 rounded-full font-semibold hover:bg-s-green/20 text-sm">🤝 Swap</button>
+        </div>
+      </div>
+
+      <!-- Fabric Listing -->
+      <div class="craft-card bg-s-card rounded-3xl p-5 border border-s-pink/10 hover:border-s-pink/30 transition flex flex-col" data-type="supplies">
+        <div class="w-full h-40 bg-s-blue/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🪡</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Cotton Fabric Bundle — 12m total</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£25</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Bolton · ♻️ Pre-loved · Floral, geometric, plain — various sizes, all clean</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-pink/10 text-s-pink px-2 py-1 rounded">🪡 Fabric</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">♻️ Pre-loved</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (9)</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-pink text-white py-2 rounded-full font-semibold hover:bg-pink-600 transition text-sm">View & Message</button>
+          <button class="token-btn bg-s-gold/10 text-s-gold px-3 py-2 rounded-full font-semibold hover:bg-s-gold/20 text-sm">🪙 $STRAW</button>
+        </div>
+      </div>
+
+      <!-- Handmade Listing -->
+      <div class="craft-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition flex flex-col" data-type="handmade">
+        <div class="w-full h-40 bg-s-purple/10 rounded-2xl flex items-center justify-center text-5xl mb-4">💎</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Handmade Beaded Earrings — 5 Pairs</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£22</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Wigan · ✨ Handmade · Unique designs, hypoallergenic hooks — perfect gifts!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">💎 Jewellery</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">✨ Handmade</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (28)</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="buy-btn flex-1 bg-s-purple text-white py-2 rounded-full font-semibold hover:bg-purple-600 transition text-sm">Buy Now</button>
+          <button class="pay-btn bg-s-blue/10 text-s-blue px-3 py-2 rounded-full font-semibold hover:bg-s-blue/20 text-sm">💳 Pay</button>
+        </div>
+      </div>
+
+      <!-- Swap Only -->
+      <div class="craft-card bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition flex flex-col" data-type="swap">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🎨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Acrylic Paint Set — 48 Colours</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">🤝 Swap Only</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Bury · Partially used — great condition · Want: Watercolours or sketchbooks</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🎨 Painting</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🤝 Swap Only</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ New Listing</span>
+        </div>
+        <button class="swap-propose-btn w-full bg-s-green text-s-dark py-2 rounded-full font-bold hover:bg-green-400 transition text-sm mt-auto">Propose Swap →</button>
+      </div>
+
+      <!-- Free -->
+      <div class="craft-card bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition flex flex-col" data-type="free">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">📐</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Card & Envelopes — Assorted</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">🆓 Free!</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Rochdale · Unused · Approx 50 cards + envelopes — collect or post for cost</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">📐 Paper Craft</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🆓 Free</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.8 (11)</span>
+        </div>
+        <button class="free-request-btn w-full bg-s-green text-s-dark py-2 rounded-full font-bold hover:bg-green-400 transition text-sm mt-auto">Request Free →</button>
+      </div>
+
+      <!-- Wood & Tools -->
+      <div class="craft-card bg-s-card rounded-3xl p-5 border border-s-gold/10 hover:border-s-gold/30 transition flex flex-col" data-type="supplies">
+        <div class="w-full h-40 bg-s-gold/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🪵</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Hardwood Offcuts — Oak, Walnut, Beech</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£12</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Oldham · Various sizes — ideal for small projects, crafts, turning blanks</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-gold/10 text-s-gold px-2 py-1 rounded">🪵 Wood</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">♻️ Offcuts</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ New Listing</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-pink text-white py-2 rounded-full font-semibold hover:bg-pink-600 transition text-sm">View & Message</button>
+          <button class="swap-btn bg-s-green/10 text-s-green px-3 py-2 rounded-full font-semibold hover:bg-s-green/20 text-sm">🤝 Swap</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreCraftBtn" class="bg-s-pink/10 border border-s-pink/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-pink/20 transition">
+        Load More Listings →
+      </button>
+    </div>
+
+    <!-- Categories Quick Links -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-pink/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🏷️ Browse by Category</h3>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🧶 Yarn & Knitting</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🪡 Fabric & Sewing</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🎨 Art Supplies</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">💎 Beads & Jewellery</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🪵 Wood & Crafts</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📐 Paper & Card</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🧼 Soap & Candles</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🛠️ Tools & Equipment</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🎈 Party Supplies</button>
+        <button class="craft-cat bg-s-pink/10 hover:bg-s-pink/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">✨ Handmade</button>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-pink/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Simple, Creative & Free</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📸</div>
+          <h4 class="font-bold text-white mb-1">1. List It</h4>
+          <p class="text-s-muted text-sm">Photos, description, price — takes 2 mins · <strong>100% Free</strong></p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find It</h4>
+          <p class="text-s-muted text-sm">Search by craft, colour, price, location — message maker directly</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Agree & Swap</h4>
+          <p class="text-s-muted text-sm">Cash, bank, $STRAW, or swap — collection, post, or meetup</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">⭐</div>
+          <h4 class="font-bold text-white mb-1">4. Create & Review</h4>
+          <p class="text-s-muted text-sm">Make something beautiful, leave feedback, repeat! Zero fees</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment & Trade Options -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-pink/10">
+        <h4 class="font-bold text-white mb-3">💰 Payment Options — All Direct, Zero Fees</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>💷 Cash — collection, instant, no fees</li>
+          <li>💳 Bank transfer / PayPal / Revolut</li>
+          <li>🪙 $STRAW — Solana, instant, low fees</li>
+          <li>🤝 Barter — swap supplies, handmade items, skills</li>
+          <li>🆓 Free — pay it forward, community spirit</li>
+          <li>✅ We never hold or process payments — <strong>all direct between creators</strong></li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-pink/10">
+        <h4 class="font-bold text-white mb-3">🛡️ Safety & Trust</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ Verified creator profiles</li>
+          <li>✅ Ratings & reviews from past trades</li>
+          <li>✅ In-app messaging — no personal contact needed</li>
+          <li>✅ Clear condition guidelines (New / Pre-loved / As-is)</li>
+          <li>✅ Meet in public places for cash exchanges</li>
+          <li>✅ Postage tracking recommended for shipped items</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Affiliate & Tools Section -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-purple/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛒 Recommended Supplies — via Affiliate Links</h3>
+      <p class="text-s-muted text-center mb-4">Need something specific? Buy new from our partners — small commission supports the community, no extra cost to you!</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🧶</div>
+          <div class="text-white font-semibold text-sm">Yarn & Wool</div>
+        </a>
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🎨</div>
+          <div class="text-white font-semibold text-sm">Art Supplies</div>
+        </a>
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🪡</div>
+          <div class="text-white font-semibold text-sm">Sewing & Fabric</div>
+        </a>
+        <a href="#" class="bg-s-purple/10 hover:bg-s-purple/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🛠️</div>
+          <div class="text-white font-semibold text-sm">Tools & Equipment</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="bg-s-pink/10 border border-s-pink/30 rounded-3xl p-6 text-center">
+      <h3 class="text-xl font-bold text-s-pink mb-2">💡 Have a Stash? List It Today!</h3>
+      <p class="text-white mb-4">That half-used yarn, extra fabric, or beads gathering dust could be exactly what someone else is looking for — clear space, make money, connect with fellow creators! It's free to list, always.</p>
+      <button id="listCraftBtn2" class="bg-s-pink text-white px-8 py-3 rounded-full font-bold hover:bg-pink-600 transition text-lg">
+        ➕ List Your Craft Supplies — Free!
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIST ITEM MODAL ========== -->
+<div id="listCraftModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-pink/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ List Your Item</h3>
+      <button id="closeListCraft" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="listCraftForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none" placeholder="e.g. Soft wool yarn — blues & greens, 5 skeins">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>🧶 Yarn & Knitting</option>
+            <option>🪡 Fabric & Sewing</option>
+            <option>🎨 Art & Painting</option>
+            <option>💎 Beads & Jewellery</option>
+            <option>🪵 Wood & Crafts</option>
+            <option>📐 Paper & Card</option>
+            <option>🧼 Soap & Candles</option>
+            <option>🛠️ Tools & Equipment</option>
+            <option>✨ Handmade Item</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Condition *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>✨ New / Unused</option>
+            <option>♻️ Pre-loved — Excellent</option>
+            <option>Partially Used — Good</option>
+            <option>Destash — As described</option>
+            <option>✨ Handmade — New</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price (£)</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none" placeholder="0 for free / swap only">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Postage / Collection</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-pink/20 text-white focus:outline-none">
+            <option>Collection Only</option>
+            <option>Postage — Buyer pays</option>
+            <option>Free Postage</option>
+            <option>Meetup — Local</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Description *</label>
+        <textarea rows="3" required class="w-full px-4 py-3 rounded-2xl bg-s-dark border border-s-pink/20 text-white focus:outline-none" placeholder="What is it? Quantity, colours, sizes, materials, anything else they should know..."></textarea>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Payment / Trade Options</label>
+        <div class="flex flex-wrap gap-3">
+          <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox" checked> 💷 Cash</label>
+          <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> 💳 Bank Transfer</label>
+          <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> 🪙 $STRAW</label>
+          <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> 🤝 Swap / Barter</label>
+          <label class="flex items-center gap-2 text-white text-sm"><input type="checkbox"> 🆓 Free / Donation</label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">📷 Upload Photos</label>
+        <div class="border-2 border-dashed border-s-pink/30 rounded-2xl p-6 text-center text-s-muted cursor-pointer hover:border-s-pink/50 transition">
+          Click or drag to upload — show item clearly, any flaws or extra details
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-s-pink text-white py-3 rounded-full font-bold hover:bg-pink-600 transition text-lg">
+        ✅ Publish Listing — Free!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a> &nbsp;|&nbsp;
+      <a href="prompts.html" class="hover:text-s-green">AI Prompt Library</a> &nbsp;|&nbsp;
+      <a href="storage.html" class="hover:text-s-green">Storage & Space</a> &nbsp;|&nbsp;
+      <a href="mentorship.html" class="hover:text-s-green">Mentorship</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab Switching
+document.querySelectorAll('.craft-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.craft-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-pink', 'text-white');
+      t.classList.add('bg-s-pink/10', 'border', 'border-s-pink/20');
+    });
+    tab.classList.add('active', 'bg-s-pink', 'text-white');
+    tab.classList.remove('bg-s-pink/10', 'border', 'border-s-pink/20');
+
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.craft-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('craftAll').classList.remove('hidden');
+
+    document.querySelectorAll('.craft-card').forEach(card => {
+      card.style.display = (tabName === 'all' || card.dataset.type === tabName) ? '' : 'none';
+    });
+  });
+});
+
+// Modal open/close
+document.getElementById('listCraftBtn')?.addEventListener('click', () => openModal('listCraftModal'));
+document.getElementById('listCraftBtn2')?.addEventListener('click', () => openModal('listCraftModal'));
+document.getElementById('closeListCraft')?.addEventListener('click', () => closeModal('listCraftModal'));
+
+// Demo actions
+document.getElementById('findCraftBtn')?.addEventListener('click', () =>
+  showToast('🔍 Searching craft supplies near you — results updated!'));
+document.getElementById('myCraftBtn')?.addEventListener('click', () =>
+  showToast('📋 Your Listings: Yarn Bundle — Active · Fabric — Pending · Bead Set — Sold'));
+document.getElementById('loadMoreCraftBtn')?.addEventListener('click', () =>
+  showToast('📦 Loading more craft supplies...'));
+document.querySelectorAll('.view-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📩 Message sent to the maker — check your inbox!')));
+document.querySelectorAll('.buy-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🛍️ Buy coming soon — message the maker directly!')));
+document.querySelectorAll('.swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Will swap for fabric or beads!')));
+document.querySelectorAll('.swap-propose-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Swap proposed — they will respond soon!')));
+document.querySelectorAll('.free-request-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🆓 Request sent — collect or post for cost!')));
+document.querySelectorAll('.pay-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('💳 Bank transfer or $STRAW — direct with the creator!')));
+document.querySelectorAll('.craft-cat').forEach(b => b.addEventListener('click', () =>
+  showToast(`🏷️ ${b.textContent.trim()} — listings coming soon!`)));
+
+// Form Submit
+document.getElementById('listCraftForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Listing Published! 🧵 Fellow creators can find it instantly.');
+  closeModal('listCraftModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>

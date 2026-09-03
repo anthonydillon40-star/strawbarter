@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home & Renovation — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+              pink: '#ec4899',
+              orange: '#f97316',
+              teal: '#14b8a6',
+              red: '#ef4444',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .renovation-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#home-renovation" class="px-3 py-2 rounded-lg bg-s-card text-amber-400 transition">🏠 Renovation</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="renovation.html" class="dropdown-item"><i class="fa-solid fa-house-chimney w-5 text-center text-s-muted"></i> 🏠 Home & Renovation</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#home-renovation" class="py-2 px-3 rounded-lg bg-s-card text-amber-400">🏠 Home & Renovation</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="mentorship.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <a href="crafts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧵 Craft & Supply Exchange</a>
+      <a href="pets.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🐾 Pets & Animals</a>
+      <a href="education.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Textbook & Education Exchange</a>
+      <a href="fitness.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏋️ Fitness & Sports</a>
+      <a href="business.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🎒 Business & Work</a>
+      <a href="upcycle.html" class="py-2 px-3 rounded-lg hover:bg-s-card">♻️ Up-Cycle & Repair</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🏠 HOME & RENOVATION — STRAW Barter -->
+<!-- ====================================== -->
+<section id="home-renovation" class="px-4 py-12 border-t border-amber-500/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">🏠 Home & Renovation — Tools · Materials · Skills</h2>
+      <p class="text-s-muted text-lg leading-relaxed mb-4">Furniture · Paint · Labour — improve your home for less! Share tools, find materials, trade skills, hire help. Save thousands, build better, live better! 🛠️🎨🏡</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-amber-500/10 border border-amber-500/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-amber-400 font-semibold text-lg">🏡 UK home renovation market = £50B+ · 🛠️ 90% of tools used once then stored · 🎨 Surplus materials = millions wasted yearly · 💰 Save 30–70% vs buying new · 🤝 Skill swap = labour for labour · 🆓 Free to list & browse</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-amber-400 mb-1">£0</div>
+        <div class="text-s-muted text-sm">Commission Fees</div>
+      </div>
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-s-green mb-1">30–70%</div>
+        <div class="text-s-muted text-sm">Avg Savings vs New</div>
+      </div>
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-s-gold mb-1">∞</div>
+        <div class="text-s-muted text-sm">Tool Share Potential</div>
+      </div>
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-s-blue mb-1">5M+</div>
+        <div class="text-s-muted text-sm">UK Homes Renovating</div>
+      </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-white/5">
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="renoSearch" class="text-sm font-semibold text-white block mb-2">🔍 What are you looking for?</label>
+          <input type="text" id="renoSearch" placeholder="Drill, paint, tiler, plans..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white placeholder-s-muted focus:outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label for="renoLocation" class="text-sm font-semibold text-white block mb-2">📍 Location</label>
+          <select id="renoLocation" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white focus:outline-none">
+            <option>Any Location</option>
+            <option>Within 5 miles</option>
+            <option>Within 10 miles</option>
+            <option>Manchester</option>
+            <option>London</option>
+            <option>Remote / Online</option>
+          </select>
+        </div>
+        <div>
+          <label for="renoCategory" class="text-sm font-semibold text-white block mb-2">📂 Category</label>
+          <select id="renoCategory" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white focus:outline-none">
+            <option value="all">All — Tools · Materials · Skills</option>
+            <option value="tools">🔧 Tools & Equipment — Share / Rent</option>
+            <option value="materials">🎨 Materials — Surplus / New / Used</option>
+            <option value="furniture">🪑 Furniture — Pre-loved / Custom</option>
+            <option value="services">👷 Services & Trades — Hire / Swap</option>
+            <option value="plans">📐 Plans, Designs & Advice</option>
+            <option value="wanted">❓ Wanted — Everything Renovation</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="renoBudget" class="text-sm font-semibold text-white block mb-2">💰 Budget</label>
+          <select id="renoBudget" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🆓 Free Only</option>
+            <option>🤝 Barter / Skill Swap</option>
+            <option>£ Low — Under £20</option>
+            <option>££ Mid — £20–£100</option>
+            <option>£££ — Over £100</option>
+          </select>
+        </div>
+        <div>
+          <label for="renoWhen" class="text-sm font-semibold text-white block mb-2">⏰ When</label>
+          <select id="renoWhen" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white focus:outline-none">
+            <option>Anytime</option>
+            <option>Immediate</option>
+            <option>Weekdays</option>
+            <option>Weekends</option>
+            <option>Evenings</option>
+          </select>
+        </div>
+        <div>
+          <label for="renoType" class="text-sm font-semibold text-white block mb-2">👤 Type</label>
+          <select id="renoType" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white focus:outline-none">
+            <option>All</option>
+            <option>Offering</option>
+            <option>Wanted</option>
+            <option>For Hire</option>
+            <option>For Sale</option>
+          </select>
+        </div>
+        <div>
+          <label for="renoVerified" class="text-sm font-semibold text-white block mb-2">⭐ Verified</label>
+          <select id="renoVerified" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white focus:outline-none">
+            <option>All Listings</option>
+            <option>✅ Verified Only</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="searchRenoBtn" class="bg-amber-500 text-s-dark px-6 py-3 rounded-full font-semibold hover:bg-amber-400 transition flex-1 min-w-[120px]">
+          🔍 Search
+        </button>
+        <button id="listRenoBtn" class="bg-s-green text-white px-6 py-3 rounded-full font-bold hover:bg-green-600 transition flex-1 min-w-[120px]">
+          ➕ List — Free!
+        </button>
+        <button id="renoHubBtn" class="bg-s-purple/20 text-s-purple px-6 py-3 rounded-full font-semibold hover:bg-s-purple/30 transition flex-1 min-w-[120px]">
+          📋 Project Hub
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="renovation-tab active bg-amber-500 text-s-dark px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">📋 All (189)</button>
+      <button class="renovation-tab bg-amber-500/20 text-amber-400 px-4 py-2 rounded-full text-sm font-semibold hover:bg-amber-500/30" data-tab="tools">🔧 Tools</button>
+      <button class="renovation-tab bg-amber-500/20 text-amber-400 px-4 py-2 rounded-full text-sm font-semibold hover:bg-amber-500/30" data-tab="materials">🎨 Materials</button>
+      <button class="renovation-tab bg-amber-500/20 text-amber-400 px-4 py-2 rounded-full text-sm font-semibold hover:bg-amber-500/30" data-tab="furniture">🪑 Furniture</button>
+      <button class="renovation-tab bg-amber-500/20 text-amber-400 px-4 py-2 rounded-full text-sm font-semibold hover:bg-amber-500/30" data-tab="services">👷 Services</button>
+      <button class="renovation-tab bg-amber-500/20 text-amber-400 px-4 py-2 rounded-full text-sm font-semibold hover:bg-amber-500/30" data-tab="plans">📐 Plans</button>
+    </div>
+
+    <!-- Listings Grid -->
+    <div id="renovationAll" class="renovation-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <!-- 🔧 Tools — Heavy Duty Drill Share -->
+      <div class="renovation-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-amber-500/30 transition flex flex-col" data-renovation-type="tools">
+        <div class="w-full h-40 bg-amber-500/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🔧⚡</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">DeWalt Heavy-Duty Combi Drill — Share / Rent</h4>
+          <span class="bg-amber-500/20 text-amber-400 px-2 py-1 rounded-full text-sm font-bold">£5/day or Swap</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Salford — Collection · Powerful 18V brushless combi drill + 2 batteries, charger, bits set. Used once — too big for my needs. £5 per day, or swap for a decent jigsaw! Weekend hire welcome. Instruction manual included. Can show working.</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-amber-500/10 text-amber-400 px-2 py-1 rounded">🔌 Power Tools</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🤝 Swap OK</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">⚡ Like New</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="request-hire-btn flex-1 bg-amber-500 text-s-dark py-2 rounded-full font-semibold hover:bg-amber-400 transition text-sm">Request Hire</button>
+          <button class="offer-swap-btn bg-s-purple/20 text-s-purple px-3 py-2 rounded-full font-semibold hover:bg-s-purple/30 text-sm">🤝 Offer Swap</button>
+        </div>
+      </div>
+
+      <!-- 🎨 Materials — Surplus Paint -->
+      <div class="renovation-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-amber-500/30 transition flex flex-col" data-renovation-type="materials">
+        <div class="w-full h-40 bg-s-blue/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🎨🖌️</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Dulux Matt Emulsion — 6L Total, Various Neutrals</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£15 all or £3/L</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Bolton · 3 × 2.5L tins — Magnolia, Pure Brilliant White, Warm White. All unopened, surplus to requirements. Bought for whole-house reno — way too much! £15 the lot or £3 per litre. Collection only — heavy. Great for rooms, ceilings, woodwork!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🎨 Paint</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">✅ Sealed</span>
+          <span class="bg-amber-500/10 text-amber-400 px-2 py-1 rounded">📦 Bulk</span>
+        </div>
+        <button class="buy-reserve-btn w-full bg-s-green text-s-dark py-2 rounded-full font-semibold hover:bg-green-600 transition text-sm mt-auto">Buy / Reserve →</button>
+      </div>
+
+      <!-- 🪑 Furniture — Solid Oak Table -->
+      <div class="renovation-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-amber-500/30 transition flex flex-col" data-renovation-type="furniture">
+        <div class="w-full h-40 bg-amber-500/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🪑✨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Solid Oak Dining Table — Needs Refinishing</h4>
+          <span class="bg-s-gold/20 text-s-gold px-2 py-1 rounded-full text-sm font-bold">£40 ONO</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester, City Centre · 150cm × 90cm solid oak table. Sturdy, no wobble. Finish is worn & ring marks — perfect upcycle project! Sand, oil, paint — whatever you want. 4 matching chairs available extra. Heavy — bring a van/strong friends!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-amber-500/10 text-amber-400 px-2 py-1 rounded">🪑 Oak</span>
+          <span class="bg-s-pink/10 text-s-pink px-2 py-1 rounded">🎨 Upcycle Ready</span>
+          <span class="bg-s-gold/10 text-s-gold px-2 py-1 rounded">💪 Solid</span>
+        </div>
+        <button class="make-offer-btn w-full bg-amber-500 text-s-dark py-2 rounded-full font-semibold hover:bg-amber-400 transition text-sm mt-auto">Make Offer →</button>
+      </div>
+
+      <!-- 👷 Services — Tiling & Bathroom Fitting -->
+      <div class="renovation-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-amber-500/30 transition flex flex-col" data-renovation-type="services">
+        <div class="w-full h-40 bg-s-purple/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🧱🛁</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Tiling & Bathroom Fitting — 15+ Years Exp</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£25/hr or Swap</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Greater Manchester — all areas · Fully qualified tiler & bathroom fitter. Walls, floors, wet rooms, underfloor heating, plastering, plumbing basics. Clean, reliable, free quotes. Also open to skill swap — do you have web, accounting, or marketing skills? Let's talk!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🧱 Tiling</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🛁 Bathroom</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (38)</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="get-quote-btn flex-1 bg-s-purple text-white py-2 rounded-full font-semibold hover:bg-purple-600 transition text-sm">Get Quote</button>
+          <button class="skill-swap-btn bg-amber-500/20 text-amber-400 px-3 py-2 rounded-full font-semibold hover:bg-amber-500/30 text-sm">🤝 Swap</button>
+        </div>
+      </div>
+
+      <!-- 📐 Plans — Kitchen Design -->
+      <div class="renovation-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-amber-500/30 transition flex flex-col" data-renovation-type="plans">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">📐🏠</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Kitchen Design & Layout — 2D/3D Plans</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£40</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Remote / Online · Architectural tech creating optimised kitchen layouts. Send me your room dimensions, windows, doors, appliances — I'll return 2D plans + 3D renders + shopping list. Avoid costly mistakes! Revisions included. PDF & CAD files provided.</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">📐 Design</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">💻 Remote</span>
+          <span class="bg-amber-500/10 text-amber-400 px-2 py-1 rounded">🍳 Kitchen</span>
+        </div>
+        <button class="start-design-btn w-full bg-s-green text-s-dark py-2 rounded-full font-semibold hover:bg-green-600 transition text-sm mt-auto">Start Design →</button>
+      </div>
+
+      <!-- ❓ Wanted — Carpet Remnants -->
+      <div class="renovation-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-amber-500/30 transition flex flex-col" data-renovation-type="materials">
+        <div class="w-full h-40 bg-s-red/10 rounded-2xl flex items-center justify-center text-5xl mb-4">❓🧶</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Wanted: Carpet Remnants & Offcuts — Any Size!</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">Free / Pay Cash</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Stockport — Will Collect · Any size, any colour, any condition. Small offcuts for stairs, landings, rooms, caravans, sheds, pet beds. Will come and collect — no hassle! Can pay small cash or swap for DIY help. Help clear your garage/shed — thank you!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-red/10 text-s-red px-2 py-1 rounded">❓ Wanted</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🚚 I Collect</span>
+          <span class="bg-amber-500/10 text-amber-400 px-2 py-1 rounded">💰 Cash Paid</span>
+        </div>
+        <button class="what-have-btn w-full bg-s-red text-white py-2 rounded-full font-semibold hover:bg-red-600 transition text-sm mt-auto">What You Have →</button>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreRenoBtn" class="bg-amber-500/20 border border-amber-500/40 text-amber-400 py-3 px-8 rounded-full font-semibold hover:bg-amber-500/30 transition">
+        Load More →
+      </button>
+    </div>
+
+    <!-- Quick Browse Categories -->
+    <div class="bg-s-card rounded-3xl p-6 border border-white/5 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🔍 Quick Browse — All Categories</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🔧 Tools & Hire</button>
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🎨 Paint & Decor</button>
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🧱 Building Materials</button>
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🪑 Furniture</button>
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">👷 Trades & Help</button>
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📐 Plans & Design</button>
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🚪 Doors & Windows</button>
+        <button class="reno-cat bg-amber-500/10 hover:bg-amber-500/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">❓ Requests & Wanted</button>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-white/5 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Save Money, Build Better!</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📝</div>
+          <h4 class="font-bold text-white mb-1">1. List What You Have</h4>
+          <p class="text-s-muted text-sm">Tools, materials, skills — takes 2 mins, <strong>100% Free</strong></p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find What You Need</h4>
+          <p class="text-s-muted text-sm">Local, nearby, same-day — save 30–70% vs new!</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Swap, Hire or Buy</h4>
+          <p class="text-s-muted text-sm">Skill swap, low-cost rental, cash — you choose!</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🏡</div>
+          <h4 class="font-bold text-white mb-1">4. Build Your Dream Home</h4>
+          <p class="text-s-muted text-sm">Better, cheaper, sustainable — together!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Planner Hub -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-purple/30 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">📋 Project Planner Hub — Plan, Budget & Build Together! 📊</h3>
+      <p class="text-s-muted text-center mb-4">Got a renovation project in mind? Create a shared project page — list what you need, find local help, track budget, and connect with others doing the same!</p>
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-s-purple/5 p-4 rounded-xl text-center">
+          <div class="text-2xl mb-2">🏠</div>
+          <h4 class="font-bold text-white mb-1">Whole House Reno</h4>
+          <p class="text-s-muted text-xs">Materials · Trades · Timeline</p>
+        </div>
+        <div class="bg-s-purple/5 p-4 rounded-xl text-center">
+          <div class="text-2xl mb-2">🍳</div>
+          <h4 class="font-bold text-white mb-1">New Kitchen</h4>
+          <p class="text-s-muted text-xs">Layout · Units · Fitting</p>
+        </div>
+        <div class="bg-s-purple/5 p-4 rounded-xl text-center">
+          <div class="text-2xl mb-2">🛁</div>
+          <h4 class="font-bold text-white mb-1">Bathroom Upgrade</h4>
+          <p class="text-s-muted text-xs">Suite · Tiling · Plumbing</p>
+        </div>
+      </div>
+      <div class="text-center">
+        <button id="renoHubBtn2" class="bg-s-purple text-white px-8 py-3 rounded-full font-bold hover:bg-purple-600 transition text-lg">
+          📋 Create Your Project →
+        </button>
+      </div>
+    </div>
+
+    <!-- Safety & Guidelines -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-white/5">
+        <h4 class="font-bold text-white mb-3">🛡️ Safe & Responsible Practices</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ <strong>Gas & Electricity = Qualified Pros Only</strong> — never attempt yourself; always check credentials & certification</li>
+          <li>✅ <strong>Meet in public first</strong> — for tool/material viewings; verify identity before work starts</li>
+          <li>✅ <strong>Agree everything in writing</strong> — scope, price, timeline, materials, payment schedule</li>
+          <li>✅ <strong>Check insurance</strong> — public liability, employer's liability, damage cover</li>
+          <li>✅ <strong>Use proper PPE</strong> — goggles, mask, gloves, boots for dusty/noisy work</li>
+          <li>✅ <strong>Waste disposal</strong> — recycle what you can; use licensed carrier for hazardous waste</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-white/5">
+        <h4 class="font-bold text-white mb-3">💡 Renovation Pro Tips</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ <strong>Measure twice, cut once</strong> — old rule, still the best! Double-check everything</li>
+          <li>✅ <strong>Buy 10% extra materials</strong> — cuts, mistakes, breakages happen; avoid colour-matching issues later</li>
+          <li>✅ <strong>Strip first, plan second</strong> — you never know what's behind the walls until you look</li>
+          <li>✅ <strong>Do the messy jobs first</strong> — plastering, painting, flooring = work from top down</li>
+          <li>✅ <strong>Ask for help</strong> — friends, family, local community — many hands make light work!</li>
+          <li>✅ <strong>Skill swap is powerful</strong> — trade what you can do for what you can't — it all balances out!</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Affiliate — Tools & Supplies -->
+    <div class="bg-s-card rounded-3xl p-6 border border-amber-500/30 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛒 Tools & Supplies — Recommended via Affiliate Links</h3>
+      <p class="text-s-muted text-center mb-4">Need it new? Power tools, paint, hardware, safety gear. Buy through our affiliate links — small commission supports STRAW, no extra cost to you!</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a target="_blank" rel="noopener" href="https://www.amazon.co.uk/?tag=straw09-21" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🔨</div>
+          <div class="text-white font-semibold text-sm">Power Tools</div>
+        </a>
+        <a target="_blank" rel="noopener" href="https://www.amazon.co.uk/?tag=straw09-21" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🎨</div>
+          <div class="text-white font-semibold text-sm">Paint & Decor</div>
+        </a>
+        <a href="#" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🔩</div>
+          <div class="text-white font-semibold text-sm">Hardware & Fixings</div>
+        </a>
+        <a target="_blank" rel="noopener" href="https://www.awin.com/?partner=3062179" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">📐</div>
+          <div class="text-white font-semibold text-sm">DIY Plans & Guides</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="bg-amber-500/10 border border-amber-500/30 rounded-3xl p-6 text-center">
+      <h3 class="text-xl font-bold text-amber-400 mb-2">🏠 Your Dream Home Doesn't Have to Cost the Earth — Let's Build It Together! 🛠️</h3>
+      <p class="text-white mb-4">Share tools, swap skills, reuse materials — save money, reduce waste, and build a home you love. Every renovation starts somewhere — start yours right here, with us! 💛</p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button id="listRenoBtn2" class="bg-amber-500 text-s-dark px-8 py-3 rounded-full font-bold hover:bg-amber-400 transition text-lg">
+          ➕ List Something — Free!
+        </button>
+        <button id="renoHubBtn3" class="bg-s-green text-s-dark px-8 py-3 rounded-full font-bold hover:bg-green-600 transition text-lg">
+          📋 Start a Project
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MODALS ========== -->
+
+<!-- List Renovation Item Modal -->
+<div id="listRenovationModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-amber-500/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ List — Home & Renovation</h3>
+      <button id="closeListRenovation" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="listRenovationForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white">
+            <option value="">Select...</option>
+            <option>🔧 Tools — For Hire</option>
+            <option>🔧 Tools — For Sale</option>
+            <option>🎨 Materials — Surplus</option>
+            <option>🎨 Materials — New</option>
+            <option>🪑 Furniture — For Sale</option>
+            <option>👷 Service — Offering</option>
+            <option>👷 Service — Seeking</option>
+            <option>📐 Plans & Design</option>
+            <option>❓ Wanted — Anything</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Location *</label>
+          <input type="text" required placeholder="City / Postcode" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title *</label>
+        <input type="text" required placeholder="e.g. Bosch Drill — £5/day or Swap" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Description & Details *</label>
+        <textarea required rows="4" placeholder="Be specific — condition, size, quantity, what's included, collection/delivery, availability, any swap possibilities..." class="w-full px-4 py-3 rounded-2xl bg-s-dark border border-amber-500/30 text-white"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price / Exchange</label>
+          <input type="text" placeholder="Free, £10, Swap, etc." class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Availability</label>
+          <input type="text" placeholder="e.g. Immediate, Weekdays" class="w-full px-4 py-3 rounded-full bg-s-dark border border-amber-500/30 text-white">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Options</label>
+        <div class="flex flex-wrap gap-3 text-white text-sm">
+          <label class="flex items-center gap-2"><input type="checkbox"> 🤝 Open to Barter / Skill Swap</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 🪙 Accept $STRAW</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 🚚 Can Deliver</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> ✅ Verified Preferred</label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">📷 Photos</label>
+        <div class="border-2 border-dashed border-amber-500/30 rounded-2xl p-6 text-center text-s-muted cursor-pointer hover:border-amber-400 transition">
+          Click or drag to upload — up to 5 images
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-amber-500 text-s-dark py-3 rounded-full font-bold hover:bg-amber-400 transition text-lg">
+        ✅ Publish Listing — Free!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Project Planner Hub Modal -->
+<div id="renovationHubModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-s-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">📋 Project Planner Hub — Build Together!</h3>
+      <button id="closeRenoHub" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <div class="bg-s-purple/10 border border-s-purple/30 rounded-xl p-4 mb-6">
+      <p class="text-s-purple font-semibold">💡 Why a Shared Project Page?</p>
+      <p class="text-white text-sm mt-2">Create a single page for your renovation — list every tool, material, and skill you need. Others can see exactly what you're looking for and offer help. Crowdsource your home improvement!</p>
+    </div>
+    <div class="space-y-3 mb-6">
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">🏠 Create a Project Page</h4>
+        <ul class="text-s-muted text-sm space-y-1">
+          <li>• Project name & location</li>
+          <li>• Timeline & budget range</li>
+          <li>• List every item needed (tools, materials, trades)</li>
+          <li>• Mark items as "found" as you go</li>
+          <li>• Invite helpers & track progress</li>
+        </ul>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">🔍 Browse Active Projects Near You</h4>
+        <ul class="text-s-muted text-sm space-y-1">
+          <li>• See what neighbours are working on</li>
+          <li>• Offer surplus materials you have</li>
+          <li>• Lend tools sitting in your shed</li>
+          <li>• Trade skills — help each other finish faster!</li>
+        </ul>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">📊 Budget Tracker & Shopping List</h4>
+        <ul class="text-s-muted text-sm space-y-1">
+          <li>• Estimate vs actual cost</li>
+          <li>• Save wishlist for later</li>
+          <li>• Price comparison links</li>
+          <li>• Receipt storage & expense log</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <button id="startProjectBtn" class="bg-s-purple text-white py-3 rounded-full font-bold hover:bg-purple-600 transition">
+        ➕ Start New Project
+      </button>
+      <button id="browseProjectsBtn" class="bg-amber-500 text-s-dark py-3 rounded-full font-bold hover:bg-amber-400 transition">
+        🔍 Browse Local Projects
+      </button>
+    </div>
+    <button id="closeRenoHub2" class="w-full bg-s-purple/20 border border-s-purple/30 text-white py-3 rounded-full font-semibold hover:bg-s-purple/30 transition">
+      ✅ Close
+    </button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="upcycle.html" class="hover:text-s-green">Up-Cycle & Repair</a> &nbsp;|&nbsp;
+      <a href="crafts.html" class="hover:text-s-green">Craft Exchange</a> &nbsp;|&nbsp;
+      <a href="business.html" class="hover:text-s-green">Business & Work</a> &nbsp;|&nbsp;
+      <a href="index.html#marketplace" class="hover:text-s-green">Marketplace</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab switching
+document.querySelectorAll('.renovation-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.renovation-tab').forEach(t => {
+      t.classList.remove('active', 'bg-amber-500', 'text-s-dark');
+      t.classList.add('bg-amber-500/20', 'text-amber-400');
+    });
+    tab.classList.add('active', 'bg-amber-500', 'text-s-dark');
+    tab.classList.remove('bg-amber-500/20', 'text-amber-400');
+
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.renovation-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('renovationAll').classList.remove('hidden');
+
+    document.querySelectorAll('.renovation-card').forEach(card => {
+      card.style.display = (tabName === 'all' || card.dataset.renovationType === tabName) ? '' : 'none';
+    });
+  });
+});
+
+// Modal open/close
+document.getElementById('listRenoBtn')?.addEventListener('click', () => openModal('listRenovationModal'));
+document.getElementById('listRenoBtn2')?.addEventListener('click', () => openModal('listRenovationModal'));
+document.getElementById('closeListRenovation')?.addEventListener('click', () => closeModal('listRenovationModal'));
+document.getElementById('renoHubBtn')?.addEventListener('click', () => openModal('renovationHubModal'));
+document.getElementById('renoHubBtn2')?.addEventListener('click', () => openModal('renovationHubModal'));
+document.getElementById('renoHubBtn3')?.addEventListener('click', () => openModal('renovationHubModal'));
+document.getElementById('closeRenoHub')?.addEventListener('click', () => closeModal('renovationHubModal'));
+document.getElementById('closeRenoHub2')?.addEventListener('click', () => closeModal('renovationHubModal'));
+
+// Close modals on background click
+document.getElementById('listRenovationModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal('listRenovationModal');
+});
+document.getElementById('renovationHubModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal('renovationHubModal');
+});
+
+// Demo actions
+document.getElementById('searchRenoBtn')?.addEventListener('click', () =>
+  showToast('🏠 Searching home & renovation listings — results updated!'));
+document.getElementById('loadMoreRenoBtn')?.addEventListener('click', () =>
+  showToast('🏠 Loading more home & renovation listings...'));
+document.getElementById('startProjectBtn')?.addEventListener('click', () =>
+  showToast('➕ Project pages coming soon — list your needs in the meantime!'));
+document.getElementById('browseProjectsBtn')?.addEventListener('click', () =>
+  showToast('🔍 Project browser coming soon — post a Wanted listing to start!'));
+document.querySelectorAll('.request-hire-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🔧 Hire request sent — arrange collection & swap details!')));
+document.querySelectorAll('.buy-reserve-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🎨 Reserved — arrange collection with the seller!')));
+document.querySelectorAll('.make-offer-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('💰 Offer sent — ONO means Negotiable — go on, make one!')));
+document.querySelectorAll('.get-quote-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📋 Quote request sent — free quotes, no obligation!')));
+document.querySelectorAll('.skill-swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Skill swap — tell me what you do!')));
+document.querySelectorAll('.start-design-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📐 Design brief started — send your room dimensions!')));
+document.querySelectorAll('.what-have-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🚚 Message sent — they will come and collect!')));
+document.querySelectorAll('.reno-cat').forEach(b => b.addEventListener('click', () =>
+  showToast(`🔍 ${b.textContent.trim()} — listings coming soon!`)));
+
+// Form submit
+document.getElementById('listRenovationForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Listing Published! 🏠 Let\'s make home improvement affordable for everyone!');
+  closeModal('listRenovationModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>
