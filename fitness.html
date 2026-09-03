@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitness & Sports — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+              pink: '#ec4899',
+              orange: '#f97316',
+              teal: '#14b8a6',
+              red: '#ef4444',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .fit-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#fitness-sports" class="px-3 py-2 rounded-lg bg-s-card text-s-red transition">🏋️ Fitness</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#fitness-sports" class="py-2 px-3 rounded-lg bg-s-card text-s-red">🏋️ Fitness & Sports</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="mentorship.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <a href="crafts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧵 Craft & Supply Exchange</a>
+      <a href="pets.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🐾 Pets & Animals</a>
+      <a href="education.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Textbook & Education Exchange</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🏋️ FITNESS & SPORTS — STRAW Barter -->
+<!-- ====================================== -->
+<section id="fitness-sports" class="px-4 py-12 border-t border-s-red/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">🏋️ Fitness & Sports — Gear · Buddies · Classes</h2>
+      <p class="text-s-muted text-lg">Equipment · Apparel · Partners — get fit for less! Buy · Sell · Swap · Find Buddies · Share Memberships. Save hundreds, stay motivated, go further together! 💪⚽🚴🏃🧘</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-red/10 border border-s-red/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-red font-semibold text-lg">💪 UK fitness market £7bn+ · 🏷️ Save up to 90% on gear · 🤝 Find a workout buddy — 2x more likely to stick with it! · 🤸 Swap passes, classes, memberships · 🆓 Always free to list · ♻️ Keep great gear in use</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="bg-s-red/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-red mb-1">7.2M</div>
+        <div class="text-s-muted text-sm">Gym Memberships UK</div>
+      </div>
+      <div class="bg-s-green/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-green mb-1">£500+</div>
+        <div class="text-s-muted text-sm">Avg Savings on Gear</div>
+      </div>
+      <div class="bg-s-purple/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-purple mb-1">∞</div>
+        <div class="text-s-muted text-sm">Active Buddies Near You</div>
+      </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-red/20">
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="fitSearch" class="text-sm font-semibold text-white block mb-2">🔍 Search</label>
+          <input type="text" id="fitSearch" placeholder="Dumbbells, bike, yoga mat, racket, gym buddy..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white placeholder-s-muted focus:outline-none focus:border-s-red">
+        </div>
+        <div>
+          <label for="fitSport" class="text-sm font-semibold text-white block mb-2">🏃 Sport / Activity</label>
+          <select id="fitSport" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>All Sports & Fitness</option>
+            <option>🏋️ Gym & Strength</option>
+            <option>🏃 Running & Athletics</option>
+            <option>🚴 Cycling</option>
+            <option>🧘 Yoga & Pilates</option>
+            <option>⚽ Team Sports — Football, Rugby, Netball</option>
+            <option>🎾 Racket Sports — Tennis, Badminton, Squash</option>
+            <option>🏊 Swimming & Water Sports</option>
+            <option>🥋 Martial Arts & Combat</option>
+            <option>⛰️ Outdoor & Adventure</option>
+            <option>🧗 Climbing & Bouldering</option>
+            <option>🏌️ Golf</option>
+          </select>
+        </div>
+        <div>
+          <label for="fitNeed" class="text-sm font-semibold text-white block mb-2">📂 What You Need</label>
+          <select id="fitNeed" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>All — Gear & Services</option>
+            <option>🏋️ Equipment & Gear</option>
+            <option>👕 Apparel & Footwear</option>
+            <option>🤝 Find a Buddy</option>
+            <option>🎟️ Class / Pass / Membership</option>
+            <option>📚 Coaching & Tuition</option>
+            <option>🤸 Swap / Barter Only</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="fitPrice" class="text-sm font-semibold text-white block mb-2">💰 Price</label>
+          <select id="fitPrice" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🆓 Free</option>
+            <option>Under £10</option>
+            <option>£10–£50</option>
+            <option>£50–£150</option>
+            <option>£150+</option>
+          </select>
+        </div>
+        <div>
+          <label for="fitLocation" class="text-sm font-semibold text-white block mb-2">📍 Location</label>
+          <select id="fitLocation" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>UK Wide — Postage OK</option>
+            <option>Local — Within 5 miles</option>
+            <option>Manchester / North West</option>
+            <option>Collection Only</option>
+          </select>
+        </div>
+        <div>
+          <label for="fitCondition" class="text-sm font-semibold text-white block mb-2">⚙️ Condition</label>
+          <select id="fitCondition" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>✨ Like New</option>
+            <option>💪 Excellent — Light Use</option>
+            <option>🏃 Good — Fully Functional</option>
+            <option>🛠️ Needs Repair</option>
+          </select>
+        </div>
+        <div>
+          <label for="fitDealType" class="text-sm font-semibold text-white block mb-2">🤝 Type</label>
+          <select id="fitDealType" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>Buy / Sell</option>
+            <option>🔄 Swap Only</option>
+            <option>🤝 Buddy / Partner</option>
+            <option>🎟️ Pass / Share</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="findFitBtn" class="bg-s-red text-white px-6 py-3 rounded-full font-semibold hover:bg-red-600 transition flex-1 min-w-[120px]">
+          🔍 Find
+        </button>
+        <button id="listFitBtn" class="bg-s-green text-s-dark px-6 py-3 rounded-full font-bold hover:bg-green-400 transition flex-1 min-w-[120px]">
+          ➕ List — Free!
+        </button>
+        <button id="buddyZoneBtn" class="bg-s-purple/10 border border-s-purple/30 text-white px-6 py-3 rounded-full font-semibold hover:bg-s-purple/20 transition flex-1 min-w-[120px]">
+          🤝 Find a Buddy
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="fit-tab active bg-s-red text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">🏋️ All (96)</button>
+      <button class="fit-tab bg-s-red/10 border border-s-red/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-red/20" data-tab="gear">⚙️ Gear</button>
+      <button class="fit-tab bg-s-red/10 border border-s-red/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-red/20" data-tab="clothes">👕 Apparel</button>
+      <button class="fit-tab bg-s-red/10 border border-s-red/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-red/20" data-tab="buddy">🤝 Buddies</button>
+      <button class="fit-tab bg-s-red/10 border border-s-red/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-red/20" data-tab="passes">🎟️ Passes</button>
+      <button class="fit-tab bg-s-red/10 border border-s-red/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-red/20" data-tab="swap">🔄 Swap</button>
+    </div>
+
+    <!-- Listings Grid -->
+    <div id="fitAll" class="fit-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <!-- Dumbbell Set -->
+      <div class="fit-card bg-s-card rounded-3xl p-5 border border-s-red/10 hover:border-s-red/30 transition flex flex-col" data-type="gear">
+        <div class="w-full h-40 bg-s-red/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🏋️💪</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">20kg Adjustable Dumbbell Set — Pair</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£45</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Salford · 2x 20kg adjustable — 2.5kg–20kg each · Fast lock, weight plates included · Excellent condition — barely used · RRP £120</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-red/10 text-s-red px-2 py-1 rounded">🏋️ Strength</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">⚖️ 20kg Each</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (24)</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="view-btn flex-1 bg-s-red text-white py-2 rounded-full font-semibold hover:bg-red-600 transition text-sm">View & Message</button>
+          <button class="swap-btn bg-s-green/10 text-s-green px-3 py-2 rounded-full font-semibold hover:bg-s-green/20 text-sm">🔄 Swap</button>
+        </div>
+      </div>
+
+      <!-- Road Bike -->
+      <div class="fit-card bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition flex flex-col" data-type="gear">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🚴💨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Road Bike — 56cm Frame, Shimano Gears</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£180</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Stockport · Aluminium frame, 56cm — suits 5'10"–6'2" · 18-speed Shimano, new tyres, serviced · Ready to ride</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🚴 Cycling</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">📏 56cm</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Serviced</span>
+        </div>
+        <button class="view-btn w-full bg-s-green text-s-dark py-2 rounded-full font-bold hover:bg-green-400 transition text-sm mt-auto">View & Message →</button>
+      </div>
+
+      <!-- Yoga Mat & Block Set -->
+      <div class="fit-card bg-s-card rounded-3xl p-5 border border-s-purple/20 hover:border-s-purple/40 transition flex flex-col" data-type="gear">
+        <div class="w-full h-40 bg-s-purple/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🧘✨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Premium Yoga Mat + 2 Blocks + Strap — Like New</h4>
+          <span class="bg-s-purple/20 text-s-purple px-2 py-1 rounded-full text-sm font-bold">£15</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester City Centre · 6mm thick, non-slip, eco-friendly · 2 cork blocks + cotton carry strap · Used twice — perfect condition · RRP £40</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🧘 Yoga</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✅ Like New</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (31)</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="buy-btn flex-1 bg-s-purple text-white py-2 rounded-full font-bold hover:bg-purple-600 transition text-sm">Buy Now</button>
+          <button class="token-btn bg-s-gold/10 text-s-gold px-3 py-2 rounded-full font-semibold hover:bg-s-gold/20 text-sm">🪙 $STRAW</button>
+        </div>
+      </div>
+
+      <!-- Running Buddy -->
+      <div class="fit-card bg-s-card rounded-3xl p-5 border border-s-blue/20 hover:border-s-blue/40 transition flex flex-col" data-type="buddy">
+        <div class="w-full h-40 bg-s-blue/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🏃🤝</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Looking for Running Buddy — 5k–10k, Weekday Evenings</h4>
+          <span class="bg-s-blue/20 text-s-blue px-2 py-1 rounded-full text-sm font-bold">🤝 Connect</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Didsbury / South Manchester · Beginner–intermediate · Goal: build to 10k · Tue/Thu 6:30pm, Sat morning · Friendly, no pressure, coffee after! ☕</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🏃 Running</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🟢 Beginner–Intermediate</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⏰ Evenings</span>
+        </div>
+        <button class="connect-btn w-full bg-s-blue text-white py-2 rounded-full font-bold hover:bg-blue-600 transition text-sm mt-auto">Say Hi →</button>
+      </div>
+
+      <!-- Gym Membership Share -->
+      <div class="fit-card bg-s-card rounded-3xl p-5 border border-s-orange/20 hover:border-s-orange/40 transition flex flex-col" data-type="passes">
+        <div class="w-full h-40 bg-s-orange/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🎟️🏋️</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">PureGym — Membership Share / Transfer — £20/mo</h4>
+          <span class="bg-s-orange/20 text-s-orange px-2 py-1 rounded-full text-sm font-bold">£20/mo</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 PureGym Bolton 24/7 · Full access — gym floor, weights, cardio, classes · Standard £28/mo — yours for £20 · 8 months remaining · Simple transfer process</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-orange/10 text-s-orange px-2 py-1 rounded">🎟️ Membership</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">💰 £8/mo Saving</span>
+          <span class="bg-blue-400/10 text-blue-400 px-2 py-1 rounded">⏳ 8 Months Left</span>
+        </div>
+        <button class="transfer-btn w-full bg-s-orange text-white py-2 rounded-full font-bold hover:bg-orange-600 transition text-sm mt-auto">Arrange Transfer →</button>
+      </div>
+
+      <!-- Football Boots -->
+      <div class="fit-card bg-s-card rounded-3xl p-5 border border-s-teal/20 hover:border-s-teal/40 transition flex flex-col" data-type="clothes">
+        <div class="w-full h-40 bg-s-teal/10 rounded-2xl flex items-center justify-center text-5xl mb-4">⚽👟</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Nike Mercurial Football Boots — Size UK 9</h4>
+          <span class="bg-s-teal/20 text-s-teal px-2 py-1 rounded-full text-sm font-bold">£25</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Wigan · SG (Soft Ground) studs · Worn 3 matches — like new · Box included · RRP £95 — 75% off!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-teal/10 text-s-teal px-2 py-1 rounded">⚽ Football</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">📏 UK 9</span>
+          <span class="bg-green-400/10 text-green-400 px-2 py-1 rounded">✨ Like New</span>
+        </div>
+        <button class="view-btn w-full bg-s-teal text-white py-2 rounded-full font-bold hover:bg-teal-600 transition text-sm mt-auto">View & Message →</button>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreFitBtn" class="bg-s-red/10 border border-s-red/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-red/20 transition">
+        Load More →
+      </button>
+    </div>
+
+    <!-- Quick Browse Categories -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-red/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🏃 Browse by Activity</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🏋️ Gym & Strength</button>
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🚴 Cycling</button>
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🧘 Yoga & Pilates</button>
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">⚽ Team Sports</button>
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🎾 Racket Sports</button>
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🏃 Running</button>
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🏊 Swimming</button>
+        <button class="fit-cat bg-s-red/10 hover:bg-s-red/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🤝 Find a Buddy</button>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-red/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Simple, Social & Money-Saving!</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📸</div>
+          <h4 class="font-bold text-white mb-1">1. List It</h4>
+          <p class="text-s-muted text-sm">Gear, pass, or looking for a buddy — takes 2 mins · <strong>100% Free</strong></p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find It</h4>
+          <p class="text-s-muted text-sm">Search by sport, size, location — gear for less, buddy near you</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Connect</h4>
+          <p class="text-s-muted text-sm">Meet up, post, or swap — cash, swap, $STRAW, or share a pass!</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">💪</div>
+          <h4 class="font-bold text-white mb-1">4. Stay Fit & Save</h4>
+          <p class="text-s-muted text-sm">££ saved, motivation doubled, great gear kept in use — win win!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buddy System Benefits -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-purple/20">
+        <h4 class="font-bold text-white mb-3">🤝 Why a Workout Buddy Works</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ <strong>2x more likely</strong> to stick to a routine</li>
+          <li>✅ Accountability = no skipping sessions!</li>
+          <li>✅ Push each other further — better results faster</li>
+          <li>✅ Safety — especially for early morning / evening runs</li>
+          <li>✅ Split costs — gym, court hire, coaching</li>
+          <li>✅ Make friends — fitness is more fun together!</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-green/20">
+        <h4 class="font-bold text-white mb-3">💰 Ways to Save & Share</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ <strong>Buy pre-loved gear</strong> — 50–90% off RRP</li>
+          <li>✅ <strong>Share memberships</strong> — split the cost, use off-peak</li>
+          <li>✅ <strong>Swap passes</strong> — can't go? Pass it on for half price</li>
+          <li>✅ <strong>Group buy gear</strong> — bulk discount for 3+ people</li>
+          <li>✅ <strong>Swap skills</strong> — I teach yoga, you teach strength</li>
+          <li>✅ <strong>Free community sessions</strong> — park runs, outdoor yoga</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Safety & Tips -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-red/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛡️ Safety & Smart Tips</h3>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="bg-s-red/5 p-4 rounded-xl">
+          <h4 class="font-bold text-white mb-2">Meeting Buddies</h4>
+          <ul class="space-y-1 text-sm text-s-muted">
+            <li>• First meet in a public, well-lit place</li>
+            <li>• Tell someone where you're going</li>
+            <li>• Start with a casual session — no pressure</li>
+            <li>• Same goals = best match!</li>
+          </ul>
+        </div>
+        <div class="bg-s-red/5 p-4 rounded-xl">
+          <h4 class="font-bold text-white mb-2">Buying Gear</h4>
+          <ul class="space-y-1 text-sm text-s-muted">
+            <li>• Check size / fit before paying</li>
+            <li>• Test weights, bikes, electronics</li>
+            <li>• Ask for receipt / proof of purchase</li>
+            <li>• Check for recalls — Gov.uk/check</li>
+          </ul>
+        </div>
+        <div class="bg-s-red/5 p-4 rounded-xl">
+          <h4 class="font-bold text-white mb-2">Passes & Memberships</h4>
+          <ul class="space-y-1 text-sm text-s-muted">
+            <li>• Confirm transfer is allowed by provider</li>
+            <li>• Check remaining time / blackout dates</li>
+            <li>• Get all account details in writing</li>
+            <li>• Never share passwords — use official transfer</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Affiliate — New Gear -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-blue/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛒 Need New? — Recommended Gear via Affiliate Links</h3>
+      <p class="text-s-muted text-center mb-4">Sometimes you need new — safety items, gifts, specific sizes. Buy from trusted partners, small commission supports our community, no extra cost to you!</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="#" class="bg-s-blue/10 hover:bg-s-blue/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">👟</div>
+          <div class="text-white font-semibold text-sm">Trainers & Shoes</div>
+        </a>
+        <a href="#" class="bg-s-blue/10 hover:bg-s-blue/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🏋️</div>
+          <div class="text-white font-semibold text-sm">Home Gym Gear</div>
+        </a>
+        <a href="#" class="bg-s-blue/10 hover:bg-s-blue/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🚴</div>
+          <div class="text-white font-semibold text-sm">Bikes & Accessories</div>
+        </a>
+        <a href="#" class="bg-s-blue/10 hover:bg-s-blue/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🧘</div>
+          <div class="text-white font-semibold text-sm">Yoga & Wellness</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="bg-s-red/10 border border-s-red/30 rounded-3xl p-6 text-center">
+      <h3 class="text-xl font-bold text-s-red mb-2">💪 Fitness Should Be For Everyone — Affordable & Fun!</h3>
+      <p class="text-white mb-4">Great gear doesn't need to cost the earth, and you don't have to train alone. Find what you need, save hundreds, find a buddy who shares your goals, and keep moving forward. Every listing helps someone start their fitness journey — that's powerful.</p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button id="listFitBtn2" class="bg-s-red text-white px-8 py-3 rounded-full font-bold hover:bg-red-600 transition text-lg">
+          ➕ List Item — Free!
+        </button>
+        <button id="buddyZoneBtn2" class="bg-s-purple text-white px-8 py-3 rounded-full font-bold hover:bg-purple-600 transition text-lg">
+          🤝 Find a Buddy
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIST FITNESS ITEM MODAL ========== -->
+<div id="listFitnessModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-red/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ List Fitness / Sports Item</h3>
+      <button id="closeListFitness" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="listFitnessForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>🏋️ Gym & Strength</option>
+            <option>🚴 Cycling</option>
+            <option>🧘 Yoga & Pilates</option>
+            <option>⚽ Team Sports</option>
+            <option>🎾 Racket Sports</option>
+            <option>🏃 Running</option>
+            <option>👕 Apparel & Footwear</option>
+            <option>🎟️ Pass / Membership</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Condition *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none">
+            <option>✨ Like New / Worn Once</option>
+            <option>💪 Excellent — Light Use</option>
+            <option>🏃 Good — Fully Functional</option>
+            <option>🛠️ Fair — Works, Wear Visible</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none" placeholder="e.g. Nike Yoga Mat — 6mm, Non-Slip, Blue">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Description & Details *</label>
+        <textarea rows="3" required class="w-full px-4 py-3 rounded-2xl bg-s-dark border border-s-red/20 text-white focus:outline-none" placeholder="Brand, size, specs, usage, any flaws, original price, accessories included, etc."></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price (£)</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none" placeholder="0 = Free / Swap">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Location</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-red/20 text-white focus:outline-none" placeholder="Postcode or area">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Options</label>
+        <div class="flex flex-wrap gap-3 text-sm text-white">
+          <label class="flex items-center gap-2"><input type="checkbox"> 🤝 Open to Swap</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 📦 Can Post</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 📏 True to Size</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> ✅ Authentic / Receipt Available</label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">📷 Photos</label>
+        <div class="border-2 border-dashed border-s-red/30 rounded-2xl p-6 text-center text-s-muted cursor-pointer hover:border-s-red/50 transition">
+          Click or drag to upload — front, details, labels, any wear
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-s-red text-white py-3 rounded-full font-bold hover:bg-red-600 transition text-lg">
+        ✅ Publish Listing — Free!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== BUDDY ZONE MODAL ========== -->
+<div id="buddyZoneModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">🤝 Find a Workout Buddy</h3>
+      <button id="closeBuddyZone" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <div class="bg-s-purple/10 border border-s-purple/30 rounded-xl p-4 mb-6">
+      <p class="text-s-purple font-semibold">💪 Why Train Together?</p>
+      <p class="text-white text-sm mt-2">Research shows you're <strong>2x more likely</strong> to stick to your goals with a buddy. Same goals, same schedule, same area — find your perfect training partner!</p>
+    </div>
+    <div class="space-y-3 mb-6">
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white">🏃 Sarah — Running / 5k–10k</h4>
+          <span class="bg-green-400/20 text-green-400 px-2 py-1 rounded-full text-xs">Active</span>
+        </div>
+        <p class="text-s-muted text-sm">📍 Didsbury · Beginner–intermediate · Tue/Thu 6pm, Sat 9am · Friendly, no pressure, coffee after! ☕</p>
+        <button class="buddy-connect mt-2 bg-s-purple text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-purple-600 transition">Connect →</button>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white">🏋️ Mike — Gym / Strength Training</h4>
+          <span class="bg-green-400/20 text-green-400 px-2 py-1 rounded-full text-xs">Active</span>
+        </div>
+        <p class="text-s-muted text-sm">📍 City Centre Gym · Intermediate · Weekdays 7–9am · Focus: hypertrophy & strength · Happy to share tips!</p>
+        <button class="buddy-connect mt-2 bg-s-purple text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-purple-600 transition">Connect →</button>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white">🧘 Lisa — Yoga / Wellness</h4>
+          <span class="bg-green-400/20 text-green-400 px-2 py-1 rounded-full text-xs">Active</span>
+        </div>
+        <p class="text-s-muted text-sm">📍 Heaton Park — Outdoor · All levels welcome · Sunday mornings 10am — followed by brunch! 🌿</p>
+        <button class="buddy-connect mt-2 bg-s-purple text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-purple-600 transition">Connect →</button>
+      </div>
+    </div>
+    <button id="createBuddyProfileBtn" class="w-full bg-s-green text-s-dark py-3 rounded-full font-bold hover:bg-green-400 transition text-lg mb-3">
+      ➕ Create My Buddy Profile
+    </button>
+    <button id="closeBuddyZone2" class="w-full bg-s-purple/10 border border-s-purple/30 text-white py-3 rounded-full font-semibold hover:bg-s-purple/20 transition">
+      ✅ Close — Go Back
+    </button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="mentorship.html" class="hover:text-s-green">Mentorship</a> &nbsp;|&nbsp;
+      <a href="crafts.html" class="hover:text-s-green">Craft Exchange</a> &nbsp;|&nbsp;
+      <a href="education.html" class="hover:text-s-green">Textbook Exchange</a> &nbsp;|&nbsp;
+      <a href="pets.html" class="hover:text-s-green">Pets & Animals</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab Switching
+document.querySelectorAll('.fit-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.fit-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-red', 'text-white');
+      t.classList.add('bg-s-red/10', 'border', 'border-s-red/20');
+    });
+    tab.classList.add('active', 'bg-s-red', 'text-white');
+    tab.classList.remove('bg-s-red/10', 'border', 'border-s-red/20');
+
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.fit-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('fitAll').classList.remove('hidden');
+
+    document.querySelectorAll('.fit-card').forEach(card => {
+      card.style.display = (tabName === 'all' || card.dataset.type === tabName) ? '' : 'none';
+    });
+  });
+});
+
+// Modal open/close
+document.getElementById('listFitBtn')?.addEventListener('click', () => openModal('listFitnessModal'));
+document.getElementById('listFitBtn2')?.addEventListener('click', () => openModal('listFitnessModal'));
+document.getElementById('closeListFitness')?.addEventListener('click', () => closeModal('listFitnessModal'));
+document.getElementById('buddyZoneBtn')?.addEventListener('click', () => openModal('buddyZoneModal'));
+document.getElementById('buddyZoneBtn2')?.addEventListener('click', () => openModal('buddyZoneModal'));
+document.getElementById('closeBuddyZone')?.addEventListener('click', () => closeModal('buddyZoneModal'));
+document.getElementById('closeBuddyZone2')?.addEventListener('click', () => closeModal('buddyZoneModal'));
+
+// Demo actions
+document.getElementById('findFitBtn')?.addEventListener('click', () =>
+  showToast('🔍 Searching fitness & sports near you — results updated!'));
+document.getElementById('loadMoreFitBtn')?.addEventListener('click', () =>
+  showToast('🏋️ Loading more fitness & sports listings...'));
+document.getElementById('createBuddyProfileBtn')?.addEventListener('click', () =>
+  showToast('➕ Buddy profile form coming soon — stay tuned!'));
+document.querySelectorAll('.view-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📩 Message sent — check your inbox!')));
+document.querySelectorAll('.buy-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🛍️ Buy coming soon — message the seller directly!')));
+document.querySelectorAll('.connect-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('👋 Hi sent — hopefully you find your perfect running partner!')));
+document.querySelectorAll('.buddy-connect').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Connection request sent — they will respond soon!')));
+document.querySelectorAll('.transfer-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🎟️ Transfer arrangement started — confirm details with the member!')));
+document.querySelectorAll('.swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🔄 Swap for kettlebell or yoga mat welcome!')));
+document.querySelectorAll('.token-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🪙 Accepts $STRAW!')));
+document.querySelectorAll('.fit-cat').forEach(b => b.addEventListener('click', () =>
+  showToast(`🏃 ${b.textContent.trim()} — listings coming soon!`)));
+
+// Form Submit
+document.getElementById('listFitnessForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Listing Published! 🏋️💪 Fitness lovers will find it instantly.');
+  closeModal('listFitnessModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>
