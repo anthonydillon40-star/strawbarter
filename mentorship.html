@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentorship & Goal Buddies — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .role-tab, .mm-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#mentorship-buddies" class="px-3 py-2 rounded-lg bg-s-card text-s-blue transition">🧑‍🏫 Mentors</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#mentorship-buddies" class="py-2 px-3 rounded-lg bg-s-card text-s-blue">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🧑‍🏫 MENTORSHIP & GOAL BUDDIES — STRAW Barter -->
+<!-- ====================================== -->
+<section id="mentorship-buddies" class="px-4 py-12 border-t border-s-blue/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">🧑‍🏫 Mentorship & Goal Buddies</h2>
+      <p class="text-s-muted text-lg">Find a mentor · Be a mentor · Team up for goals — accountability, skills, growth, all free!</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-blue/10 border border-s-blue/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-blue font-semibold text-lg">🎯 10x more likely to achieve goals with a buddy · 🆓 Always free · 🤝 Teach what you know, learn what you don't · ⭐ Verified profiles & reviews</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="bg-s-blue/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-blue mb-1">3,850</div>
+        <div class="text-s-muted text-sm">Active Mentors & Buddies</div>
+      </div>
+      <div class="bg-s-green/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-green mb-1">92%</div>
+        <div class="text-s-muted text-sm">Goal Success Rate</div>
+      </div>
+      <div class="bg-s-purple/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-purple mb-1">45+</div>
+        <div class="text-s-muted text-sm">Skill Categories</div>
+      </div>
+    </div>
+
+    <!-- Search & Role Select -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-blue/20">
+      <div class="flex flex-wrap gap-3 mb-6 justify-center">
+        <button class="role-tab active bg-s-blue text-white px-5 py-3 rounded-full font-semibold hover:bg-blue-600 transition" data-role="buddies">🎯 Find Goal Buddy</button>
+        <button class="role-tab bg-s-blue/10 border border-s-blue/20 text-white px-5 py-3 rounded-full font-semibold hover:bg-s-blue/20 transition" data-role="mentor">🧑‍🏫 Find a Mentor</button>
+        <button class="role-tab bg-s-blue/10 border border-s-blue/20 text-white px-5 py-3 rounded-full font-semibold hover:bg-s-blue/20 transition" data-role="mentee">🙋 Offer to Mentor</button>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="skillArea" class="text-sm font-semibold text-white block mb-2">🎯 Area / Skill</label>
+          <select id="skillArea" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>All Areas</option>
+            <option>💼 Business & Entrepreneurship</option>
+            <option>💻 Tech, Coding & AI</option>
+            <option>📈 Career & Work</option>
+            <option>💰 Finance & Investing</option>
+            <option>🏋️ Fitness & Health</option>
+            <option>🎨 Creative & Arts</option>
+            <option>📚 Learning & Education</option>
+            <option>🌱 Personal Growth</option>
+            <option>🌍 Sustainability & Off-Grid</option>
+            <option>🗣️ Languages & Speaking</option>
+          </select>
+        </div>
+        <div>
+          <label for="matchLocation" class="text-sm font-semibold text-white block mb-2">📍 Location / Remote</label>
+          <select id="matchLocation" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>Remote / Online — Anywhere</option>
+            <option>Local — Within 10 miles</option>
+            <option>North West / Manchester</option>
+            <option>England — UK Wide</option>
+            <option>Global — Worldwide</option>
+          </select>
+        </div>
+        <div>
+          <label for="timeCommit" class="text-sm font-semibold text-white block mb-2">⏰ Time Commitment</label>
+          <select id="timeCommit" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-blue/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>15–30 mins / week</option>
+            <option>1 hour / week</option>
+            <option>2–4 hours / week</option>
+            <option>Daily Check-in</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="findMatchesBtn" class="bg-s-blue text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition flex-1 min-w-[140px]">
+          🔍 Find Matches
+        </button>
+        <button id="createProfileBtn" class="bg-s-green text-s-dark px-6 py-3 rounded-full font-bold hover:bg-green-400 transition flex-1 min-w-[140px]">
+          ✍️ Create My Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="mm-tab active bg-s-blue text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">👥 All (24)</button>
+      <button class="mm-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="buddies">🎯 Goal Buddies (12)</button>
+      <button class="mm-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="mentors">🧑‍🏫 Mentors (8)</button>
+      <button class="mm-tab bg-s-blue/10 border border-s-blue/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-blue/20" data-tab="mentees">🙋 Seeking Mentors (4)</button>
+    </div>
+
+    <!-- Results List -->
+    <div id="resultsAll" class="results-content space-y-4 mb-8">
+      <!-- Goal Buddy Pair Example -->
+      <div class="match-card bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition" data-type="buddies">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-16 h-16 bg-s-purple/20 rounded-full flex items-center justify-center text-2xl shrink-0">🎯</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Fitness & Health Accountability Buddy</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">Buddy Pair</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Manchester · ⏰ Daily check-ins · 🗓️ 12-week challenge</p>
+            <p class="text-white mb-3"><strong>Goal:</strong> Build daily exercise habit, track nutrition, stay consistent — check in each morning, share progress, celebrate wins!</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🏃 Fitness</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🥗 Health</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">⏰ Daily</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ New Group</span>
+            </div>
+            <button class="join-btn bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition">Join & Partner Up →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mentor Example -->
+      <div class="match-card bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition" data-type="mentors">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-16 h-16 bg-s-green/20 rounded-full flex items-center justify-center text-2xl shrink-0">🧑‍🏫</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Coding & AI — 1:1 Mentor</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">Mentor</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Remote / Bolton · ⏰ 1hr/week · 💻 5+ years experience</p>
+            <p class="text-white mb-3"><strong>About:</strong> Full-stack developer & AI builder. Happy to help beginners — Python, web dev, AI tools, Solana projects. Patient, practical, project-based learning!</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">💻 Coding</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🤖 AI Tools</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🌐 Web Dev</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (32)</span>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+              <button class="connect-btn bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition">Request Session →</button>
+              <button class="swap-btn bg-s-green/10 text-s-green px-4 py-2 rounded-full font-semibold hover:bg-s-green/20">🤝 Skill Swap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seeking Mentor Example -->
+      <div class="match-card bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition" data-type="mentees">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-16 h-16 bg-s-purple/20 rounded-full flex items-center justify-center text-2xl shrink-0">🙋</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Seeking: Business & Startup Mentor</h4>
+              <span class="bg-s-purple/20 text-s-purple px-3 py-1 rounded-full text-sm font-bold">Seeking</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Remote / Manchester · ⏰ 1hr every 2 weeks · 🚀 Early-stage startup</p>
+            <p class="text-white mb-3"><strong>Looking for:</strong> Guidance on business planning, funding, marketing, scaling. I have a sustainable energy project — would love someone with startup experience! Happy to swap skills in hydro/energy systems.</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">💼 Startup</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">📈 Strategy</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🤝 Skill Swap Available</span>
+            </div>
+            <button class="mentor-offer-btn bg-s-purple text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-600 transition">Offer to Mentor →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- More Examples -->
+      <div class="match-card bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition" data-type="buddies">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-16 h-16 bg-s-gold/20 rounded-full flex items-center justify-center text-2xl shrink-0">💰</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Financial Freedom — Savings & Investing Group</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">Group (5 people)</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Online · ⏰ Fortnightly · 📊 Budgeting, investing, debt-free goals</p>
+            <p class="text-white mb-3">Track spending, set savings targets, learn investing together — share wins, tips, resources. All welcome, all levels!</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">💰 Finance</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">📈 Investing</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.8 (18)</span>
+            </div>
+            <button class="connect-btn bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition">Join Group →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="match-card bg-s-card rounded-3xl p-5 border border-s-blue/10 hover:border-s-blue/30 transition" data-type="mentors">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-16 h-16 bg-s-green/20 rounded-full flex items-center justify-center text-2xl shrink-0">🌱</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Sustainability & Off-Grid Living Mentor</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">Mentor</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 UK / Remote · ⏰ 1hr/fortnight · 🏡 10+ years off-grid experience</p>
+            <p class="text-white mb-3">Solar, hydro, water systems, waste, growing food, low-impact living. Practical, hands-on guidance — no theory, just what works!</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🌍 Off-Grid</span>
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">⚡ Energy</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🌱 Self-Sufficiency</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (27)</span>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+              <button class="connect-btn bg-s-blue text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-600 transition">Book Session →</button>
+              <button class="swap-btn bg-s-green/10 text-s-green px-4 py-2 rounded-full font-semibold hover:bg-s-green/20">🤝 Swap Skills</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreProfilesBtn" class="bg-s-blue/10 border border-s-blue/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-blue/20 transition">
+        Load More Profiles →
+      </button>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-blue/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Simple, Free, Mutual</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📝</div>
+          <h4 class="font-bold text-white mb-1">1. Create Profile</h4>
+          <p class="text-s-muted text-sm">What you want to learn · What you can teach · Your goals & availability — 2 mins</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find Your Match</h4>
+          <p class="text-s-muted text-sm">Search by skill, goal, location, time commitment — connect instantly</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Connect & Grow</h4>
+          <p class="text-s-muted text-sm">Chat, set schedule, check in, track progress — video, text, in-person</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">⭐</div>
+          <h4 class="font-bold text-white mb-1">4. Review & Repeat</h4>
+          <p class="text-s-muted text-sm">Share feedback, build reputation, grow your network — forever free</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Three Ways to Connect -->
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-purple/20">
+        <h4 class="font-bold text-white mb-3 text-center">🎯 Goal Buddies</h4>
+        <p class="text-s-muted text-sm mb-4 text-center">Equal partners — same goals, accountability, check-ins, motivation</p>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ Daily/weekly check-ins</li>
+          <li>✅ Shared progress tracking</li>
+          <li>✅ Mutual encouragement</li>
+          <li>✅ Same-level learning</li>
+          <li class="text-s-purple font-semibold">🤝 Equal & Mutual</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-green/20">
+        <h4 class="font-bold text-white mb-3 text-center">🧑‍🏫 1:1 Mentorship</h4>
+        <p class="text-s-muted text-sm mb-4 text-center">Guide & learn — experienced → growing, skill transfer, guidance</p>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ Expert guidance & advice</li>
+          <li>✅ Personalised feedback</li>
+          <li>✅ Experience & shortcuts shared</li>
+          <li>✅ Skill swap or free</li>
+          <li class="text-s-green font-semibold">📚 Knowledge Flow</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-gold/20">
+        <h4 class="font-bold text-white mb-3 text-center">👥 Group Circles</h4>
+        <p class="text-s-muted text-sm mb-4 text-center">Small groups — shared goals, peer learning, collective wisdom</p>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ 3–8 people per group</li>
+          <li>✅ Peer support & ideas</li>
+          <li>✅ Shared resources</li>
+          <li>✅ Multiple perspectives</li>
+          <li class="text-s-gold font-semibold">🌱 Collective Growth</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Skill Swap & Payment -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-blue/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🤝 Always Free — Or Skill Swap / $STRAW</h3>
+      <div class="grid md:grid-cols-3 gap-4 text-center">
+        <div class="p-4">
+          <div class="text-3xl mb-2">🆓</div>
+          <h4 class="font-bold text-white mb-1">Completely Free</h4>
+          <p class="text-s-muted text-sm">Pay nothing — give your time, share your knowledge, community spirit</p>
+        </div>
+        <div class="p-4 border-l border-s-blue/20">
+          <div class="text-3xl mb-2">🔄</div>
+          <h4 class="font-bold text-white mb-1">Skill Swap</h4>
+          <p class="text-s-muted text-sm">You teach me X → I teach you Y — fair exchange, no money needed</p>
+        </div>
+        <div class="p-4 border-l border-s-blue/20">
+          <div class="text-3xl mb-2">🪙</div>
+          <h4 class="font-bold text-white mb-1">Tip with $STRAW</h4>
+          <p class="text-s-muted text-sm">Show appreciation — send $STRAW tokens directly to your mentor/buddy</p>
+        </div>
+      </div>
+      <p class="text-center text-s-muted text-sm mt-4">✅ <strong>We never take fees or payments</strong> — all connections are direct & community-led</p>
+    </div>
+
+    <!-- Goal Tracker Preview -->
+    <div class="bg-s-blue/10 border border-s-blue/30 rounded-3xl p-5 text-center">
+      <h3 class="text-xl font-bold text-s-blue mb-2">📊 Built-In Goal Tracker — Stay Accountable!</h3>
+      <p class="text-white mb-4">Set targets, log progress, celebrate milestones — visual dashboard shows your journey. Share updates with your buddy/mentor automatically!</p>
+      <button id="createProfileBtn2" class="bg-s-blue text-white px-8 py-3 rounded-full font-bold hover:bg-blue-600 transition text-lg">
+        ✨ Create My Profile — Start Growing!
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CREATE PROFILE MODAL ========== -->
+<div id="profileModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-green/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">✍️ Create Your Profile</h3>
+      <button id="closeProfile" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="profileForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">I want to...</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none">
+            <option>🎯 Find a Goal Buddy</option>
+            <option>🧑‍🏫 Be a Mentor</option>
+            <option>🙋 Find a Mentor</option>
+            <option>🔄 All of the above!</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Location</label>
+          <input type="text" placeholder="Postcode or 'Remote'" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">🎯 What do you want to learn / achieve?</label>
+        <textarea rows="2" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="e.g. Learn coding, start a business, get fit, save money, build confidence..."></textarea>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">💡 What can you teach / offer others?</label>
+        <textarea rows="2" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="e.g. Cooking, gardening, sales, listening, organisation, patience, coding..."></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">⏰ Time per week</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none">
+            <option>15–30 mins</option>
+            <option>1 hour</option>
+            <option>2–3 hours</option>
+            <option>Flexible / As needed</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">🗣️ Prefer</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none">
+            <option>Online / Chat</option>
+            <option>Video Call</option>
+            <option>In-Person (local)</option>
+            <option>Any / Flexible</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Short Bio / About You</label>
+        <textarea rows="2" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="A bit about you — friendly, genuine, keep it simple!"></textarea>
+      </div>
+      <button type="submit" class="w-full bg-s-green text-s-dark py-3 rounded-full font-bold hover:bg-green-400 transition text-lg">
+        ✅ Publish Profile — Start Connecting!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a> &nbsp;|&nbsp;
+      <a href="prompts.html" class="hover:text-s-green">AI Prompt Library</a> &nbsp;|&nbsp;
+      <a href="storage.html" class="hover:text-s-green">Storage & Space</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Role Tab Switching (filter chips only — no content switch)
+document.querySelectorAll('.role-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.role-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-blue', 'text-white');
+      t.classList.add('bg-s-blue/10', 'border', 'border-s-blue/20');
+    });
+    tab.classList.add('active', 'bg-s-blue', 'text-white');
+    tab.classList.remove('bg-s-blue/10', 'border', 'border-s-blue/20');
+  });
+});
+
+// Results Tab Switching
+document.querySelectorAll('.mm-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mm-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-blue', 'text-white');
+      t.classList.add('bg-s-blue/10', 'border', 'border-s-blue/20');
+    });
+    tab.classList.add('active', 'bg-s-blue', 'text-white');
+    tab.classList.remove('bg-s-blue/10', 'border', 'border-s-blue/20');
+
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.results-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('resultsAll').classList.remove('hidden');
+
+    document.querySelectorAll('.match-card').forEach(card => {
+      card.style.display = (tabName === 'all' || card.dataset.type === tabName) ? '' : 'none';
+    });
+  });
+});
+
+// Buttons
+document.getElementById('findMatchesBtn')?.addEventListener('click', () =>
+  showToast('🔍 Finding your best matches — updated results below!'));
+document.getElementById('createProfileBtn')?.addEventListener('click', () => openModal('profileModal'));
+document.getElementById('createProfileBtn2')?.addEventListener('click', () => openModal('profileModal'));
+document.getElementById('closeProfile')?.addEventListener('click', () => closeModal('profileModal'));
+document.getElementById('loadMoreProfilesBtn')?.addEventListener('click', () =>
+  showToast('👥 Loading more matches...'));
+
+document.querySelectorAll('.connect-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📩 Request sent — they will reply soon!')));
+document.querySelectorAll('.swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Can also swap skills — what can you teach me?')));
+document.querySelectorAll('.mentor-offer-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🙋 Offer sent — they will be delighted!')));
+document.querySelectorAll('.join-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🎉 Joined — welcome aboard!')));
+
+// Form Submit
+document.getElementById('profileForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Profile Created! 🧑‍🏫 People with matching goals will find you instantly.');
+  closeModal('profileModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>
