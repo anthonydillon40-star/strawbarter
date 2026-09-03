@@ -7,6 +7,7 @@ STRAW Barter is a single-page static marketing/landing site for a UK barter plat
 ## Architecture
 
 - `index.html` — the whole site: header with sticky nav + "More" dropdown, mobile menu, hero, token section, marketplace, barter, RWA registry, coffee dating (18+ age gate), builder finder, jobs, tools, downloads, events, businesses, sign-up/referral, legal, footer. Interactivity (dropdown, mobile menu, toast, clipboard copy, age gate modal) is vanilla JS in an inline `<script>` at the bottom of the file.
+- `games.html` — standalone Games & Entertainment Exchange page (search/filter grid, post-item + detail modals, vanilla JS). Uses the same Tailwind `s.*` palette, Inter font, and header/footer pattern as `index.html`, with a purple accent theme. Linked from index's "More" dropdown and mobile menu.
 - `netlify.toml` — static deploy config; `publish = "."` (repo root). Functions directory is `netlify/functions` (currently empty).
 - No package.json, no dependencies. Tailwind and Font Awesome load from CDNs.
 
