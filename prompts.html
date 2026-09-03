@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Prompt & Tool Library — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .ai-cat { transition: all 0.15s; }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#guides" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🧰 Free Tools</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#ai-prompt-library" class="px-3 py-2 rounded-lg bg-s-card text-s-purple transition">🤖 AI Prompts</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#ai-prompt-library" class="py-2 px-3 rounded-lg bg-s-card text-s-purple">🤖 AI Prompt Library</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 🤖 AI PROMPT & TOOL LIBRARY — STRAW Barter -->
+<!-- ====================================== -->
+<section id="ai-prompt-library" class="px-4 py-12 border-t border-s-purple/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">🤖 AI Prompt & Tool Library</h2>
+      <p class="text-s-muted text-lg">1000+ ready-to-use prompts · Free AI tools · Save hours of work — copy, paste, create!</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-purple/10 border border-s-purple/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-purple font-semibold text-lg">⚡ All free · Copy one-click · No signup · Updated weekly · For ChatGPT, Claude, Gemini, Midjourney & more</p>
+    </div>
+
+    <!-- Search & Category -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-purple/20">
+      <input type="text" id="aiPromptSearch" placeholder="Search prompts: marketing, code, writing, art, SEO, business, email, lesson plan..."
+        class="w-full px-5 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white placeholder-s-muted focus:outline-none focus:border-s-purple mb-4 text-lg">
+      <div class="flex flex-wrap gap-2">
+        <button class="ai-cat active bg-s-purple text-white px-3 py-2 rounded-full text-sm font-semibold" data-cat="all">📂 All</button>
+        <button class="ai-cat bg-s-purple/10 border border-s-purple/20 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-cat="writing">✍️ Writing</button>
+        <button class="ai-cat bg-s-purple/10 border border-s-purple/20 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-cat="business">💼 Business</button>
+        <button class="ai-cat bg-s-purple/10 border border-s-purple/20 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-cat="coding">💻 Coding</button>
+        <button class="ai-cat bg-s-purple/10 border border-s-purple/20 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-cat="art">🎨 Art & Image</button>
+        <button class="ai-cat bg-s-purple/10 border border-s-purple/20 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-cat="education">📚 Education</button>
+        <button class="ai-cat bg-s-purple/10 border border-s-purple/20 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-cat="tools">🔧 Free Tools</button>
+      </div>
+    </div>
+
+    <!-- Prompts Grid -->
+    <div id="aiPromptsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <!-- Writing -->
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="writing">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">✍️</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Write a compelling, high-converting email subject line and email body for [Product/Service]. Keep it under 200 words. Friendly, persuasive, clear CTA.">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">📧 Cold Email Generator</h3>
+        <p class="text-s-muted text-sm line-clamp-2">High-converting emails — subject + body + CTA</p>
+      </div>
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="writing">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">📱</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Write 5 engaging Instagram captions for [Topic/Product]. Include emojis, hashtags, and a call to action. Vary tone: professional, playful, inspiring, urgent, educational.">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">📸 Social Media Captions</h3>
+        <p class="text-s-muted text-sm line-clamp-2">5 variations — emojis + hashtags + CTA</p>
+      </div>
+      <!-- Business -->
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="business">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">📊</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Create a detailed SWOT analysis for [Business/Idea]. Strengths, Weaknesses, Opportunities, Threats. Be specific and practical.">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">📊 SWOT Analysis Generator</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Strategic business breakdown — clear & actionable</p>
+      </div>
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="business">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">💰</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Write a 1-page executive summary for a business plan. Problem, Solution, Market, Business Model, Team, Financial Highlights, Ask. Professional & concise.">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">📄 Business Plan Summary</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Investor-ready — 1-page, covers all key points</p>
+      </div>
+      <!-- Coding -->
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="coding">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">💻</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Write clean, well-commented code in [Language] for [Task]. Include error handling, best practices, and explain how it works. Make it beginner-friendly.">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">🧑‍💻 Code Generator</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Clean code + comments + explanation</p>
+      </div>
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="coding">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">🐛</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Debug and optimize this code. Find errors, security issues, and inefficiencies. Suggest improvements and explain the fixes clearly. Code: [paste here]">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">🔍 Code Debugger</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Find & fix bugs — optimize performance</p>
+      </div>
+      <!-- Art -->
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="art">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">🎨</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Midjourney prompt: [Subject], [Style], [Lighting], [Angle], highly detailed, 8k, cinematic composition, sharp focus --ar 16:9 --v 6.0">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">🖼️ Midjourney Pro Prompt</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Cinematic, detailed, professional-grade images</p>
+      </div>
+      <!-- Education -->
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="education">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">📚</span>
+          <button class="copy-btn bg-s-purple/10 text-s-purple px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-purple/20" data-prompt="Explain [Topic] simply like I'm 12 years old. Use analogies, avoid jargon. Then give 3 real-world examples and a summary.">📋 Copy</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">👶 Explain Like I'm 12</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Simple, clear, analogies — anyone can understand</p>
+      </div>
+      <!-- Free Tools -->
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="tools">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">🔧</span>
+          <button class="copy-btn bg-s-green/10 text-s-green px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-green/20" onclick="window.open('https://chat.openai.com', '_blank')">→ Open</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">🤖 ChatGPT (Free)</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Text, code, writing, analysis — all-purpose AI</p>
+      </div>
+      <div class="ai-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition" data-cat="tools">
+        <div class="flex justify-between items-start mb-3">
+          <span class="text-3xl">🎨</span>
+          <button class="copy-btn bg-s-green/10 text-s-green px-3 py-1 rounded-full text-xs font-semibold hover:bg-s-green/20" onclick="window.open('https://www.canva.com', '_blank')">→ Open</button>
+        </div>
+        <h3 class="font-bold text-white mb-2">🖼️ Canva AI Image Generator</h3>
+        <p class="text-s-muted text-sm line-clamp-2">Free AI images + design tools — no skills needed</p>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMorePrompts" class="bg-s-purple/10 border border-s-purple/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-purple/20 transition">
+        Load 100+ More Prompts →
+      </button>
+    </div>
+
+    <!-- Submit Your Prompt -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-purple/20 text-center">
+      <h3 class="text-xl font-bold text-white mb-2">💡 Have a Great Prompt?</h3>
+      <p class="text-s-muted mb-4">Share it with the community — get credit & earn STRAW!</p>
+      <button id="submitPromptBtn" class="bg-s-purple text-white py-3 px-6 rounded-full font-semibold hover:bg-purple-600 transition">➕ Submit Prompt</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="index.html#guides" class="hover:text-s-green">Free Tools</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Copy Prompt Function
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const prompt = btn.dataset.prompt;
+    if (prompt) {
+      navigator.clipboard.writeText(prompt).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  });
+});
+
+// Category Filter + Search Filter (combined)
+let currentCat = 'all';
+
+function setAICatActive(btn) {
+  document.querySelectorAll('.ai-cat').forEach(b => {
+    b.classList.remove('active', 'bg-s-purple', 'text-white');
+    b.classList.add('bg-s-purple/10', 'border', 'border-s-purple/20');
+  });
+  btn.classList.add('active', 'bg-s-purple', 'text-white');
+  btn.classList.remove('bg-s-purple/10', 'border', 'border-s-purple/20');
+}
+
+function applyAIFilters() {
+  const q = document.getElementById('aiPromptSearch').value.toLowerCase();
+  document.querySelectorAll('.ai-card').forEach(card => {
+    const matchCat = currentCat === 'all' || card.dataset.cat === currentCat;
+    const matchSearch = !q || card.textContent.toLowerCase().includes(q);
+    card.style.display = matchCat && matchSearch ? '' : 'none';
+  });
+}
+
+document.querySelectorAll('.ai-cat').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentCat = btn.dataset.cat;
+    setAICatActive(btn);
+    applyAIFilters();
+  });
+});
+
+document.getElementById('aiPromptSearch')?.addEventListener('input', applyAIFilters);
+
+// Load More (demo)
+document.getElementById('loadMorePrompts')?.addEventListener('click', () => {
+  showToast('🤖 Loading 100+ more prompts...');
+});
+
+// Submit Prompt (demo)
+document.getElementById('submitPromptBtn')?.addEventListener('click', () => {
+  showToast('💡 Prompt submissions open soon — earn STRAW for each accepted!');
+});
+</script>
+
+</body>
+</html>
