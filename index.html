@@ -68,6 +68,9 @@
     .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
     
     section, .scroll-anchor { scroll-margin-top: 90px; }
+    @media (min-width: 768px) {
+      section, .scroll-anchor { scroll-margin-top: 120px; }
+    }
     .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
     .gap-tight { gap: 1rem; }
 
@@ -120,34 +123,11 @@
 
 <!-- Header -->
 <header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+  <!-- Row 1: Brand + account actions -->
+  <div class="max-w-7xl mx-auto px-4 pt-3 pb-1 flex items-center justify-between">
     <a href="#home" class="flex items-center gap-2 text-xl font-bold">
       <span>🍓</span> STRAW Barter
     </a>
-
-    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
-      <a href="#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
-      <a href="#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
-      <a href="#rwa" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔐 RWA</a>
-      <a href="#dating" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">☕ Dating</a>
-      <a href="#builder" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🏗️ Builders</a>
-      
-      <div class="dropdown">
-        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
-        <div id="moreDropdown" class="dropdown-menu">
-          <a href="skills.html" class="dropdown-item"><i class="fa-solid fa-hourglass-half w-5 text-center text-s-muted"></i> ⏱️ Skills & Time Bank</a>
-          <a href="#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
-          <a href="#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
-          <a href="#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
-          <a href="#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
-          <a href="#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
-          <a href="#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
-          <a href="#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
-          <a href="#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
-          <a href="#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
-        </div>
-      </div>
-    </nav>
 
     <div class="flex items-center gap-2">
       <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
@@ -156,6 +136,33 @@
       <button class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</button>
       <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
     </div>
+  </div>
+
+  <!-- Row 2: Main navigation -->
+  <div class="max-w-7xl mx-auto px-4 pb-2 hidden md:block">
+    <nav class="flex items-center justify-center flex-wrap gap-1 text-sm font-medium">
+      <a href="#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="#rwa" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔐 RWA</a>
+      <a href="skills.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">⏱️ Time Bank</a>
+      <a href="#books" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">📚 Books</a>
+      <a href="#dating" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">☕ Dating</a>
+      <a href="#builder" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🏗️ Builders</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
+          <a href="#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
   </div>
 
   <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
@@ -167,12 +174,12 @@
       <a href="#builder" class="py-2 px-3 rounded-lg hover:bg-s-card">🏗️ Find a Builder</a>
       <div class="border-t border-s-border my-1"></div>
       <a href="skills.html" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-green">⏱️ Skills & Time Bank</a>
+      <a href="#books" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Book Exchange</a>
       <a href="#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
       <a href="#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
       <a href="#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
       <a href="#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
       <a href="#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
-      <a href="#books" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Book Exchange</a>
       <a href="#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
       <a href="#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
       <a href="#legal" class="py-2 px-3 rounded-lg hover:bg-s-card">⚖️ Legal</a>
