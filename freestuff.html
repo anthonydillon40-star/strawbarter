@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Stuff — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      transition: background 0.15s;
+    }
+    .dropdown-item:hover { background: #0f172a; color: #22c55e; }
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(150%);
+      background: #22c55e;
+      color: #0f172a;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+      z-index: 10000;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="index.html#rwa" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔐 RWA</a>
+      <a href="freestuff.html" class="px-3 py-2 rounded-lg bg-s-card text-s-green transition">🎁 Free Stuff</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="freestuff.html" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Free Stuff</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#business" class="dropdown-item"><i class="fa-solid fa-building w-5 text-center text-s-muted"></i> 🏪 Businesses</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-hand-holding-heart w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="index.html#signup" class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</a>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="index.html#rwa" class="py-2 px-3 rounded-lg hover:bg-s-card">🔐 RWA Registry</a>
+      <a href="freestuff.html" class="py-2 px-3 rounded-lg bg-s-card text-s-green">🎁 Free Stuff</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <a href="index.html#guides" class="py-2 px-3 rounded-lg hover:bg-s-card">🧰 Free Tools</a>
+      <a href="index.html#digital" class="py-2 px-3 rounded-lg hover:bg-s-card">📁 Downloads</a>
+      <a href="index.html#events" class="py-2 px-3 rounded-lg hover:bg-s-card">📅 Events</a>
+      <a href="index.html#business" class="py-2 px-3 rounded-lg hover:bg-s-card">🏪 Businesses</a>
+      <a href="index.html#books" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Book Exchange</a>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#referral" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Referral</a>
+      <a href="index.html#legal" class="py-2 px-3 rounded-lg hover:bg-s-card">⚖️ Legal</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section id="home" class="py-14 px-4">
+  <div class="max-w-6xl mx-auto text-center">
+    <div class="flex flex-wrap justify-center gap-3 mb-4 text-sm text-s-muted">
+      <span>✅ 100% Free</span><span>✅ No Catch</span><span>✅ UK Based</span>
+    </div>
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-s-green/10 border border-s-green/20 text-sm text-s-green mb-6">
+      <strong>🎁 New freebies added daily — members claim first</strong>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+      Free Stuff.<br>
+      <span class="gradient-text">Yours for Nothing.</span>
+    </h1>
+    <p class="text-lg text-s-muted max-w-2xl mx-auto mb-8">Genuine freebies, samples, giveaways and free-to-keep finds — curated for UK members. Zero cost, zero fees.</p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="#freebies" class="bg-s-green px-6 py-3 rounded-xl font-semibold btn">🎁 Browse Freebies</a>
+      <a href="#daily" class="border border-s-border px-6 py-3 rounded-xl font-medium hover:bg-s-card transition">⚡ Today's Drops</a>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section id="categories" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">🗂️ Freebie Categories</h2>
+  <p class="text-s-muted mb-4 text-sm">Pick a category — everything listed is free to claim or keep.</p>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">📦</div>
+      <h3 class="font-semibold text-sm mb-1">Samples</h3>
+      <p class="text-xs text-s-muted">Food, Drink, Beauty</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">🎟️</div>
+      <h3 class="font-semibold text-sm mb-1">Giveaways</h3>
+      <p class="text-xs text-s-muted">Prizes, Competitions</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">📄</div>
+      <h3 class="font-semibold text-sm mb-1">Printables</h3>
+      <p class="text-xs text-s-muted">Planners, Checklists</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">☕</div>
+      <h3 class="font-semibold text-sm mb-1">Vouchers</h3>
+      <p class="text-xs text-s-muted">Coffee, Dining, Retail</p>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">🌱</div>
+      <h3 class="font-semibold text-sm mb-1">Garden & Seeds</h3>
+      <p class="text-xs text-s-muted">Free seed packs</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">👶</div>
+      <h3 class="font-semibold text-sm mb-1">Baby & Family</h3>
+      <p class="text-xs text-s-muted">Bundles & Samplers</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">🎂</div>
+      <h3 class="font-semibold text-sm mb-1">Birthday Clubs</h3>
+      <p class="text-xs text-s-muted">Treats on your day</p>
+    </div>
+    <div class="card rounded-lg p-4 text-center hover:border-s-green/50 transition cursor-pointer">
+      <div class="text-2xl mb-1">🏠</div>
+      <h3 class="font-semibold text-sm mb-1">Home & DIY</h3>
+      <p class="text-xs text-s-muted">Swatches, Stickers</p>
+    </div>
+  </div>
+</section>
+
+<!-- Today's Drops -->
+<section id="daily" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">⚡ Today's Drops</h2>
+  <p class="text-s-muted mb-4 text-sm">Fresh claims — while stocks last. Tap a card to copy the claim link.</p>
+  <div class="grid md:grid-cols-3 gap-4 mb-6">
+    <div class="card rounded-xl p-4 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-s-gold transition text-sm" onclick="showToast('Saved to your list! ⭐')">⭐</button>
+      <div class="text-2xl mb-2">🍵</div>
+      <h3 class="font-semibold mb-1">Free Tea Sample Box</h3>
+      <p class="text-sm text-s-muted mb-2">4-flavour tasting pack from a new UK blender.</p>
+      <div class="flex items-center justify-between">
+        <span class="text-xs px-2 py-0.5 rounded-full bg-s-green/10 text-s-green border border-s-green/20">Sample</span>
+        <button onclick="claim('https://example.com/free-tea')" class="text-s-green text-sm font-medium hover:underline">Claim →</button>
+      </div>
+    </div>
+    <div class="card rounded-xl p-4 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-s-gold transition text-sm" onclick="showToast('Saved to your list! ⭐')">⭐</button>
+      <div class="text-2xl mb-2">📱</div>
+      <h3 class="font-semibold mb-1">Free eSIM Data Day</h3>
+      <p class="text-sm text-s-muted mb-2">1GB UK data for new customers — no contract.</p>
+      <div class="flex items-center justify-between">
+        <span class="text-xs px-2 py-0.5 rounded-full bg-s-gold/10 text-s-gold border border-s-gold/20">Giveaway</span>
+        <button onclick="claim('https://example.com/free-esim')" class="text-s-green text-sm font-medium hover:underline">Claim →</button>
+      </div>
+    </div>
+    <div class="card rounded-xl p-4 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-s-gold transition text-sm" onclick="showToast('Saved to your list! ⭐')">⭐</button>
+      <div class="text-2xl mb-2">📚</div>
+      <h3 class="font-semibold mb-1">Free Gardening eBook</h3>
+      <p class="text-sm text-s-muted mb-2">40-page allotment starter guide — PDF download.</p>
+      <div class="flex items-center justify-between">
+        <span class="text-xs px-2 py-0.5 rounded-full bg-s-green/10 text-s-green border border-s-green/20">Download</span>
+        <button onclick="claim('https://example.com/gardening-ebook')" class="text-s-green text-sm font-medium hover:underline">Claim →</button>
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+    <button class="bg-s-green/10 text-s-green border border-s-green/20 px-5 py-2 rounded-lg font-medium hover:bg-s-green/20 transition text-sm" onclick="showToast('🔔 New drops will ping you!')">
+      🔔 Notify Me of New Drops
+    </button>
+  </div>
+</section>
+
+<!-- Freebies Directory -->
+<section id="freebies" class="section-compact px-4 max-w-6xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3">🎁 The Freebies Directory</h2>
+  <p class="text-s-muted mb-4 text-sm">Long-running UK freebies you can claim any time.</p>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">🍰 Food & Drink</h3>
+      <p class="text-sm text-s-muted">Free birthday treats, supermarket sampling days, hot-drink vouchers for new app users.</p>
+    </div>
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">🧴 Beauty & Health</h3>
+      <p class="text-sm text-s-muted">Skincare sample tubes, vitamin trial packs, pharmacy testing services at no cost.</p>
+    </div>
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">🏡 Home & Garden</h3>
+      <p class="text-sm text-s-muted">Paint colour cards, wallpaper samples, free seed programmes each spring.</p>
+    </div>
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">👶 Baby & Kids</h3>
+      <p class="text-sm text-s-muted">New-parent bundles, nappy samples, kids' eat-free meal deals across the holidays.</p>
+    </div>
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">💻 Digital Goodies</h3>
+      <p class="text-sm text-s-muted">Free courses, e-book bundles, stock photos, trial software and templates.</p>
+    </div>
+    <div class="card rounded-xl p-4">
+      <h3 class="font-semibold mb-2">🎟️ Competitions</h3>
+      <p class="text-sm text-s-muted">Free-to-enter prize draws from UK brands — no purchase necessary, as required by law.</p>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how" class="section-compact px-4 max-w-4xl mx-auto border-t border-s-border">
+  <h2 class="text-2xl font-bold mb-3 text-center">❓ How Free Stuff Works</h2>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card rounded-xl p-4 text-center">
+      <div class="text-2xl mb-2">1️⃣</div>
+      <h3 class="font-semibold mb-1">Join Free</h3>
+      <p class="text-sm text-s-muted">Sign up in seconds — get 10,000 STRAW tokens welcome bonus.</p>
+    </div>
+    <div class="card rounded-xl p-4 text-center">
+      <div class="text-2xl mb-2">2️⃣</div>
+      <h3 class="font-semibold mb-1">Claim What You Like</h3>
+      <p class="text-sm text-s-muted">Tap any freebie — claim links go straight to the brand.</p>
+    </div>
+    <div class="card rounded-xl p-4 text-center">
+      <div class="text-2xl mb-2">3️⃣</div>
+      <h3 class="font-semibold mb-1">Enjoy — Zero Cost</h3>
+      <p class="text-sm text-s-muted">Freebies are free; never pay a fee to claim on STRAW.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="py-12 px-4">
+  <div class="max-w-4xl mx-auto card rounded-2xl p-8 text-center">
+    <h2 class="text-2xl font-bold mb-2">🎁 Want First Dibs on Freebies?</h2>
+    <p class="text-s-muted mb-6 text-sm">Members get new drops in their feed before anyone else — plus 10,000 STRAW on sign-up.</p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="index.html#signup" class="bg-s-green px-6 py-3 rounded-xl font-semibold btn">🎁 Join Free & Claim</a>
+      <a href="index.html" class="border border-s-border px-6 py-3 rounded-xl font-medium hover:bg-s-card transition">🍓 Back to Marketplace</a>
+    </div>
+  </div>
+</section>
+
+<!-- Safety Notice -->
+<section class="section-compact px-4 max-w-4xl mx-auto">
+  <div class="bg-s-gold/5 border border-s-gold/20 rounded-xl p-4 text-sm">
+    <p class="mb-2">🛡️ <strong>Stay Safe:</strong> Genuine freebies never ask for card details or upfront fees. We only list offers from verifiable UK brands — always check the source before claiming.</p>
+    <p>📜 <strong>Terms & Privacy:</strong> By using this site, you agree to our Terms of Service and Privacy Policy.</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Link copied!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+// Close dropdown when clicking outside or on a menu item
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Claim a freebie — copy the offer link
+function claim(url) {
+  navigator.clipboard.writeText(url)
+    .then(() => showToast('✅ Claim link copied — paste it in your browser!'))
+    .catch(() => showToast('🔗 ' + url));
+}
+</script>
+
+</body>
+</html>
