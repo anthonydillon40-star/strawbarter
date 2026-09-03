@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📅 Events & Meetups Board — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', orange: '#f97316', cyan: '#06b6d4',
+              rose: '#f43f5e', amber: '#f59e0b'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .event-card { transition: all 0.25s ease; }
+    .event-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(245,158,11,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(245,158,11,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #f59e0b; }
+    .free-badge { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .paid-badge { background: linear-gradient(135deg, #f97316, #eab308); }
+    .online-badge { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+    .new-badge { background: linear-gradient(135deg, #f43f5e, #ec4899); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-amber/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-amber transition">← Back</a>
+      <button onclick="openSubmitModal()" class="bg-straw-amber text-white px-3 py-1.5 rounded-full font-semibold hover:bg-amber-600 transition">
+        <i class="fa-solid fa-plus mr-1"></i> Add Event
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-amber/10 via-transparent to-straw-orange/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">📅</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Events & Meetups Board</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Local Gatherings · Online Workshops · Community Meetups — Connect In Person & Online</strong><br>
+      Find what's happening near you — learn, share, barter, build real connections 🤝
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6 grid sm:grid-cols-3 gap-3">
+      <input type="text" id="searchInput" placeholder="🔍 Search: workshop, market, coffee, tech, swap..."
+        class="w-full px-4 py-3 rounded-full bg-straw-card border border-straw-amber/20 text-white">
+      <input type="text" id="locationInput" placeholder="📍 Location: Manchester, UK, Online..."
+        class="w-full px-4 py-3 rounded-full bg-straw-card border border-straw-amber/20 text-white">
+      <select id="eventFilter" class="w-full px-4 py-3 rounded-full bg-straw-card border border-straw-amber/20 text-white">
+        <option value="">All Types</option>
+        <option value="free">🆓 Free Events</option>
+        <option value="local">📍 In-Person</option>
+        <option value="online">💻 Online</option>
+        <option value="weekly">🔁 Weekly</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-amber/20 text-straw-amber">✅ Free Events</span>
+      <span class="tag bg-straw-green/20 text-straw-green">✅ Local Meetups</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">✅ Online Workshops</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">✅ Barter Markets</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⚡ UPCOMING EVENTS GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="eventsGrid">
+
+    <!-- EVENT 1 → STRAW Barter Meetup -->
+    <div class="bg-straw-card rounded-2xl p-5 event-card border border-straw-amber/10" data-type="free local" data-date="2026-09-10">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 FREE</span>
+        <span class="new-badge text-white text-xs font-bold px-3 py-1 rounded-full">🔥 NEW</span>
+      </div>
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-straw-amber/20 text-straw-amber rounded-xl p-2 text-center min-w-[60px]">
+          <div class="text-xl font-black">10</div>
+          <div class="text-xs">SEP</div>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-0.5">🍓 STRAW Barter Meetup — Manchester</h3>
+          <p class="text-straw-gray text-sm"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Northern Quarter, Manchester • 6:30pm</p>
+        </div>
+      </div>
+      <p class="text-straw-gray text-sm mb-4">Swap skills, items, ideas & STRAW stories. Bring something to trade — no money needed! Coffee, chat & community.</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="tag bg-straw-green/20 text-straw-green">Barter</span>
+        <span class="tag bg-straw-amber/20 text-straw-amber">Community</span>
+        <span class="tag bg-straw-purple/20 text-straw-purple">Weekly</span>
+      </div>
+      <a href="#" class="block w-full bg-straw-amber text-white text-center py-2 rounded-lg font-semibold hover:bg-amber-600 text-sm">
+        <i class="fa-solid fa-calendar-check mr-1"></i> Register Free →
+      </a>
+    </div>
+
+    <!-- EVENT 2 → Online AI Workshop -->
+    <div class="bg-straw-card rounded-2xl p-5 event-card border border-straw-amber/10" data-type="online" data-date="2026-09-12">
+      <div class="flex justify-between items-start mb-3">
+        <span class="online-badge text-white text-xs font-bold px-3 py-1 rounded-full">💻 ONLINE</span>
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 FREE</span>
+      </div>
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-straw-blue/20 text-straw-blue rounded-xl p-2 text-center min-w-[60px]">
+          <div class="text-xl font-black">12</div>
+          <div class="text-xs">SEP</div>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-0.5">🤖 AI Tools for Beginners — Live Workshop</h3>
+          <p class="text-straw-gray text-sm"><i class="fa-solid fa-wifi text-straw-cyan mr-1"></i> Zoom Link Sent • 7:00pm UK</p>
+        </div>
+      </div>
+      <p class="text-straw-gray text-sm mb-4">Learn the best free AI tools to save hours of work. No experience needed — live demo + Q&A session!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="tag bg-straw-blue/20 text-straw-blue">AI</span>
+        <span class="tag bg-straw-cyan/20 text-straw-cyan">Workshop</span>
+        <span class="tag bg-straw-green/20 text-straw-green">Beginner</span>
+      </div>
+      <a href="#" class="block w-full bg-straw-blue text-white text-center py-2 rounded-lg font-semibold hover:bg-blue-600 text-sm">
+        <i class="fa-solid fa-video mr-1"></i> Get Link →
+      </a>
+    </div>
+
+    <!-- EVENT 3 → Local Swap Market -->
+    <div class="bg-straw-card rounded-2xl p-5 event-card border border-straw-amber/10" data-type="local" data-date="2026-09-14">
+      <div class="flex justify-between items-start mb-3">
+        <span class="paid-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 £2 Entry</span>
+        <span class="new-badge text-white text-xs font-bold px-3 py-1 rounded-full">🔥 NEW</span>
+      </div>
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-straw-orange/20 text-straw-orange rounded-xl p-2 text-center min-w-[60px]">
+          <div class="text-xl font-black">14</div>
+          <div class="text-xs">SEP</div>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-0.5">🛍️ Community Swap Market — Bolton</h3>
+          <p class="text-straw-gray text-sm"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Bolton Town Hall • 10am–4pm</p>
+        </div>
+      </div>
+      <p class="text-straw-gray text-sm mb-4">Clothes, books, homeware, plants — bring what you don't need, take what you want! Everything free inside. Entry supports venue.</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="tag bg-straw-green/20 text-straw-green">Sustainable</span>
+        <span class="tag bg-straw-amber/20 text-straw-amber">Swap</span>
+        <span class="tag bg-straw-rose/20 text-straw-rose">Family</span>
+      </div>
+      <a href="#" class="block w-full bg-straw-orange text-white text-center py-2 rounded-lg font-semibold hover:bg-orange-600 text-sm">
+        <i class="fa-solid fa-ticket mr-1"></i> Book Spot →
+      </a>
+    </div>
+
+    <!-- EVENT 4 → Coffee & Crypto Meetup -->
+    <div class="bg-straw-card rounded-2xl p-5 event-card border border-straw-amber/10" data-type="free local weekly" data-date="2026-09-17">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 FREE</span>
+        <span class="tag bg-straw-purple/20 text-straw-purple text-xs font-bold px-3 py-1 rounded-full">🔁 Weekly</span>
+      </div>
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-straw-purple/20 text-straw-purple rounded-xl p-2 text-center min-w-[60px]">
+          <div class="text-xl font-black">17</div>
+          <div class="text-xs">SEP</div>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-0.5">☕ Coffee & Crypto — Solana / STRAW Chat</h3>
+          <p class="text-straw-gray text-sm"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Indie Coffee, Northern Qtr • 7pm</p>
+        </div>
+      </div>
+      <p class="text-straw-gray text-sm mb-4">Casual weekly meetup — all welcome! Chat crypto, Solana, STRAW, RWA, and new ideas. No prior knowledge needed — just curiosity!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="tag bg-straw-purple/20 text-straw-purple">Crypto</span>
+        <span class="tag bg-straw-amber/20 text-straw-amber">Casual</span>
+        <span class="tag bg-straw-green/20 text-straw-green">Beginners</span>
+      </div>
+      <a href="#" class="block w-full bg-straw-purple text-white text-center py-2 rounded-lg font-semibold hover:bg-purple-600 text-sm">
+        <i class="fa-solid fa-mug-hot mr-1"></i> I'm In →
+      </a>
+    </div>
+
+    <!-- EVENT 5 → Side Hustle Masterclass -->
+    <div class="bg-straw-card rounded-2xl p-5 event-card border border-straw-amber/10" data-type="online" data-date="2026-09-20">
+      <div class="flex justify-between items-start mb-3">
+        <span class="online-badge text-white text-xs font-bold px-3 py-1 rounded-full">💻 ONLINE</span>
+        <span class="paid-badge text-white text-xs font-bold px-3 py-1 rounded-full">💰 Free / £15</span>
+      </div>
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-straw-teal/20 text-straw-teal rounded-xl p-2 text-center min-w-[60px]">
+          <div class="text-xl font-black">20</div>
+          <div class="text-xs">SEP</div>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-0.5">💸 Top 50 Side Hustles — Live Masterclass</h3>
+          <p class="text-straw-gray text-sm"><i class="fa-solid fa-wifi text-straw-cyan mr-1"></i> YouTube Live • 8:00pm UK</p>
+        </div>
+      </div>
+      <p class="text-straw-gray text-sm mb-4">Which side hustles actually make money in 2026? Breakdown of effort vs income, no-experience options, and how to start today!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="tag bg-straw-green/20 text-straw-green">Money</span>
+        <span class="tag bg-straw-amber/20 text-straw-amber">Business</span>
+        <span class="tag bg-straw-blue/20 text-straw-blue">Recording</span>
+      </div>
+      <a href="#" class="block w-full bg-straw-teal text-white text-center py-2 rounded-lg font-semibold hover:bg-teal-600 text-sm">
+        <i class="fa-solid fa-play mr-1"></i> Register →
+      </a>
+    </div>
+
+    <!-- EVENT 6 → Off-Grid Energy Workshop -->
+    <div class="bg-straw-card rounded-2xl p-5 event-card border border-straw-amber/10" data-type="local" data-date="2026-09-25">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">🆓 FREE</span>
+        <span class="new-badge text-white text-xs font-bold px-3 py-1 rounded-full">🔥 NEW</span>
+      </div>
+      <div class="flex items-center gap-3 mb-3">
+        <div class="bg-straw-green/20 text-straw-green rounded-xl p-2 text-center min-w-[60px]">
+          <div class="text-xl font-black">25</div>
+          <div class="text-xs">SEP</div>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white mb-0.5">⚡ Off-Grid Energy — Hydro & Solar DIY</h3>
+          <p class="text-straw-gray text-sm"><i class="fa-solid fa-location-dot text-straw-red mr-1"></i> Farnworth Community Hall • 2pm</p>
+        </div>
+      </div>
+      <p class="text-straw-gray text-sm mb-4">Practical workshop — mini hydro, battery banks, solar, air systems. Real builds, real results. Bring your questions & ideas!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="tag bg-straw-green/20 text-straw-green">Energy</span>
+        <span class="tag bg-straw-amber/20 text-straw-amber">DIY</span>
+        <span class="tag bg-straw-blue/20 text-straw-blue">Sustainability</span>
+      </div>
+      <a href="#" class="block w-full bg-straw-green text-white text-center py-2 rounded-lg font-semibold hover:bg-green-600 text-sm">
+        <i class="fa-solid fa-bolt mr-1"></i> Reserve Spot →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-amber/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-amber/10 transition">
+      <i class="fa-solid fa-calendar-days mr-2"></i> Load More Events
+    </button>
+  </div>
+</section>
+
+<!-- 💡 INFO SECTION -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-amber/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-straw-amber"></i>
+      How It Works — Events Board
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-amber/5 border border-straw-amber/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-amber mb-2">✅ For Attendees</h4>
+        <ul class="space-y-1.5">
+          <li>• <strong>Free to browse & join</strong> — no account needed for most events</li>
+          <li>• <strong>Click Register</strong> — you'll get all details, time, location, link</li>
+          <li>• <strong>Add to calendar</strong> — one-click Google/Apple/Outlook export</li>
+          <li>• <strong>Share with friends</strong> — help grow the community!</li>
+        </ul>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-green mb-2">📤 Submit Your Event</h4>
+          <ul class="space-y-1.5">
+            <li>• Free community events — always free to list</li>
+            <li>• Workshops / markets — basic listing free</li>
+            <li>• Featured / pinned — small premium fee</li>
+            <li>• Affiliate ticket integration — earn on sales</li>
+            <li>• <strong>All events moderated</strong> — safe & spam-free</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-purple mb-2">💰 Revenue Streams</h4>
+          <ul class="space-y-1.5">
+            <li>• Ticket platform affiliate fees (Eventbrite, etc.)</li>
+            <li>• Featured / pinned event listings</li>
+            <li>• Community spotlights & local business ads</li>
+            <li>• Premium event organizer dashboard</li>
+            <li>• Free events → grow traffic → all revenue streams grow!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Guidelines:</strong> All events must be legal, safe, and respectful. No commercial spamming or unauthorised ticket resales. Always check with organisers before travelling — sometimes plans change. Affiliate links may apply to ticketed events — we earn a small commission at no extra cost to you. © 2026 Events & Meetups Board — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>📅 Events & Meetups Board — <span class="text-straw-amber">Connect Locally · Learn Together · Build Community 🤝</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('eventsGrid');
+  const allEvents = grid.querySelectorAll('div[data-type]');
+
+  // Search + location + type filters combined, applied together
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('locationInput').addEventListener('input', applyFilters);
+  document.getElementById('eventFilter').addEventListener('change', applyFilters);
+
+  function applyFilters() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const loc = document.getElementById('locationInput').value.toLowerCase();
+    const type = document.getElementById('eventFilter').value;
+
+    allEvents.forEach(e => {
+      const text = e.textContent.toLowerCase();
+      const typeMatch = !type || e.dataset.type.includes(type);
+      const searchMatch = !search || text.includes(search);
+      const locMatch = !loc || text.includes(loc);
+      e.style.display = (typeMatch && searchMatch && locMatch) ? '' : 'none';
+    });
+  }
+
+  function openSubmitModal() {
+    alert('📤 Submit Event — Coming Soon!\n\nEvent name, date, time, location, description, price — free community events always welcome! 🎉');
+  }
+</script>
+
+</body>
+</html>
+

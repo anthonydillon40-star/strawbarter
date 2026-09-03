@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📚 Free Learning & Skills Hub — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', orange: '#f97316', indigo: '#6366f1',
+              teal: '#14b8a6', rose: '#f43f5e'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .course-card { transition: all 0.25s ease; }
+    .course-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(99,102,241,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(99,102,241,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #6366f1; }
+    .free-badge { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .beginner-badge { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .cert-badge { background: linear-gradient(135deg, #f97316, #eab308); }
+    .time-badge { background: linear-gradient(135deg, #14b8a6, #06b6d4); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-indigo/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-indigo transition">← Back</a>
+      <span class="text-xs text-straw-indigo hidden sm:inline">
+        <i class="fa-solid fa-graduation-cap"></i> 100% Free — Start Learning Now
+      </span>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-indigo/10 via-transparent to-straw-purple/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">📚</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Free Learning & Skills Hub</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Free Courses · Certifications · Guides — Upskill For Free, Boost Your Future</strong><br>
+      Learn in-demand skills — no cost, no credit card, just knowledge 🎓
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6 grid sm:grid-cols-2 gap-3">
+      <input type="text" id="searchInput" placeholder="🔍 Search: Python, Excel, Marketing, Design, Finance..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-indigo/20 text-white text-lg">
+      <select id="levelFilter" class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-indigo/20 text-white text-lg">
+        <option value="">All Levels</option>
+        <option value="beginner">🌱 Beginner</option>
+        <option value="intermediate">📖 Intermediate</option>
+        <option value="advanced">🚀 Advanced</option>
+        <option value="cert">🏆 Free Certificate</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-green/20 text-straw-green">✅ 100% Free</span>
+      <span class="tag bg-straw-indigo/20 text-straw-indigo">✅ Self-Paced</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">✅ Certificates Available</span>
+      <span class="tag bg-straw-orange/20 text-straw-orange">✅ Job-Ready Skills</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⚡ TOP LEARNING CATEGORIES -->
+<section class="max-w-7xl mx-auto px-4 mb-10">
+  <h2 class="text-2xl font-bold text-white mb-5 flex items-center gap-2">
+    <i class="fa-solid fa-bolt text-straw-gold"></i> Popular Subjects
+  </h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+    <button onclick="filterCat('all')" class="bg-straw-indigo text-white p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">📚</span>
+      <span class="text-sm font-semibold">All Subjects</span>
+    </button>
+    <button onclick="filterCat('tech')" class="bg-straw-card hover:bg-straw-indigo/10 hover:text-straw-indigo p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">💻</span>
+      <span class="text-sm font-semibold">Coding & Tech</span>
+    </button>
+    <button onclick="filterCat('business')" class="bg-straw-card hover:bg-straw-indigo/10 hover:text-straw-indigo p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">📊</span>
+      <span class="text-sm font-semibold">Business & Finance</span>
+    </button>
+    <button onclick="filterCat('marketing')" class="bg-straw-card hover:bg-straw-indigo/10 hover:text-straw-indigo p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">📢</span>
+      <span class="text-sm font-semibold">Marketing</span>
+    </button>
+    <button onclick="filterCat('design')" class="bg-straw-card hover:bg-straw-indigo/10 hover:text-straw-indigo p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🎨</span>
+      <span class="text-sm font-semibold">Design & Creative</span>
+    </button>
+    <button onclick="filterCat('language')" class="bg-straw-card hover:bg-straw-indigo/10 hover:text-straw-indigo p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🌍</span>
+      <span class="text-sm font-semibold">Languages</span>
+    </button>
+    <button onclick="filterCat('personal')" class="bg-straw-card hover:bg-straw-indigo/10 hover:text-straw-indigo p-4 rounded-xl text-center transition">
+      <span class="text-3xl block mb-1">🧠</span>
+      <span class="text-sm font-semibold">Personal Growth</span>
+    </button>
+  </div>
+</section>
+
+<!-- 📚 FREE COURSES GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="coursesGrid">
+
+    <!-- COURSE 1 → Python for Beginners -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="tech" data-level="beginner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ 40hrs</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🐍</div>
+      <h3 class="text-xl font-bold text-white mb-1">Python for Beginners</h3>
+      <p class="text-straw-gray text-sm mb-3">Learn Python from scratch — fundamentals, automation, data basics. No prior experience needed!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">Beginner</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Certificate</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">Google / Coursera</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+    <!-- COURSE 2 → Digital Marketing -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="marketing" data-level="beginner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ 26hrs</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📈</div>
+      <h3 class="text-xl font-bold text-white mb-1">Fundamentals of Digital Marketing</h3>
+      <p class="text-straw-gray text-sm mb-3">SEO, social media, PPC, analytics, email marketing — complete Google-certified course!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">Beginner</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Google Cert</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">Google Digital Garage</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+    <!-- COURSE 3 → Excel for Business -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="business" data-level="intermediate">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ 12hrs</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📊</div>
+      <h3 class="text-xl font-bold text-white mb-1">Microsoft Excel — Beginner to Advanced</h3>
+      <p class="text-straw-gray text-sm mb-3">Formulas, pivot tables, charts, macros, data analysis — essential for every office job!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">All Levels</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Certificate</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">Microsoft / YouTube</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+    <!-- COURSE 4 → Graphic Design -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="design" data-level="beginner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ 30hrs</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🎨</div>
+      <h3 class="text-xl font-bold text-white mb-1">Graphic Design Essentials</h3>
+      <p class="text-straw-gray text-sm mb-3">Color theory, typography, layout, tools — Canva & free software included. Build a portfolio!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">Beginner</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Project-Based</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">Canva / YouTube</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+    <!-- COURSE 5 → Financial Literacy -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="business" data-level="beginner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ 8hrs</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">💰</div>
+      <h3 class="text-xl font-bold text-white mb-1">Personal Finance & Investing 101</h3>
+      <p class="text-straw-gray text-sm mb-3">Budgeting, saving, debt, investing, pensions — take control of your money future!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">All Levels</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Certificate</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">UK Gov / FutureLearn</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+    <!-- COURSE 6 → Data Analytics -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="tech" data-level="intermediate">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ 40hrs</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📉</div>
+      <h3 class="text-xl font-bold text-white mb-1">Data Analytics Fundamentals</h3>
+      <p class="text-straw-gray text-sm mb-3">SQL, data visualization, statistics, storytelling with data — high-demand career skill!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">Intermediate</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Free Cert</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">Google / Coursera</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+    <!-- COURSE 7 → Language (was unrepresented) -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="language" data-level="beginner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ Self-paced</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🌍</div>
+      <h3 class="text-xl font-bold text-white mb-1">Spanish for Beginners</h3>
+      <p class="text-straw-gray text-sm mb-3">Everyday conversation from zero — speaking, listening, and essential grammar. Gamified lessons!</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">Beginner</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Progress Tracking</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">Duolingo / BBC Languages</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+    <!-- COURSE 8 → Personal Growth (was unrepresented) -->
+    <div class="bg-straw-card rounded-2xl p-5 course-card border border-straw-indigo/10" data-cat="personal" data-level="beginner">
+      <div class="flex justify-between items-start mb-3">
+        <span class="free-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ FREE</span>
+        <span class="time-badge text-white text-xs font-bold px-3 py-1 rounded-full">⏱️ 6hrs</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🧠</div>
+      <h3 class="text-xl font-bold text-white mb-1">Productivity & Time Management</h3>
+      <p class="text-straw-gray text-sm mb-3">Beat procrastination, build habits, plan better — practical frameworks you can apply today.</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="beginner-badge text-white text-xs px-2 py-0.5 rounded">All Levels</span>
+        <span class="cert-badge text-white text-xs px-2 py-0.5 rounded">Certificate</span>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 text-sm">
+        <span class="text-straw-gray">Platform:</span> <span class="text-straw-indigo font-bold">OpenLearn / YouTube</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-indigo text-white text-center py-2 rounded-lg font-semibold hover:bg-indigo-600 text-sm">
+        Start Learning →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-indigo/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-indigo/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Free Courses
+    </button>
+  </div>
+</section>
+
+<!-- 💡 LEARNING RESOURCES -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-indigo/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-lightbulb text-straw-gold"></i>
+      Top Free Learning Platforms — All Verified
+    </h3>
+    <div class="grid md:grid-cols-2 gap-4 text-sm">
+      <div class="bg-straw-dark rounded-lg p-4">
+        <h4 class="font-bold text-straw-indigo mb-2">🎓 Universities & Official</h4>
+        <ul class="space-y-1.5 text-straw-gray">
+          <li>• Coursera — Free to audit, paid cert</li>
+          <li>• edX — Harvard/MIT, free audit</li>
+          <li>• FutureLearn — UK unis, free options</li>
+          <li>• OpenLearn — Open University, 100% free</li>
+          <li>• Google Digital Garage — Free + cert</li>
+        </ul>
+      </div>
+      <div class="bg-straw-dark rounded-lg p-4">
+        <h4 class="font-bold text-straw-purple mb-2">🛠️ Skill-Based Platforms</h4>
+        <ul class="space-y-1.5 text-straw-gray">
+          <li>• YouTube — Unlimited free tutorials</li>
+          <li>• Khan Academy — K–12 & beyond</li>
+          <li>• Udemy — Free courses daily</li>
+          <li>• LinkedIn Learning — Free 1-month trial</li>
+          <li>• Skillshare — Free 1-month trial</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>💡 Pro Tip:</strong> Many platforms offer free courses — you often only pay if you want a verified certificate. Always check the "Audit" or "Full Course Free" option! Affiliate links to premium platforms may earn a small commission if you subscribe — at no extra cost to you. © 2026 Free Learning Hub — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>📚 Free Learning & Skills Hub — <span class="text-straw-indigo">Learn Anything · For Free · Build Your Future 🎓</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('coursesGrid');
+  const allCourses = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = 'all';
+
+  // Combined filter: search + subject + level applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    const level = document.getElementById('levelFilter').value;
+    allCourses.forEach(c => {
+      const matchSearch = c.textContent.toLowerCase().includes(term);
+      const matchCat = (activeCat === 'all' || c.dataset.cat === activeCat);
+      const matchLevel = (!level || c.dataset.level === level);
+      c.style.display = (matchSearch && matchCat && matchLevel) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('levelFilter').addEventListener('change', applyFilters);
+
+  function filterCat(c) {
+    activeCat = c;
+    applyFilters();
+  }
+</script>
+
+</body>
+</html>
+

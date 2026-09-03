@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎁 Daily Deals & Voucher Codes — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            straw: {
+              bg: '#0F1210', card: '#1A241E', mint: '#7FE8A0', green: '#22c55e',
+              gold: '#F2C14E', red: '#e84a5f', gray: '#B0B8B0', dark: '#0A0C0B',
+              blue: '#3b82f6', purple: '#8b5cf6', orange: '#f97316', rose: '#f43f5e'
+            }
+          },
+          fontFamily: { sans: ['system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0F1210; }
+    .deal-card { transition: all 0.25s ease; }
+    .deal-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(242,193,78,0.15); }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; }
+    html { scroll-behavior: smooth; }
+    input, select { background: #0A0C0B; border: 1px solid rgba(242,193,78,0.2); color: white; }
+    input:focus, select:focus { outline: none; border-color: #F2C14E; }
+    .code-badge { background: linear-gradient(135deg, #22c55e, #84cc16); }
+    .flash-badge { background: linear-gradient(135deg, #e84a5f, #f97316); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    .copy-btn:active { transform: scale(0.95); }
+  </style>
+</head>
+<body class="text-straw-gray font-sans antialiased">
+
+<!-- 🍓 HEADER -->
+<header class="sticky top-0 z-50 bg-straw-dark/90 backdrop-blur-md border-b border-straw-gold/10">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="text-2xl">🍓</span>
+      <span class="text-xl font-bold text-white hidden sm:inline">STRAW Barter</span>
+    </a>
+    <nav class="flex items-center gap-4 text-sm">
+      <a href="/" class="hover:text-straw-gold transition">← Back</a>
+      <span class="text-xs text-straw-gold hidden sm:inline">
+        <i class="fa-solid fa-clock-rotate-left"></i> Updated: <span id="today">Sep 2, 2026</span>
+      </span>
+    </nav>
+  </div>
+</header>
+
+<!-- 🎯 HERO -->
+<section class="relative py-12 px-4 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-straw-gold/10 via-transparent to-straw-orange/5"></div>
+  <div class="max-w-4xl mx-auto text-center relative">
+    <span class="text-5xl mb-4 block">🎁</span>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Daily Deals & Voucher Codes</h1>
+    <p class="text-xl text-straw-gray max-w-2xl mx-auto mb-6">
+      <strong>Verified Codes · Updated Daily · Copy & Paste at Checkout — Instant Savings</strong><br>
+      Never pay full price again! 💰
+    </p>
+    <div class="max-w-2xl mx-auto relative mb-6 grid sm:grid-cols-2 gap-3">
+      <input type="text" id="searchInput" placeholder="🔍 Search: Amazon, Tesco, ASOS, Currys..."
+        class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-gold/20 text-white text-lg">
+      <select id="catFilter" class="w-full px-5 py-3 rounded-full bg-straw-card border border-straw-gold/20 text-white text-lg">
+        <option value="">All Categories</option>
+        <option value="fashion">👗 Fashion</option>
+        <option value="tech">📱 Tech & Electronics</option>
+        <option value="food">🍔 Food & Drink</option>
+        <option value="home">🏠 Home & Garden</option>
+        <option value="travel">✈️ Travel</option>
+        <option value="all">🔥 All Deals</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="tag bg-straw-gold/20 text-straw-gold">✅ Verified Today</span>
+      <span class="tag bg-straw-green/20 text-straw-green">✅ Free To Use</span>
+      <span class="tag bg-straw-blue/20 text-straw-blue">✅ Copy & Paste</span>
+      <span class="tag bg-straw-purple/20 text-straw-purple">✅ No Sign-Up</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⚡ FLASH DEALS — LIMITED TIME -->
+<section class="max-w-7xl mx-auto px-4 mb-10">
+  <h2 class="text-2xl font-bold text-white mb-5 flex items-center gap-2">
+    <i class="fa-solid fa-bolt text-straw-orange"></i> Flash Deals — Ending Soon!
+  </h2>
+  <div class="grid md:grid-cols-3 gap-4">
+
+    <!-- FLASH 1 -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-red/10 deal-card relative overflow-hidden">
+      <div class="absolute top-0 right-0 flash-badge text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
+        ⏳ 4h 12m left
+      </div>
+      <span class="text-3xl mb-2 block">🛍️</span>
+      <h3 class="font-bold text-white mb-1">ASOS — 20% OFF Everything</h3>
+      <p class="text-straw-gray text-sm mb-3">Valid on all brands — students & everyone!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-3 flex items-center justify-between">
+        <code class="text-straw-green font-mono font-bold text-lg">ASOS20</code>
+        <button onclick="copyCode('ASOS20')" class="copy-btn bg-straw-gold text-straw-dark px-3 py-1 rounded font-bold text-sm hover:bg-yellow-400">
+          <i class="fa-solid fa-copy"></i> Copy
+        </button>
+      </div>
+      <a href="https://www.asos.com/?cid=straw09-21" target="_blank" class="block w-full bg-straw-orange text-white text-center py-2 rounded-lg font-semibold hover:bg-orange-600 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+    <!-- FLASH 2 -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-red/10 deal-card relative overflow-hidden">
+      <div class="absolute top-0 right-0 flash-badge text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
+        ⏳ 11h 45m left
+      </div>
+      <span class="text-3xl mb-2 block">📱</span>
+      <h3 class="font-bold text-white mb-1">Currys — £50 Off Orders £399+</h3>
+      <p class="text-straw-gray text-sm mb-3">Laptops, phones, TVs — excludes clearance.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-3 flex items-center justify-between">
+        <code class="text-straw-green font-mono font-bold text-lg">TECH50</code>
+        <button onclick="copyCode('TECH50')" class="copy-btn bg-straw-gold text-straw-dark px-3 py-1 rounded font-bold text-sm hover:bg-yellow-400">
+          <i class="fa-solid fa-copy"></i> Copy
+        </button>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-orange text-white text-center py-2 rounded-lg font-semibold hover:bg-orange-600 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+    <!-- FLASH 3 -->
+    <div class="bg-straw-card rounded-xl p-4 border border-straw-red/10 deal-card relative overflow-hidden">
+      <div class="absolute top-0 right-0 flash-badge text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
+        ⏳ 23h 30m left
+      </div>
+      <span class="text-3xl mb-2 block">🍔</span>
+      <h3 class="font-bold text-white mb-1">Pizza Express — 30% Off Food</h3>
+      <p class="text-straw-gray text-sm mb-3">Mon–Thu all day, Fri before 6pm.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-3 flex items-center justify-between">
+        <code class="text-straw-green font-mono font-bold text-lg">PIZZA30</code>
+        <button onclick="copyCode('PIZZA30')" class="copy-btn bg-straw-gold text-straw-dark px-3 py-1 rounded font-bold text-sm hover:bg-yellow-400">
+          <i class="fa-solid fa-copy"></i> Copy
+        </button>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-orange text-white text-center py-2 rounded-lg font-semibold hover:bg-orange-600 text-sm">
+        Go to Store →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 📂 CATEGORY FILTERS -->
+<section class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="flex flex-wrap gap-2 justify-center mb-4">
+    <button onclick="filterAll()" class="bg-straw-gold text-straw-dark px-4 py-2 rounded-full text-sm font-bold">All Codes</button>
+    <button onclick="filterCat('fashion')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10 hover:text-straw-gold">👗 Fashion</button>
+    <button onclick="filterCat('tech')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10 hover:text-straw-gold">📱 Tech</button>
+    <button onclick="filterCat('food')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10 hover:text-straw-gold">🍔 Food</button>
+    <button onclick="filterCat('home')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10 hover:text-straw-gold">🏠 Home</button>
+    <button onclick="filterCat('travel')" class="bg-straw-card px-4 py-2 rounded-full text-sm hover:bg-straw-gold/10 hover:text-straw-gold">✈️ Travel</button>
+  </div>
+</section>
+
+<!-- 📦 ALL VOUCHER CODES GRID -->
+<section class="max-w-7xl mx-auto px-4 pb-16">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="codesGrid">
+
+    <!-- FASHION 1 → Nike -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-gold/10" data-cat="fashion">
+      <div class="flex justify-between items-start mb-3">
+        <span class="code-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ Verified</span>
+        <span class="text-xs text-straw-gray">Used 2.3k×</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">👟</div>
+      <h3 class="text-xl font-bold text-white mb-1">Nike — 15% Off First Order</h3>
+      <p class="text-straw-gray text-sm mb-3">New customers only — full-price items. Exclusions apply.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 flex items-center justify-between">
+        <code class="text-straw-green font-mono font-bold">NIKE15</code>
+        <button onclick="copyCode('NIKE15')" class="copy-btn bg-straw-gold text-straw-dark px-3 py-1 rounded font-bold text-sm hover:bg-yellow-400">
+          <i class="fa-solid fa-copy"></i> Copy
+        </button>
+      </div>
+      <a href="https://www.nike.com/gb" target="_blank" class="block w-full bg-straw-gold text-straw-dark text-center py-2 rounded-lg font-bold hover:bg-yellow-400 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+    <!-- TECH 1 → Amazon -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-gold/10" data-cat="tech">
+      <div class="flex justify-between items-start mb-3">
+        <span class="code-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ Verified</span>
+        <span class="text-xs text-straw-gray">Used 5.1k×</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">📦</div>
+      <h3 class="text-xl font-bold text-white mb-1">Amazon — Free Delivery on £25+</h3>
+      <p class="text-straw-gray text-sm mb-3">No code needed — auto-applies. Same-day & next-day options too!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 flex items-center justify-between">
+        <span class="text-straw-green font-bold text-sm">No Code Needed</span>
+        <span class="bg-straw-green/20 text-straw-green px-3 py-1 rounded text-xs font-bold">Auto</span>
+      </div>
+      <a href="https://www.amazon.co.uk/?tag=straw09-21" target="_blank" class="block w-full bg-straw-gold text-straw-dark text-center py-2 rounded-lg font-bold hover:bg-yellow-400 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+    <!-- FOOD 1 → Deliveroo -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-gold/10" data-cat="food">
+      <div class="flex justify-between items-start mb-3">
+        <span class="code-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ Verified</span>
+        <span class="text-xs text-straw-gray">Used 1.8k×</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🛵</div>
+      <h3 class="text-xl font-bold text-white mb-1">Deliveroo — £10 Off First Order</h3>
+      <p class="text-straw-gray text-sm mb-3">New users only — min spend £15. Valid across all restaurants.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 flex items-center justify-between">
+        <code class="text-straw-green font-mono font-bold">RIDER10</code>
+        <button onclick="copyCode('RIDER10')" class="copy-btn bg-straw-gold text-straw-dark px-3 py-1 rounded font-bold text-sm hover:bg-yellow-400">
+          <i class="fa-solid fa-copy"></i> Copy
+        </button>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-gold text-straw-dark text-center py-2 rounded-lg font-bold hover:bg-yellow-400 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+    <!-- HOME 1 → Dunelm -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-gold/10" data-cat="home">
+      <div class="flex justify-between items-start mb-3">
+        <span class="code-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ Verified</span>
+        <span class="text-xs text-straw-gray">Used 956×</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🛋️</div>
+      <h3 class="text-xl font-bold text-white mb-1">Dunelm — 10% Off Everything</h3>
+      <p class="text-straw-gray text-sm mb-3">Excludes clearance & delivery. Can be used in-store & online!</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 flex items-center justify-between">
+        <code class="text-straw-green font-mono font-bold">HOME10</code>
+        <button onclick="copyCode('HOME10')" class="copy-btn bg-straw-gold text-straw-dark px-3 py-1 rounded font-bold text-sm hover:bg-yellow-400">
+          <i class="fa-solid fa-copy"></i> Copy
+        </button>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-gold text-straw-dark text-center py-2 rounded-lg font-bold hover:bg-yellow-400 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+    <!-- TRAVEL 1 → Booking.com -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-gold/10" data-cat="travel">
+      <div class="flex justify-between items-start mb-3">
+        <span class="code-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ Verified</span>
+        <span class="text-xs text-straw-gray">Used 3.2k×</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">🏨</div>
+      <h3 class="text-xl font-bold text-white mb-1">Booking.com — 15% Off Stays</h3>
+      <p class="text-straw-gray text-sm mb-3">Genius members extra 10% too! Free cancellation on most rooms.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 flex items-center justify-between">
+        <span class="text-straw-green font-bold text-sm">Automatically Applied</span>
+        <span class="bg-straw-green/20 text-straw-green px-3 py-1 rounded text-xs font-bold">Member</span>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-gold text-straw-dark text-center py-2 rounded-lg font-bold hover:bg-yellow-400 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+    <!-- FASHION 2 → Boots -->
+    <div class="bg-straw-card rounded-2xl p-5 deal-card border border-straw-gold/10" data-cat="fashion">
+      <div class="flex justify-between items-start mb-3">
+        <span class="code-badge text-white text-xs font-bold px-3 py-1 rounded-full">✅ Verified</span>
+        <span class="text-xs text-straw-gray">Used 4.7k×</span>
+      </div>
+      <div class="text-center py-3 text-5xl mb-2">💄</div>
+      <h3 class="text-xl font-bold text-white mb-1">Boots — £5 Off £40+ Beauty</h3>
+      <p class="text-straw-gray text-sm mb-3">Selected brands — No7, Soap & Glory, Botanics included.</p>
+      <div class="bg-straw-dark rounded-lg p-3 mb-4 flex items-center justify-between">
+        <code class="text-straw-green font-mono font-bold">BEAUTY5</code>
+        <button onclick="copyCode('BEAUTY5')" class="copy-btn bg-straw-gold text-straw-dark px-3 py-1 rounded font-bold text-sm hover:bg-yellow-400">
+          <i class="fa-solid fa-copy"></i> Copy
+        </button>
+      </div>
+      <a href="#" target="_blank" class="block w-full bg-straw-gold text-straw-dark text-center py-2 rounded-lg font-bold hover:bg-yellow-400 text-sm">
+        Go to Store →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Load More -->
+  <div class="text-center mt-10">
+    <button class="bg-straw-card border border-straw-gold/20 text-white px-8 py-3 rounded-xl font-semibold hover:bg-straw-gold/10 transition">
+      <i class="fa-solid fa-arrow-down mr-2"></i> Load More Codes
+    </button>
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER -->
+<section class="max-w-4xl mx-auto px-4 pb-16">
+  <div class="bg-straw-card border border-straw-gold/10 rounded-2xl p-6">
+    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+      <i class="fa-solid fa-circle-info text-straw-gold"></i>
+      How It Works — Using Voucher Codes
+    </h3>
+    <div class="space-y-4 text-sm text-straw-gray">
+      <div class="bg-straw-gold/5 border border-straw-gold/20 rounded-xl p-4">
+        <h4 class="font-bold text-straw-gold mb-2">✅ How To Use a Code</h4>
+        <ol class="space-y-1.5 list-decimal pl-5">
+          <li>Click <strong>"Copy"</strong> — the code is saved to your clipboard</li>
+          <li>Click <strong>"Go to Store"</strong> — shop as normal</li>
+          <li>At checkout, <strong>paste the code</strong> into the voucher/promo code box</li>
+          <li>Click <strong>Apply</strong> — discount shows instantly! 🎉</li>
+        </ol>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold text-straw-green mb-2">✅ Why Codes May Not Work</h4>
+          <ul class="space-y-1.5">
+            <li>• Minimum spend not met — check terms</li>
+            <li>• Code expired — we remove ASAP</li>
+            <li>• Selected items excluded — sale/clearance often excluded</li>
+            <li>• Already used — one per customer usually</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-straw-blue mb-2">💡 Pro Tips</h4>
+          <ul class="space-y-1.5">
+            <li>• Check "New Customer" codes first — biggest savings!</li>
+            <li>• Sign up to newsletter for exclusive codes</li>
+            <li>• Check delivery costs — sometimes free shipping beats % off</li>
+            <li>• Bookmark this page — we update daily! 🔔</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bg-straw-orange/5 border border-straw-orange/20 rounded-xl p-4 mt-4">
+        <h4 class="font-bold text-straw-orange mb-2">💰 Affiliate Disclosure</h4>
+        <p>When you click through and use a code, we may earn a small commission from the retailer — <strong>at no extra cost to you!</strong> This helps us keep finding and sharing the best deals every single day. Thank you for your support! 💛</p>
+      </div>
+    </div>
+    <div class="mt-5 pt-4 border-t border-straw-mint/10 text-xs text-straw-gray">
+      <p><strong>Terms & Notes:</strong> Codes are verified but cannot be guaranteed. Always check final discount before paying. Offers subject to retailer's terms & conditions. Expiry dates and minimum spends apply. © 2026 Daily Deals & Voucher Codes — part of STRAW Barter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📄 FOOTER -->
+<footer class="border-t border-straw-mint/10 py-8 px-4 text-center text-sm text-straw-gray">
+  <p>🎁 Daily Deals & Voucher Codes — <span class="text-straw-gold">Updated Daily · 100% Free · Save At Checkout 💛</span></p>
+  <p class="mt-1">Part of <a href="/" class="text-straw-mint hover:underline">STRAW Barter</a></p>
+</footer>
+
+<!-- ⚡ JAVASCRIPT -->
+<script>
+  const grid = document.getElementById('codesGrid');
+  const allCodes = grid.querySelectorAll('div[data-cat]');
+
+  let activeCat = '';
+
+  // Copy code function
+  function copyCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+      alert(`✅ Code "${code}" copied!\n\nPaste it at checkout to save money! 🎉`);
+    }).catch(() => {
+      alert(`Code: ${code}\n\nCopy this manually — it's ready! ✅`);
+    });
+  }
+
+  // Combined filter: search + category applied together
+  function applyFilters() {
+    const term = document.getElementById('searchInput').value.toLowerCase().trim();
+    const cat = document.getElementById('catFilter').value;
+    allCodes.forEach(c => {
+      const matchSearch = c.textContent.toLowerCase().includes(term);
+      const matchCat = (!activeCat || c.dataset.cat === activeCat);
+      c.style.display = (matchSearch && matchCat) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('catFilter').addEventListener('change', applyFilters);
+
+  function filterAll() {
+    activeCat = '';
+    document.getElementById('catFilter').value = '';
+    applyFilters();
+  }
+
+  function filterCat(c) {
+    activeCat = c;
+    document.getElementById('catFilter').value = c;
+    applyFilters();
+  }
+
+  // Set today's date
+  document.getElementById('today').textContent = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+</script>
+
+</body>
+</html>
+
