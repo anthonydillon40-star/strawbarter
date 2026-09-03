@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Up-Cycle & Repair — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+              pink: '#ec4899',
+              orange: '#f97316',
+              teal: '#14b8a6',
+              red: '#ef4444',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .upcycle-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#upcycle-repair" class="px-3 py-2 rounded-lg bg-s-card text-s-green transition">♻️ Up-Cycle</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="mentorship.html" class="dropdown-item"><i class="fa-solid fa-chalkboard-user w-5 text-center text-s-muted"></i> 🧑‍🏫 Mentorship & Goal Buddies</a>
+          <a href="crafts.html" class="dropdown-item"><i class="fa-solid fa-scissors w-5 text-center text-s-muted"></i> 🧵 Craft & Supply Exchange</a>
+          <a href="pets.html" class="dropdown-item"><i class="fa-solid fa-paw w-5 text-center text-s-muted"></i> 🐾 Pets & Animals</a>
+          <a href="education.html" class="dropdown-item"><i class="fa-solid fa-graduation-cap w-5 text-center text-s-muted"></i> 📚 Textbook & Education Exchange</a>
+          <a href="fitness.html" class="dropdown-item"><i class="fa-solid fa-dumbbell w-5 text-center text-s-muted"></i> 🏋️ Fitness & Sports</a>
+          <a href="business.html" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> 🎒 Business & Work</a>
+          <a href="upcycle.html" class="dropdown-item"><i class="fa-solid fa-recycle w-5 text-center text-s-muted"></i> ♻️ Up-Cycle & Repair</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#upcycle-repair" class="py-2 px-3 rounded-lg bg-s-card text-s-green">♻️ Up-Cycle & Repair</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="storage.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📦 Storage & Space Sharing</a>
+      <a href="mentorship.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧑‍🏫 Mentorship & Goal Buddies</a>
+      <a href="crafts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🧵 Craft & Supply Exchange</a>
+      <a href="pets.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🐾 Pets & Animals</a>
+      <a href="education.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📚 Textbook & Education Exchange</a>
+      <a href="fitness.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏋️ Fitness & Sports</a>
+      <a href="business.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🎒 Business & Work</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- ♻️ UP-CYCLE & REPAIR — STRAW Barter -->
+<!-- ====================================== -->
+<section id="upcycle-repair" class="px-4 py-12 border-t border-s-green/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">♻️ Up-Cycle & Repair — Skills · Materials · Workshops</h2>
+      <p class="text-s-muted text-lg leading-relaxed mb-4">Fix · Transform · Create — nothing goes to landfill! Repair instead of replace, upcycle what you have, share skills & free materials. Save money, reduce waste, build a circular economy! 🔧🎨🛠️🌍</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-green/10 border border-s-green/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-green font-semibold text-lg">🌍 UK throws away £10B+ repairable items yearly · 🔧 Repair instead of replace = save 70–90% · 🎨 Turn trash into treasure · 🆓 Free materials hub · 🤝 Skill swap — teach & learn · 🆓 Free to list & browse</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-s-green mb-1">£0</div>
+        <div class="text-s-muted text-sm">Commission Fees</div>
+      </div>
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-s-green mb-1">70–90%</div>
+        <div class="text-s-muted text-sm">Avg Savings vs New</div>
+      </div>
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-s-gold mb-1">0</div>
+        <div class="text-s-muted text-sm">Items to Landfill</div>
+      </div>
+      <div class="bg-s-card rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-bold text-s-blue mb-1">∞</div>
+        <div class="text-s-muted text-sm">Creative Possibilities</div>
+      </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-white/5">
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="upcycleSearch" class="text-sm font-semibold text-white block mb-2">🔍 What are you looking for?</label>
+          <input type="text" id="upcycleSearch" placeholder="Repair help, wood, fabric, workshop..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white placeholder-s-muted focus:outline-none focus:border-s-green">
+        </div>
+        <div>
+          <label for="upcycleLocation" class="text-sm font-semibold text-white block mb-2">📍 Location</label>
+          <select id="upcycleLocation" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white focus:outline-none">
+            <option>Any Location</option>
+            <option>Within 5 miles</option>
+            <option>Within 10 miles</option>
+            <option>Manchester</option>
+            <option>London</option>
+            <option>Remote / Online</option>
+          </select>
+        </div>
+        <div>
+          <label for="upcycleCategory" class="text-sm font-semibold text-white block mb-2">📂 Category</label>
+          <select id="upcycleCategory" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white focus:outline-none">
+            <option value="all">All — Repair · Materials · Skills</option>
+            <option value="repair">🔧 Repair Services & Help</option>
+            <option value="materials">🪵 Free & Low-Cost Materials</option>
+            <option value="upcycled">🎨 Upcycled Creations — Buy/Sell</option>
+            <option value="skills">🛠️ Skill Swap — Teach & Learn</option>
+            <option value="workshops">📅 Workshops & Events</option>
+            <option value="parts">🔩 Spare Parts & Components</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="upcycleCost" class="text-sm font-semibold text-white block mb-2">💰 Cost</label>
+          <select id="upcycleCost" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🆓 Free Only</option>
+            <option>🤝 Barter / Skill Swap</option>
+            <option>£ Low Cost</option>
+            <option>££ Market Rate</option>
+          </select>
+        </div>
+        <div>
+          <label for="upcycleAvail" class="text-sm font-semibold text-white block mb-2">⏰ Availability</label>
+          <select id="upcycleAvail" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white focus:outline-none">
+            <option>Any</option>
+            <option>Immediate</option>
+            <option>Flexible</option>
+            <option>Weekdays</option>
+            <option>Weekends</option>
+          </select>
+        </div>
+        <div>
+          <label for="upcycleRole" class="text-sm font-semibold text-white block mb-2">👤 Type</label>
+          <select id="upcycleRole" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white focus:outline-none">
+            <option>All</option>
+            <option>Offering Help</option>
+            <option>Needing Help</option>
+            <option>Materials Available</option>
+            <option>Upcycled For Sale</option>
+          </select>
+        </div>
+        <div>
+          <label for="upcycleVerified" class="text-sm font-semibold text-white block mb-2">⭐ Verified</label>
+          <select id="upcycleVerified" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white focus:outline-none">
+            <option>All Listings</option>
+            <option>✅ Verified Only</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="searchUpcycleBtn" class="bg-s-green text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition flex-1 min-w-[120px]">
+          🔍 Search
+        </button>
+        <button id="listUpcycleBtn" class="bg-s-gold text-s-dark px-6 py-3 rounded-full font-bold hover:bg-amber-400 transition flex-1 min-w-[120px]">
+          ➕ List — Free!
+        </button>
+        <button id="repairHubBtn" class="bg-s-purple/20 text-s-purple px-6 py-3 rounded-full font-semibold hover:bg-s-purple/30 transition flex-1 min-w-[120px]">
+          🛠️ Repair Hub
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="upcycle-tab active bg-s-green text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">📋 All (124)</button>
+      <button class="upcycle-tab bg-s-green/20 text-s-green px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-green/30" data-tab="repair">🔧 Repair</button>
+      <button class="upcycle-tab bg-s-green/20 text-s-green px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-green/30" data-tab="materials">🪵 Materials</button>
+      <button class="upcycle-tab bg-s-green/20 text-s-green px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-green/30" data-tab="upcycled">🎨 Upcycled</button>
+      <button class="upcycle-tab bg-s-green/20 text-s-green px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-green/30" data-tab="skills">🛠️ Skills</button>
+      <button class="upcycle-tab bg-s-green/20 text-s-green px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-green/30" data-tab="workshops">📅 Workshops</button>
+    </div>
+
+    <!-- Listings Grid -->
+    <div id="upcycleAll" class="upcycle-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <!-- 🔧 Repair — Furniture Restoration -->
+      <div class="upcycle-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-s-green/30 transition flex flex-col" data-upcycle-type="repair">
+        <div class="w-full h-40 bg-s-green/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🪑🔧</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Furniture Restoration — Repair & Upcycle</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">From £15 or Swap</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester · I repair, sand, paint & upcycle wood furniture — chairs, tables, cabinets, frames. 15+ years experience. Also open to skill swap: photography, graphic design, or help with my website! Collection & delivery available.</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🪑 Furniture</span>
+          <span class="bg-s-gold/10 text-s-gold px-2 py-1 rounded">🎨 Upcycle</span>
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🤝 Swap OK</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="request-repair-btn flex-1 bg-s-green text-white py-2 rounded-full font-semibold hover:bg-green-600 transition text-sm">Request Repair</button>
+          <button class="offer-swap-btn bg-s-purple/20 text-s-purple px-3 py-2 rounded-full font-semibold hover:bg-s-purple/30 text-sm">🤝 Offer Swap</button>
+        </div>
+      </div>
+
+      <!-- 🪵 Free Materials — Pallets & Wood -->
+      <div class="upcycle-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-s-green/30 transition flex flex-col" data-upcycle-type="materials">
+        <div class="w-full h-40 bg-s-gold/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🪵📦</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Free Pallets & Scrap Wood — Various Sizes</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">🆓 FREE!</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Salford — collection · 20+ standard pallets, some heat-treated. Also offcuts, MDF, plywood, timber from workshop. Clean, no nails. Great for planters, shelves, furniture, projects. Must collect by Sunday — otherwise going to recycling centre!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-gold/10 text-s-gold px-2 py-1 rounded">🪵 Wood</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🆓 Free</span>
+          <span class="bg-s-red/10 text-s-red px-2 py-1 rounded">📅 By Sunday</span>
+        </div>
+        <button class="claim-btn w-full bg-s-gold text-s-dark py-2 rounded-full font-semibold hover:bg-amber-400 transition text-sm mt-auto">Claim Now →</button>
+      </div>
+
+      <!-- 🎨 Upcycled — Pallet Coffee Table -->
+      <div class="upcycle-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-s-green/30 transition flex flex-col" data-upcycle-type="upcycled">
+        <div class="w-full h-40 bg-s-pink/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🪑✨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Handmade Pallet Wood Coffee Table — Rustic</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£45</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester · Made from reclaimed pallets. Sanded smooth, sealed with clear wax. 60cm × 60cm × 40cm. Unique, eco-friendly, sturdy. Every piece different. Can customise size/colour on request. Also open to partial trade for plants or home decor!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-pink/10 text-s-pink px-2 py-1 rounded">🎨 Upcycled</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🌿 Eco</span>
+          <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (24)</span>
+        </div>
+        <button class="buy-trade-btn w-full bg-s-pink text-white py-2 rounded-full font-semibold hover:bg-pink-600 transition text-sm mt-auto">Buy / Trade →</button>
+      </div>
+
+      <!-- 🛠️ Skill Swap — Sewing ↔️ Basic DIY -->
+      <div class="upcycle-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-s-green/30 transition flex flex-col" data-upcycle-type="skills">
+        <div class="w-full h-40 bg-s-purple/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🧵↔️🔨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Seamstress ↔️ Handyman — Skill Swap</h4>
+          <span class="bg-s-purple/20 text-s-purple px-2 py-1 rounded-full text-sm font-bold">🤝 100% Barter</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester, Levenshulme · I'm a dressmaker — I'll alter, repair, or upcycle your clothes/curtains/soft furnishings. Need help with basic DIY — shelves, curtain rails, flat-pack assembly, small repairs. Equal time swap — 1 hour sewing = 1 hour DIY help. Let's help each other!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🤝 Skill Swap</span>
+          <span class="bg-s-pink/10 text-s-pink px-2 py-1 rounded">🧵 Sewing</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🔨 DIY</span>
+        </div>
+        <div class="flex gap-2 mt-auto">
+          <button class="propose-swap-btn flex-1 bg-s-purple text-white py-2 rounded-full font-semibold hover:bg-purple-600 transition text-sm">Propose Swap</button>
+          <button class="token-btn bg-s-gold/20 text-s-gold px-3 py-2 rounded-full font-semibold hover:bg-s-gold/30 text-sm">🪙 $STRAW</button>
+        </div>
+      </div>
+
+      <!-- 📅 Workshop — Upcycle Furniture -->
+      <div class="upcycle-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-s-green/30 transition flex flex-col" data-upcycle-type="workshops">
+        <div class="w-full h-40 bg-s-blue/10 rounded-2xl flex items-center justify-center text-5xl mb-4">📅🎨</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Workshop: Furniture Upcycling — Paint & Transform!</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£25 — Sat 20 Sep</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Community Hub, Northern Quarter · 10am–1pm — Learn to prep, paint, wax & transform old furniture. Bring your own small piece or use ours. All materials & tools provided. Small group — max 8 people. Tea/coffee included. Beginners welcome! Booking essential — only 4 spots left!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">📅 Workshop</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🎨 Upcycling</span>
+          <span class="bg-s-red/10 text-s-red px-2 py-1 rounded">⚠️ 4 Spots Left</span>
+        </div>
+        <button class="book-spot-btn w-full bg-s-blue text-white py-2 rounded-full font-semibold hover:bg-blue-600 transition text-sm mt-auto">Book Spot →</button>
+      </div>
+
+      <!-- 🔩 Spare Parts — Electronics & Components -->
+      <div class="upcycle-card bg-s-card rounded-3xl p-5 border border-white/5 hover:border-s-green/30 transition flex flex-col" data-upcycle-type="materials">
+        <div class="w-full h-40 bg-s-teal/10 rounded-2xl flex items-center justify-center text-5xl mb-4">🔩📺</div>
+        <div class="flex justify-between items-start mb-2">
+          <h4 class="font-bold text-white text-lg">Electronics Spares — Screens, Boards, Cables, Motors</h4>
+          <span class="bg-s-green/20 text-s-green px-2 py-1 rounded-full text-sm font-bold">£2–£10 each</span>
+        </div>
+        <p class="text-s-muted text-sm mb-3">📍 Manchester — collection or post · From dismantled TVs, printers, appliances, toys. Screens, power supplies, motors, circuit boards, connectors, cables, buttons. Great for repair projects, upcycling, art installations, learning. Let me know what you need — I'll check!</p>
+        <div class="flex flex-wrap gap-2 text-xs mb-3">
+          <span class="bg-s-teal/10 text-s-teal px-2 py-1 rounded">🔩 Spares</span>
+          <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🔌 Electronics</span>
+          <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">📬 Post OK</span>
+        </div>
+        <button class="request-parts-btn w-full bg-s-teal text-white py-2 rounded-full font-semibold hover:bg-teal-600 transition text-sm mt-auto">Request Parts →</button>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreUpcycleBtn" class="bg-s-green/20 border border-s-green/40 text-s-green py-3 px-8 rounded-full font-semibold hover:bg-s-green/30 transition">
+        Load More →
+      </button>
+    </div>
+
+    <!-- Quick Browse Categories -->
+    <div class="bg-s-card rounded-3xl p-6 border border-white/5 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🔍 Quick Browse — All Categories</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🔧 Repair Help</button>
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🪵 Free Materials</button>
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🎨 Upcycled Goods</button>
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🛠️ Skill Swap</button>
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📅 Workshops</button>
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">🔩 Spare Parts</button>
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">📖 Repair Guides</button>
+        <button class="upcycle-cat bg-s-green/10 hover:bg-s-green/20 text-white py-3 px-4 rounded-xl text-sm font-semibold transition">♻️ Waste Exchange</button>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-white/5 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Simple, Sustainable & Rewarding!</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📝</div>
+          <h4 class="font-bold text-white mb-1">1. List What You Have</h4>
+          <p class="text-s-muted text-sm">Materials, skills, broken items — takes 2 mins, <strong>100% Free</strong></p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find What You Need</h4>
+          <p class="text-s-muted text-sm">Repair help, free wood, upcycled gifts — local & sustainable!</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Share & Create</h4>
+          <p class="text-s-muted text-sm">Barter, swap skills, pay fair price — zero landfill, maximum value!</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🌍</div>
+          <h4 class="font-bold text-white mb-1">4. Save the Planet</h4>
+          <p class="text-s-muted text-sm">Less waste, less new production — every repair counts!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repair Hub Highlight -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-purple/30 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛠️ Repair Hub — Fix It, Don't Bin It! 💡</h3>
+      <p class="text-s-muted text-center mb-4">The average UK home throws away £500+ worth of repairable items every year. Phones, appliances, clothes, furniture — most can be fixed! Find local repairers, spare parts, or learn to do it yourself.</p>
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-s-purple/5 p-4 rounded-xl text-center">
+          <div class="text-2xl mb-2">📱</div>
+          <h4 class="font-bold text-white mb-1">Electronics</h4>
+          <p class="text-s-muted text-xs">Phones, laptops, consoles — screens, batteries, ports</p>
+        </div>
+        <div class="bg-s-purple/5 p-4 rounded-xl text-center">
+          <div class="text-2xl mb-2">🧵</div>
+          <h4 class="font-bold text-white mb-1">Clothing & Textiles</h4>
+          <p class="text-s-muted text-xs">Alterations, mends, zips, hems, upcycling</p>
+        </div>
+        <div class="bg-s-purple/5 p-4 rounded-xl text-center">
+          <div class="text-2xl mb-2">🏠</div>
+          <h4 class="font-bold text-white mb-1">Home & Furniture</h4>
+          <p class="text-s-muted text-xs">Woodwork, upholstery, painting, restoration</p>
+        </div>
+      </div>
+      <div class="text-center">
+        <button id="repairHubBtn2" class="bg-s-purple text-white px-8 py-3 rounded-full font-bold hover:bg-purple-600 transition text-lg">
+          🛠️ Enter Repair Hub →
+        </button>
+      </div>
+    </div>
+
+    <!-- Safety & Guidelines -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-white/5">
+        <h4 class="font-bold text-white mb-3">🛡️ Safe & Responsible Practices</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ <strong>Electrical safety first</strong> — unplug before working; if unsure, consult a qualified electrician</li>
+          <li>✅ <strong>Meet in public</strong> — for material handovers & first meetings</li>
+          <li>✅ <strong>Be clear about condition</strong> — describe faults honestly; set realistic expectations</li>
+          <li>✅ <strong>Agree scope upfront</strong> — what's included, timeline, cost, or swap terms</li>
+          <li>✅ <strong>Use proper PPE</strong> — goggles, gloves, masks for dusty/chemical work</li>
+          <li>✅ <strong>Report hazards</strong> — help keep the community safe for everyone</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-white/5">
+        <h4 class="font-bold text-white mb-3">💡 Upcycle & Repair Pro Tips</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ <strong>Assess before you start</strong> — is it worth fixing? Cost vs replacement</li>
+          <li>✅ <strong>YouTube is your friend</strong> — most repairs have free step-by-step tutorials</li>
+          <li>✅ <strong>One person's trash = another's treasure</strong> — always ask before discarding</li>
+          <li>✅ <strong>Start small</strong> — simple repairs build confidence for bigger projects</li>
+          <li>✅ <strong>Document your process</strong> — photos help others learn & build your portfolio</li>
+          <li>✅ <strong>Pay it forward</strong> — teach someone what you know — knowledge multiplies!</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Affiliate — Tools & Supplies -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-green/30 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4 text-center">🛒 Tools & Supplies — Recommended via Affiliate Links</h3>
+      <p class="text-s-muted text-center mb-4">Need it new? Tools, paints, hardware, safety gear. Buy through our affiliate links — small commission supports STRAW, no extra cost to you!</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a target="_blank" rel="noopener" href="https://www.amazon.co.uk/?tag=straw09-21" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🔨</div>
+          <div class="text-white font-semibold text-sm">Tools & Hardware</div>
+        </a>
+        <a target="_blank" rel="noopener" href="https://www.amazon.co.uk/?tag=straw09-21" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🎨</div>
+          <div class="text-white font-semibold text-sm">Paints & Finishes</div>
+        </a>
+        <a href="#" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">🥽</div>
+          <div class="text-white font-semibold text-sm">Safety & PPE</div>
+        </a>
+        <a target="_blank" rel="noopener" href="https://www.awin.com/?partner=3062179" class="bg-s-green/10 hover:bg-s-green/20 p-4 rounded-xl text-center transition">
+          <div class="text-2xl mb-1">📚</div>
+          <div class="text-white font-semibold text-sm">Courses & Guides</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="bg-s-green/10 border border-s-green/30 rounded-3xl p-6 text-center">
+      <h3 class="text-xl font-bold text-s-green mb-2">♻️ Nothing Should Be Wasted — Let's Fix, Create & Reuse Together! 🌍</h3>
+      <p class="text-white mb-4">Every item repaired, every material reused, every skill shared — saves money, reduces waste, and builds a stronger community. List your materials, offer your skills, or find what you need. The circular economy starts right here, right now — with us! 💚</p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button id="listUpcycleBtn2" class="bg-s-green text-white px-8 py-3 rounded-full font-bold hover:bg-green-600 transition text-lg">
+          ➕ List Something — Free!
+        </button>
+        <button id="repairHubBtn3" class="bg-s-gold text-s-dark px-8 py-3 rounded-full font-bold hover:bg-amber-400 transition text-lg">
+          🛠️ Find Repair Help
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MODALS ========== -->
+
+<!-- List Upcycle Item Modal -->
+<div id="listUpcycleModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-green/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ List Item — Upcycle & Repair</h3>
+      <button id="closeListUpcycle" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="listUpcycleForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Category *</label>
+          <select required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white">
+            <option value="">Select...</option>
+            <option>🔧 Repair — Offering Help</option>
+            <option>🔧 Repair — Needing Help</option>
+            <option>🪵 Materials — Free / Low Cost</option>
+            <option>🎨 Upcycled — For Sale</option>
+            <option>🛠️ Skill Swap — Offering</option>
+            <option>🛠️ Skill Swap — Seeking</option>
+            <option>📅 Workshop / Event</option>
+            <option>🔩 Spare Parts</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Location *</label>
+          <input type="text" required placeholder="City / Postcode" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Title *</label>
+        <input type="text" required placeholder="e.g. Free Pallets — Collection Only" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Description & Details *</label>
+        <textarea required rows="4" placeholder="Be specific — condition, size, quantity, what you're offering/seeking, collection/delivery..." class="w-full px-4 py-3 rounded-2xl bg-s-dark border border-s-green/30 text-white"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price / Exchange</label>
+          <input type="text" placeholder="Free, £10, Swap, etc." class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Availability</label>
+          <input type="text" placeholder="e.g. Immediate, Until Sunday" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/30 text-white">
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Options</label>
+        <div class="flex flex-wrap gap-3 text-white text-sm">
+          <label class="flex items-center gap-2"><input type="checkbox"> 🤝 Open to Barter / Swap</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 🪙 Accept $STRAW</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> 📦 Can Deliver / Post</label>
+          <label class="flex items-center gap-2"><input type="checkbox"> ✅ Verified Preferred</label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">📷 Photos</label>
+        <div class="border-2 border-dashed border-s-green/30 rounded-2xl p-6 text-center text-s-muted cursor-pointer hover:border-s-green/50 transition">
+          Click or drag to upload — up to 5 images
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-s-green text-white py-3 rounded-full font-bold hover:bg-green-600 transition text-lg">
+        ✅ Publish Listing — Free!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Repair Hub Modal -->
+<div id="repairHubModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-s-purple/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">🛠️ Repair Hub — Fix It, Don't Bin It!</h3>
+      <button id="closeRepairHub" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <div class="bg-s-purple/10 border border-s-purple/30 rounded-xl p-4 mb-6">
+      <p class="text-s-purple font-semibold">💡 Why Repair Matters</p>
+      <p class="text-white text-sm mt-2">The average UK home throws away £500+ worth of repairable items each year. Repairing saves money, reduces carbon emissions, and preserves valuable resources. Let's change that — together!</p>
+    </div>
+    <div class="space-y-3 mb-6">
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">📱 Electronics & Tech</h4>
+        <p class="text-s-muted text-sm mb-2">Phones, laptops, tablets, consoles — screens, batteries, charging ports, buttons, software issues.</p>
+        <button class="repair-finder text-s-purple hover:underline text-sm">Find a repairer →</button>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">🧵 Clothing & Textiles</h4>
+        <p class="text-s-muted text-sm mb-2">Alterations, mends, zips, hems, buttons, tears, upcycling old clothes into new styles.</p>
+        <button class="repair-finder text-s-purple hover:underline text-sm">Find a seamstress/tailor →</button>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">🏠 Furniture & Home</h4>
+        <p class="text-s-muted text-sm mb-2">Wood repairs, upholstery, painting, glazing, hardware replacement, restoration, upcycling.</p>
+        <button class="repair-finder text-s-purple hover:underline text-sm">Find a furniture restorer →</button>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">🔌 Appliances & Tools</h4>
+        <p class="text-s-muted text-sm mb-2">Washing machines, toasters, drills, vacuums — motors, switches, seals, belts, controls.</p>
+        <button class="repair-finder text-s-purple hover:underline text-sm">Find an appliance repairer →</button>
+      </div>
+      <div class="bg-s-purple/5 p-4 rounded-xl">
+        <h4 class="font-bold text-white mb-2">📖 Free Repair Guides</h4>
+        <p class="text-s-muted text-sm mb-2">Step-by-step tutorials for common repairs — electronics, clothing, furniture, appliances. Learn to fix it yourself!</p>
+        <button class="repair-finder text-s-purple hover:underline text-sm">Browse guides →</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <button id="offerRepairBtn" class="bg-s-purple text-white py-3 rounded-full font-bold hover:bg-purple-600 transition">
+        ➕ Offer Repair Help
+      </button>
+      <button id="needRepairBtn" class="bg-s-gold text-s-dark py-3 rounded-full font-bold hover:bg-amber-400 transition">
+        🔍 Need Something Fixed
+      </button>
+    </div>
+    <button id="closeRepairHub2" class="w-full bg-s-purple/20 border border-s-purple/30 text-white py-3 rounded-full font-semibold hover:bg-s-purple/30 transition">
+      ✅ Close
+    </button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="business.html" class="hover:text-s-green">Business & Work</a> &nbsp;|&nbsp;
+      <a href="crafts.html" class="hover:text-s-green">Craft Exchange</a> &nbsp;|&nbsp;
+      <a href="mentorship.html" class="hover:text-s-green">Mentorship</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab switching
+document.querySelectorAll('.upcycle-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.upcycle-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-green', 'text-white');
+      t.classList.add('bg-s-green/20', 'text-s-green');
+    });
+    tab.classList.add('active', 'bg-s-green', 'text-white');
+    tab.classList.remove('bg-s-green/20', 'text-s-green');
+
+    const tabName = tab.dataset.tab;
+    document.querySelectorAll('.upcycle-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('upcycleAll').classList.remove('hidden');
+
+    document.querySelectorAll('.upcycle-card').forEach(card => {
+      card.style.display = (tabName === 'all' || card.dataset.upcycleType === tabName) ? '' : 'none';
+    });
+  });
+});
+
+// Modal open/close
+document.getElementById('listUpcycleBtn')?.addEventListener('click', () => openModal('listUpcycleModal'));
+document.getElementById('listUpcycleBtn2')?.addEventListener('click', () => openModal('listUpcycleModal'));
+document.getElementById('closeListUpcycle')?.addEventListener('click', () => closeModal('listUpcycleModal'));
+document.getElementById('repairHubBtn')?.addEventListener('click', () => openModal('repairHubModal'));
+document.getElementById('repairHubBtn2')?.addEventListener('click', () => openModal('repairHubModal'));
+document.getElementById('repairHubBtn3')?.addEventListener('click', () => openModal('repairHubModal'));
+document.getElementById('closeRepairHub')?.addEventListener('click', () => closeModal('repairHubModal'));
+document.getElementById('closeRepairHub2')?.addEventListener('click', () => closeModal('repairHubModal'));
+
+// Close modals on background click
+document.getElementById('listUpcycleModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal('listUpcycleModal');
+});
+document.getElementById('repairHubModal')?.addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal('repairHubModal');
+});
+
+// Demo actions
+document.getElementById('searchUpcycleBtn')?.addEventListener('click', () =>
+  showToast('♻️ Searching upcycle & repair listings — results updated!'));
+document.getElementById('loadMoreUpcycleBtn')?.addEventListener('click', () =>
+  showToast('♻️ Loading more upcycle & repair listings...'));
+document.getElementById('offerRepairBtn')?.addEventListener('click', () =>
+  showToast('➕ Offer repair skills — open the List form and pick "Repair — Offering Help"!'));
+document.getElementById('needRepairBtn')?.addEventListener('click', () =>
+  showToast('🔍 Post a repair request — open the List form and pick "Repair — Needing Help"!'));
+document.querySelectorAll('.request-repair-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🔧 Repair request sent — they will respond with a quote!')));
+document.querySelectorAll('.claim-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🆓 Claimed — arrange collection before Sunday!')));
+document.querySelectorAll('.buy-trade-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🪑 Enquiry sent — custom sizes & trades welcome!')));
+document.querySelectorAll('.propose-swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Swap proposed — they will respond soon!')));
+document.querySelectorAll('.book-spot-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📅 Spot reserved — confirmation on the way!')));
+document.querySelectorAll('.request-parts-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🔩 Request sent — they will check their stock!')));
+document.querySelectorAll('.offer-swap-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Open to skill swap — tell me what you do!')));
+document.querySelectorAll('.token-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🪙 Also accept $STRAW!')));
+document.querySelectorAll('.repair-finder').forEach(b => b.addEventListener('click', () =>
+  showToast('🛠️ Directory coming soon — meanwhile, browse Repair listings!')));
+document.querySelectorAll('.upcycle-cat').forEach(b => b.addEventListener('click', () =>
+  showToast(`♻️ ${b.textContent.trim()} — listings coming soon!`)));
+
+// Form submit
+document.getElementById('listUpcycleForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Listing Published! ♻️ Let\'s keep things out of landfill!');
+  closeModal('listUpcycleModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>
