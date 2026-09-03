@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storage & Space Sharing — STRAW Barter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            s: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              green: '#22c55e',
+              gold: '#f59e0b',
+              text: '#f8fafc',
+              muted: '#94a3b8',
+              border: '#334155',
+              purple: '#AB5FFB',
+              solana: '#00FFA3',
+              blue: '#3b82f6',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: #0f172a; color: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+    .btn { transition: all 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .card { background: #1e293b; border: 1px solid #334155; transition: all 0.2s; }
+    .card:hover { border-color: #22c55e; }
+    .gradient-text { background: linear-gradient(90deg, #22c55e, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      min-width: 240px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.5rem 0;
+      z-index: 9999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-top: 0.5rem;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.15s;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #2d3a4f; color: #22c55e; padding-left: 1.5rem; }
+    .dropdown-toggle::after { content: '▼'; font-size: 0.6rem; margin-left: 0.4rem; opacity: 0.6; }
+
+    section, .scroll-anchor { scroll-margin-top: 90px; }
+    .section-compact { padding-top: 3rem; padding-bottom: 3rem; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid #22c55e;
+      padding: 0.875rem 1.5rem;
+      border-radius: 10px;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .space-tab { transition: all 0.15s; }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- ⚠️ FCA Warning -->
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html#marketplace" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🛒 Marketplace</a>
+      <a href="index.html#barter" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">🔄 Barter</a>
+      <a href="network.html" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">💼 Network</a>
+      <a href="#storage-space" class="px-3 py-2 rounded-lg bg-s-card text-s-purple transition">📦 Storage</a>
+
+      <div class="dropdown">
+        <button onclick="toggleDropdown('moreDropdown', event)" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition dropdown-toggle">More</button>
+        <div id="moreDropdown" class="dropdown-menu">
+          <a href="index.html#jobs" class="dropdown-item"><i class="fa-solid fa-briefcase w-5 text-center text-s-muted"></i> Jobs & Income</a>
+          <a href="network.html" class="dropdown-item"><i class="fa-solid fa-users w-5 text-center text-s-muted"></i> 💼 Professional Network</a>
+          <a href="prompts.html" class="dropdown-item"><i class="fa-solid fa-robot w-5 text-center text-s-muted"></i> 🤖 AI Prompt Library</a>
+          <a href="liftshare.html" class="dropdown-item"><i class="fa-solid fa-car-side w-5 text-center text-s-muted"></i> 🚗 Lift Share & Carpool</a>
+          <a href="subscriptions.html" class="dropdown-item"><i class="fa-solid fa-clipboard-list w-5 text-center text-s-muted"></i> 📋 Subscription & Bill Manager</a>
+          <a href="storage.html" class="dropdown-item"><i class="fa-solid fa-warehouse w-5 text-center text-s-muted"></i> 📦 Storage & Space Sharing</a>
+          <a href="index.html#guides" class="dropdown-item"><i class="fa-solid fa-wrench w-5 text-center text-s-muted"></i> 🧰 Free Tools</a>
+          <a href="index.html#digital" class="dropdown-item"><i class="fa-solid fa-file-download w-5 text-center text-s-muted"></i> 📁 Downloads</a>
+          <a href="index.html#events" class="dropdown-item"><i class="fa-solid fa-calendar-days w-5 text-center text-s-muted"></i> 📅 Events</a>
+          <a href="index.html#books" class="dropdown-item"><i class="fa-solid fa-book w-5 text-center text-s-muted"></i> 📚 Book Exchange</a>
+          <a href="index.html#token" class="dropdown-item"><i class="fa-solid fa-coins w-5 text-center text-s-muted"></i> 💎 Solana Token</a>
+          <a href="index.html#referral" class="dropdown-item"><i class="fa-solid fa-gift w-5 text-center text-s-muted"></i> 🎁 Referral</a>
+          <a href="index.html#legal" class="dropdown-item"><i class="fa-solid fa-scale-balanced w-5 text-center text-s-muted"></i> ⚖️ Legal</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <button class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</button>
+      <a href="index.html#signup" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark">
+    <nav class="flex flex-col gap-1 text-sm">
+      <a href="index.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🏠 Home</a>
+      <a href="#storage-space" class="py-2 px-3 rounded-lg bg-s-card text-s-purple">📦 Storage & Space Sharing</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#marketplace" class="py-2 px-3 rounded-lg hover:bg-s-card">🛒 Marketplace</a>
+      <a href="index.html#barter" class="py-2 px-3 rounded-lg hover:bg-s-card">🔄 Barter</a>
+      <a href="network.html" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Professional Network</a>
+      <a href="prompts.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🤖 AI Prompt Library</a>
+      <a href="liftshare.html" class="py-2 px-3 rounded-lg hover:bg-s-card">🚗 Lift Share & Carpool</a>
+      <a href="subscriptions.html" class="py-2 px-3 rounded-lg hover:bg-s-card">📋 Subscription & Bill Manager</a>
+      <a href="index.html#jobs" class="py-2 px-3 rounded-lg hover:bg-s-card">💼 Jobs & Income</a>
+      <div class="border-t border-s-border my-1"></div>
+      <a href="index.html#token" class="py-2 px-3 rounded-lg hover:bg-s-card text-s-solana">💎 Solana Token</a>
+      <a href="index.html#signup" class="py-2 px-3 rounded-lg hover:bg-s-card">🎁 Join Free</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================== -->
+<!-- 📦 STORAGE & SPACE SHARING — STRAW Barter -->
+<!-- ====================================== -->
+<section id="storage-space" class="px-4 py-12 border-t border-s-purple/20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-white mb-2">📦 Storage & Space Sharing</h2>
+      <p class="text-s-muted text-lg">List your spare space — earn extra income · Find affordable local storage · Swap for goods or skills — zero middleman fees!</p>
+    </div>
+
+    <!-- Banner -->
+    <div class="bg-s-purple/10 border border-s-purple/30 rounded-3xl p-5 mb-8 text-center">
+      <p class="text-s-purple font-semibold text-lg">💰 Earn from empty space · 📍 Find storage near you · 🤝 Barter accepted · ✅ Verified hosts & renters · 🛡️ Secure & Insured</p>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="bg-s-card rounded-3xl p-5 mb-8 border border-s-purple/20">
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="spaceLocation" class="text-sm font-semibold text-white block mb-2">📍 Location</label>
+          <input type="text" id="spaceLocation" placeholder="Postcode, town, or area..."
+            class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white placeholder-s-muted focus:outline-none focus:border-s-purple">
+        </div>
+        <div>
+          <label for="spaceSize" class="text-sm font-semibold text-white block mb-2">📏 Size Needed</label>
+          <select id="spaceSize" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+            <option>Any Size</option>
+            <option>Small — Cupboard / Shelf (up to 5 sq ft)</option>
+            <option>Medium — Loft / Shed / Garage (5–50 sq ft)</option>
+            <option>Large — Full Garage / Driveway / Room (50–200 sq ft)</option>
+            <option>Extra Large — Warehouse / Yard (200+ sq ft)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div>
+          <label for="spacePrice" class="text-sm font-semibold text-white block mb-2">💰 Price</label>
+          <select id="spacePrice" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>🆓 Free / Barter Only</option>
+            <option>Under £10/mo</option>
+            <option>£10–£30/mo</option>
+            <option>£30–£60/mo</option>
+            <option>£60+/mo</option>
+          </select>
+        </div>
+        <div>
+          <label for="spaceAccess" class="text-sm font-semibold text-white block mb-2">🔒 Access</label>
+          <select id="spaceAccess" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+            <option>Any Access</option>
+            <option>24/7 Access</option>
+            <option>Hours Only</option>
+            <option>Arranged Access</option>
+          </select>
+        </div>
+        <div>
+          <label for="spaceType" class="text-sm font-semibold text-white block mb-2">🏠 Space Type</label>
+          <select id="spaceType" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+            <option>All Types</option>
+            <option>🏠 Indoor Storage</option>
+            <option>🚗 Parking / Driveway</option>
+            <option>🌳 Outdoor / Yard</option>
+            <option>🏢 Commercial / Unit</option>
+          </select>
+        </div>
+        <div>
+          <label for="spaceDuration" class="text-sm font-semibold text-white block mb-2">📅 Min Duration</label>
+          <select id="spaceDuration" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-purple/20 text-white focus:outline-none">
+            <option>Any</option>
+            <option>Day / Week</option>
+            <option>1 Month+</option>
+            <option>3 Months+</option>
+            <option>6 Months+</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <button id="findSpaceBtn" class="bg-s-purple text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-600 transition flex-1 min-w-[120px]">
+          🔍 Find Space
+        </button>
+        <button id="listSpaceBtn" class="bg-s-green text-s-dark px-6 py-3 rounded-full font-bold hover:bg-green-400 transition flex-1 min-w-[120px]">
+          ➕ List Your Space
+        </button>
+        <button id="mySpacesBtn" class="bg-s-blue/10 border border-s-blue/30 text-white px-6 py-3 rounded-full font-semibold hover:bg-s-blue/20 transition flex-1 min-w-[120px]">
+          📋 My Listings
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8 text-center">
+      <div class="bg-s-purple/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-purple mb-1">1,240</div>
+        <div class="text-s-muted text-sm">Active Spaces Near You</div>
+      </div>
+      <div class="bg-s-green/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-green mb-1">£2.10/mo</div>
+        <div class="text-s-muted text-sm">Avg. Savings vs. Commercial</div>
+      </div>
+      <div class="bg-s-blue/5 rounded-2xl p-4">
+        <div class="text-2xl font-bold text-s-blue mb-1">89%</div>
+        <div class="text-s-muted text-sm">Space Utilization Goal</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="space-tab active bg-s-purple text-white px-4 py-2 rounded-full text-sm font-semibold" data-tab="all">📦 All Spaces</button>
+      <button class="space-tab bg-s-purple/10 border border-s-purple/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-tab="indoor">🏠 Indoor</button>
+      <button class="space-tab bg-s-purple/10 border border-s-purple/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-tab="parking">🚗 Parking</button>
+      <button class="space-tab bg-s-purple/10 border border-s-purple/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-tab="outdoor">🌳 Outdoor</button>
+      <button class="space-tab bg-s-purple/10 border border-s-purple/20 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-s-purple/20" data-tab="barter">🤝 Barter Only</button>
+    </div>
+
+    <!-- Spaces List -->
+    <div id="spacesAll" class="space-content space-y-4 mb-8">
+      <!-- Indoor Space -->
+      <div class="space-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition cursor-pointer" data-type="indoor">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-full md:w-48 h-36 bg-s-purple/10 rounded-2xl flex items-center justify-center text-4xl shrink-0">🏠</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Spare Bedroom — Bolton, BL1</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">£25/mo</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 0.5 miles from town centre · 100 sq ft · Ground floor · Easy access</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🔒 Locked room</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🌡️ Dry & Heated</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🕒 24/7 Access</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.9 (12)</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">✅ Ideal: Boxes, furniture, household items · ❌ No food, no hazardous items</p>
+            <div class="flex gap-3 flex-wrap">
+              <button class="request-btn bg-s-purple text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-600 transition">Request Space →</button>
+              <button class="barter-btn bg-s-green/10 text-s-green px-4 py-2 rounded-full font-semibold hover:bg-s-green/20">🤝 Offer Barter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parking Space -->
+      <div class="space-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition cursor-pointer" data-type="parking">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-full md:w-48 h-36 bg-s-blue/10 rounded-2xl flex items-center justify-center text-4xl shrink-0">🚗</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Secure Driveway — Manchester, M4</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">£15/mo</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Near City Centre / Universities · 1 space · Tarmac · Gated entrance</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🚗 Car / Van</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🔒 Gated & Locked</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🕒 24/7 Access</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (24)</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">✅ Perfect for daily commute, vehicle storage, or overnight parking</p>
+            <div class="flex gap-3 flex-wrap">
+              <button class="request-btn bg-s-purple text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-600 transition">Request Space →</button>
+              <button class="barter-btn bg-s-green/10 text-s-green px-4 py-2 rounded-full font-semibold hover:bg-s-green/20">🤝 Offer Barter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Garage Space -->
+      <div class="space-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition cursor-pointer" data-type="indoor">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-full md:w-48 h-36 bg-s-purple/10 rounded-2xl flex items-center justify-center text-4xl shrink-0">🔧</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Double Garage — Wigan, WN1</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">£45/mo</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Close to motorway · 400 sq ft · Power & Light · Roll-up door</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">⚡ Power Available</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🌡️ Dry & Secure</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🛠️ Workshop OK</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 4.8 (8)</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">✅ Storage, workshop, small business use · ⚠️ No living / sleeping</p>
+            <div class="flex gap-3 flex-wrap">
+              <button class="request-btn bg-s-purple text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-600 transition">Request Space →</button>
+              <button class="token-btn bg-s-gold/10 text-s-gold px-4 py-2 rounded-full font-semibold hover:bg-s-gold/20">🪙 Pay with $STRAW</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outdoor / Yard Space -->
+      <div class="space-card bg-s-card rounded-3xl p-5 border border-s-purple/10 hover:border-s-purple/30 transition cursor-pointer" data-type="outdoor">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-full md:w-48 h-36 bg-s-green/10 rounded-2xl flex items-center justify-center text-4xl shrink-0">🌳</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Secure Yard Space — Bury, BL9</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">£20/mo</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Fenced & gated · 200 sq ft · Hardstanding · CCTV</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🚚 Boat / Trailer / Caravan</span>
+              <span class="bg-s-green/10 text-s-green px-2 py-1 rounded">🔒 Gated & Fenced</span>
+              <span class="bg-s-purple/10 text-s-purple px-2 py-1 rounded">🕒 Arranged Access</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ New Listing</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">✅ Outdoor items, vehicles, equipment · ⚠️ No household goods</p>
+            <div class="flex gap-3 flex-wrap">
+              <button class="request-btn bg-s-purple text-white px-5 py-2 rounded-full font-semibold hover:bg-purple-600 transition">Request Space →</button>
+              <button class="barter-only-btn bg-s-green/10 text-s-green px-4 py-2 rounded-full font-semibold hover:bg-s-green/20">🤝 Barter Only</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barter Spaces Section -->
+    <div id="spacesBarter" class="space-content hidden space-y-4 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-full md:w-48 h-36 bg-s-green/10 rounded-2xl flex items-center justify-center text-4xl shrink-0">🤝</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Loft Storage — Rochdale — BARTER ONLY</h4>
+              <span class="bg-s-green/20 text-s-green px-3 py-1 rounded-full text-sm font-bold">🤝 Barter</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Dry, clean, accessible · 50 sq ft · Shelving included</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">✅ Accepting: Help around home, DIY, gardening, tech help</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ 5.0 (6)</span>
+            </div>
+            <button class="propose-barter-btn w-full md:w-auto bg-s-green text-s-dark px-5 py-2 rounded-full font-bold hover:bg-green-400 transition">Propose Barter →</button>
+          </div>
+        </div>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-green/20 hover:border-s-green/40 transition">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="w-full md:w-48 h-36 bg-s-green/10 rounded-2xl flex items-center justify-center text-4xl shrink-0">🪙</div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-white text-xl">Shed Space — Oldham — $STRAW Accepted</h4>
+              <span class="bg-s-gold/20 text-s-gold px-3 py-1 rounded-full text-sm font-bold">🪙 $STRAW / Cash</span>
+            </div>
+            <p class="text-s-muted text-sm mb-3">📍 Secure, dry · 8x6 ft · Easy access</p>
+            <div class="flex flex-wrap gap-3 text-sm mb-3">
+              <span class="bg-s-blue/10 text-s-blue px-2 py-1 rounded">🪙 5000 $STRAW/mo or £10 cash</span>
+              <span class="bg-amber-400/10 text-amber-400 px-2 py-1 rounded">⭐ New Listing</span>
+            </div>
+            <button class="token-pay-btn w-full md:w-auto bg-s-gold text-s-dark px-5 py-2 rounded-full font-bold hover:bg-amber-400 transition">Pay with $STRAW →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mb-12">
+      <button id="loadMoreSpacesBtn" class="bg-s-purple/10 border border-s-purple/40 text-white py-3 px-8 rounded-full font-semibold hover:bg-s-purple/20 transition">
+        Load More Spaces →
+      </button>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-s-card rounded-3xl p-6 border border-s-purple/20 mb-8">
+      <h3 class="text-xl font-bold text-white mb-6 text-center">✅ How It Works — Simple, Safe & Free</h3>
+      <div class="grid md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-3xl mb-3">📝</div>
+          <h4 class="font-bold text-white mb-1">1. List Space</h4>
+          <p class="text-s-muted text-sm">Add size, photos, price — takes 2 minutes · <strong>100% Free</strong></p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🔍</div>
+          <h4 class="font-bold text-white mb-1">2. Find or Book</h4>
+          <p class="text-s-muted text-sm">Search by location, size, price — message owner directly</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-bold text-white mb-1">3. Agree Terms</h4>
+          <p class="text-s-muted text-sm">Dates, access, payment — cash, bank, $STRAW, or barter</p>
+        </div>
+        <div>
+          <div class="text-3xl mb-3">⭐</div>
+          <h4 class="font-bold text-white mb-1">4. Move In & Review</h4>
+          <p class="text-s-muted text-sm">No fees, no middleman, no holding funds — direct & trusted</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Safety & Payment Options -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-s-card rounded-3xl p-5 border border-s-purple/10">
+        <h4 class="font-bold text-white mb-3">🛡️ Safety & Trust</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>✅ Verified profiles & ID options</li>
+          <li>✅ Ratings & reviews from past rentals</li>
+          <li>✅ In-app messaging — no personal contact needed</li>
+          <li>✅ Space photos & accurate descriptions</li>
+          <li>✅ Clear terms & agreements template</li>
+          <li>✅ Report & dispute system</li>
+          <li>✅ Optional insurance links for valuable items</li>
+        </ul>
+      </div>
+      <div class="bg-s-card rounded-3xl p-5 border border-s-purple/10">
+        <h4 class="font-bold text-white mb-3">💰 Payment Options — Zero Platform Fees</h4>
+        <ul class="space-y-2 text-sm text-s-muted">
+          <li>💷 Cash — direct, instant, no fees</li>
+          <li>💳 Bank transfer / Revolut / PayPal</li>
+          <li>🪙 $STRAW — Solana, instant, low fees</li>
+          <li>🤝 Barter — goods, skills, favours, services</li>
+          <li>🆓 Free — kindness & community sharing</li>
+          <li>✅ We never hold or process payments — <strong>all direct</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Why List Space? -->
+    <div class="bg-s-purple/10 border border-s-purple/30 rounded-3xl p-5 text-center">
+      <h3 class="text-xl font-bold text-s-purple mb-2">💡 Why List Your Space?</h3>
+      <p class="text-white mb-4">That empty garage, loft, cupboard, or driveway could be earning you <strong>£15–£60/mo</strong> — every month, passively — while helping someone in your community find affordable storage!</p>
+      <button id="listSpaceBtn2" class="bg-s-purple text-white px-8 py-3 rounded-full font-bold hover:bg-purple-600 transition text-lg">
+        ➕ List My Space — It's Free!
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LIST SPACE MODAL ========== -->
+<div id="listSpaceModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-s-card rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto border border-s-green/30">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-white">➕ List Your Space</h3>
+      <button id="closeListSpace" class="text-s-muted hover:text-white text-2xl">&times;</button>
+    </div>
+    <form id="listSpaceForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Space Title *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="e.g. Dry Garage in City Centre, Secure Driveway, Spare Bedroom">
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Full Address / Postcode *</label>
+        <input type="text" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="Postcode shown publicly, full address on booking">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Space Type *</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none">
+            <option>🏠 Indoor — Room / Loft / Cupboard</option>
+            <option>🚗 Parking — Driveway / Garage</option>
+            <option>🌳 Outdoor — Yard / Land</option>
+            <option>🏢 Garage / Shed / Unit</option>
+            <option>🛶 Other — Describe below</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Size (sq ft) *</label>
+          <input type="number" required class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="e.g. 100">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Price (£/mo)</label>
+          <input type="text" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="0 for free / barter only">
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-white block mb-2">Access Type</label>
+          <select class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none">
+            <option>24/7 Access</option>
+            <option>Set Hours Only</option>
+            <option>Arranged / Key Exchange</option>
+            <option>Limited / Scheduled</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">What Can Be Stored?</label>
+        <textarea rows="2" class="w-full px-4 py-3 rounded-full bg-s-dark border border-s-green/20 text-white focus:outline-none" placeholder="Boxes, furniture, car, caravan, tools... List restrictions: no food, no living, etc."></textarea>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Accepted Payment / Trade</label>
+        <div class="flex flex-wrap gap-3">
+          <label class="flex items-center gap-2 text-white"><input type="checkbox" checked> 💷 Cash</label>
+          <label class="flex items-center gap-2 text-white"><input type="checkbox"> 💳 Bank Transfer</label>
+          <label class="flex items-center gap-2 text-white"><input type="checkbox"> 🪙 $STRAW</label>
+          <label class="flex items-center gap-2 text-white"><input type="checkbox"> 🤝 Barter / Skills</label>
+          <label class="flex items-center gap-2 text-white"><input type="checkbox"> 🆓 Free / Community</label>
+        </div>
+      </div>
+      <div>
+        <label class="text-sm font-semibold text-white block mb-2">Upload Photos</label>
+        <div class="border-2 border-dashed border-s-green/30 rounded-2xl p-4 text-center text-s-muted cursor-pointer hover:border-s-green/50 transition">
+          📷 Click to upload photos — inside, outside, access points
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-s-green text-s-dark py-3 rounded-full font-bold hover:bg-green-400 transition text-lg">
+        ✅ Publish Space — Free!
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <p class="mb-3">
+      <a href="index.html" class="hover:text-s-green">Home</a> &nbsp;|&nbsp;
+      <a href="network.html" class="hover:text-s-green">Professional Network</a> &nbsp;|&nbsp;
+      <a href="prompts.html" class="hover:text-s-green">AI Prompt Library</a> &nbsp;|&nbsp;
+      <a href="liftshare.html" class="hover:text-s-green">Lift Share</a> &nbsp;|&nbsp;
+      <a href="subscriptions.html" class="hover:text-s-green">Bill Manager</a>
+    </p>
+    <p class="mb-3">
+      <a href="https://explorer.solana.com/address/2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc" target="_blank" class="text-s-solana hover:underline">Solana Explorer</a> &nbsp;|&nbsp;
+      <a href="https://phantom.app/" target="_blank" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </p>
+    <p>© 2026 STRAW Barter. All rights reserved. &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Terms</a> &nbsp;|&nbsp; <a href="index.html#legal" class="hover:text-s-green">Privacy</a> &nbsp;|&nbsp; <a href="#" class="hover:text-s-green">Contact</a></p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✅ Done!</div>
+
+<script>
+// Dropdown
+function toggleDropdown(id, e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const menu = document.getElementById(id);
+  menu.classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    if (!menu.parentElement.contains(e.target) || e.target.closest('.dropdown-item')) {
+      menu.classList.remove('open');
+    }
+  });
+});
+
+// Mobile Menu
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+// Tab Switching
+document.querySelectorAll('.space-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.space-tab').forEach(t => {
+      t.classList.remove('active', 'bg-s-purple', 'text-white');
+      t.classList.add('bg-s-purple/10', 'border', 'border-s-purple/20');
+    });
+    tab.classList.add('active', 'bg-s-purple', 'text-white');
+    tab.classList.remove('bg-s-purple/10', 'border', 'border-s-purple/20');
+
+    const tabName = tab.dataset.tab;
+
+    if (tabName === 'barter') {
+      document.getElementById('spacesAll').classList.add('hidden');
+      document.getElementById('spacesBarter').classList.remove('hidden');
+    } else {
+      document.getElementById('spacesBarter').classList.add('hidden');
+      document.getElementById('spacesAll').classList.remove('hidden');
+      document.querySelectorAll('.space-card').forEach(card => {
+        card.style.display = (tabName === 'all' || card.dataset.type === tabName) ? '' : 'none';
+      });
+    }
+  });
+});
+
+// Modal Functions
+function openModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  m.classList.remove('flex');
+  m.classList.add('hidden');
+}
+
+document.getElementById('listSpaceBtn')?.addEventListener('click', () => openModal('listSpaceModal'));
+document.getElementById('listSpaceBtn2')?.addEventListener('click', () => openModal('listSpaceModal'));
+document.getElementById('closeListSpace')?.addEventListener('click', () => closeModal('listSpaceModal'));
+
+// Demo actions
+document.getElementById('findSpaceBtn')?.addEventListener('click', () =>
+  showToast('🔍 Searching spaces near you — results updated below!'));
+document.getElementById('mySpacesBtn')?.addEventListener('click', () =>
+  showToast('📋 Your Listings: Driveway — Active · Garage — Pending · Spare Room — Expires 12 Oct'));
+document.getElementById('loadMoreSpacesBtn')?.addEventListener('click', () =>
+  showToast('📦 Loading more spaces...'));
+document.querySelectorAll('.request-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('📩 Request sent — the host will reply soon!')));
+document.querySelectorAll('.barter-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 This space accepts barter — offer goods, skills, or $STRAW!')));
+document.querySelectorAll('.barter-only-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 BARTER ONLY — goods or skills welcome!')));
+document.querySelectorAll('.token-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🪙 Also accepts $STRAW tokens!')));
+document.querySelectorAll('.propose-barter-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🤝 Propose your trade — the host will respond!')));
+document.querySelectorAll('.token-pay-btn').forEach(b => b.addEventListener('click', () =>
+  showToast('🪙 Pay with $STRAW — wallet coming soon!')));
+
+// Form Submit
+document.getElementById('listSpaceForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  showToast('✅ Space Listed! 📦 People in your area can find it instantly.');
+  closeModal('listSpaceModal');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>
