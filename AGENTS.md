@@ -2,23 +2,35 @@
 
 ## Project Overview
 
-STRAW Barter is a single-page static marketing/landing site for a UK barter platform. There is no framework and no build step — the entire site lives in `index.html` at the repo root.
+STRAW Barter is a UK barter platform marketing site built with **Eleventy v3 + Tailwind CSS v4**, compiled to static HTML in `dist/` and deployed on Netlify (`netlify.toml`: `command = "npm run build"`, `publish = "dist"`).
 
 ## Architecture
 
-- `index.html` — the whole site: header with sticky nav + "More" dropdown, mobile menu, hero, token section, marketplace, barter, RWA registry, coffee dating (18+ age gate), builder finder, jobs, tools, downloads, events, businesses, sign-up/referral, legal, footer. Interactivity (dropdown, mobile menu, toast, clipboard copy, age gate modal) is vanilla JS in an inline `<script>` at the bottom of the file.
-- `netlify.toml` — static deploy config; `publish = "."` (repo root). Functions directory is `netlify/functions` (currently empty).
-- No package.json, no dependencies. Tailwind and Font Awesome load from CDNs.
+- `src/index.html` — homepage hub: hero, explore-the-platform card grid (generated from `nav.js`), token strip, sign-up CTA.
+- One page per feature under `src/*.html` — marketplace, barter, rwa, books, dating (18+), repair-upcycle, events, business, builder, jobs, tools, downloads, token, signup, legal, terms, privacy, contact, 404.
+- `src/_includes/base.html` — the only layout: head/meta, FCA warning banner, sticky header with CSS-driven dropdowns, mobile menu, footer, toast, age-gate modal, global JS include. Pages contribute **content only** via front-matter `title`/`description` + `layout: base`.
+- `src/_data/nav.js` — single source of navigation: desktop dropdown groups, mobile menu, footer links. New pages get an entry here; the homepage explore grid and footer update automatically.
+- `src/_data/config.js` — shared constants. The Solana contract address lives here (`config.ADDRESSES.solana`) and is templated everywhere — never hard-code it in pages.
+- `src/assets/css/main.css` — Tailwind v4 entry (`@import "tailwindcss"` + `@source`) with the custom palette in `@theme`; compiled by `main.11ty.js` (PostCSS) to `/assets/css/main.css`.
+- `src/assets/js/main.js` — global vanilla JS: mobile menu, toast, clipboard copy, modal helpers (open/close, Escape, backdrop click), age gate (localStorage-gated blur on `.age-gate-guard`), book exchange rendering/filtering.
 
 ## Conventions
 
-- Colors come from a custom Tailwind palette `s.*` (dark, card, green, gold, text, muted, border, purple, solana) defined in the inline `tailwind.config` in `<head>`. Use these tokens (e.g. `bg-s-card`, `text-s-green`) instead of raw hex classes.
-- Custom CSS (`.card`, `.toast`, `.modal-backdrop`, `.dropdown-menu`, `.section-compact`, `.gradient-text`) is in a single `<style>` block in `<head>`. Keep new styles there.
-- JS helpers live in the bottom `<script>` block: `toggleDropdown(id, event)`, `toggleMobileMenu()`, `showToast(msg)`, `copyTokenAddress()`, `copyRefLink()`, `openAgeGate()`, `confirmAge()`. The dropdown toggle explicitly receives `event` from inline `onclick` (the original implicit-global `event` was unreliable in strict contexts).
-- The page is UK-oriented (en-GB, FCA/amber risk warnings, GBP). Preserve the risk disclaimers when editing token-related sections.
-- Solana contract address `2nct6YmdaqJaRQbZSj3SFe96CVsdTbvaWC8cSfKaAfxc` appears in multiple places (header, hero, token section, sign-up, footer) and is duplicated in the JS `copyTokenAddress()` — update all occurrences together if it changes.
+- Colour palette is defined twice on purpose in `@theme`: `s.*` (original tokens: `bg-s-card`, `text-s-green`, …) and `straw-*` aliases (`text-straw-muted`, `bg-straw-card`, …) so user-supplied markup drops in unchanged. Prefer `s.*` for new hand-written code.
+- Shared custom CSS (`.card`, `.toast`, `.modal-backdrop`, `.dropdown-menu`, `.section-compact`, `.gradient-text`, `.card-hover`, `.age-gate-guard`) lives in `main.css` after the `@theme` block.
+- Inline handlers call helpers exposed on `window` by `main.js`: `toggleMobileMenu`, `showToast`, `copyText`, `copyTokenAddress`, `copyRefLink`, `openAgeGate`, `confirmAge`, `openModal`, `closeModal`.
+- UK-oriented (en-GB, FCA/amber risk warnings, GBP). Preserve risk disclaimers in token-related sections.
+- The `dist/` directory is build output — never edit or commit it.
+
+## Adding a page
+
+1. `src/my-page.html` with front-matter (`title`, `description`, `layout: base`), then content-only HTML.
+2. Add nav entry in `src/_data/nav.js` (dropdown item — desktop, mobile and footer follow automatically).
+3. Verify with `npm run build` (or `npm run dev`).
 
 ## Non-obvious decisions
 
-- Built as a plain static file (no template scaffold) because the user supplied a complete, self-contained HTML page; a framework would add nothing.
-- `scroll-margin-top: 90px` on sections offsets the sticky header for anchor navigation.
+- Eleventy was chosen so ~50 planned new pages plug into one shared layout instead of duplicating header/footer/scripts per file (the contract address alone was duplicated 7× in the previous single-file site).
+- Dropdowns are pure CSS (`:hover`/`:focus-within`) — no JS toggling needed; JS only closes them on outside click/Escape.
+- The age gate actually gates: dating content carries `.age-gate-guard` (blurred + inert) until `confirmAge(true)` sets a `strawAgeVerified` localStorage flag (applied via `html.age-verified`).
+- Keep front-matter `description` filled on every page — it feeds the meta description automatically.
