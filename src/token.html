@@ -1,0 +1,24 @@
+---
+title: STRAW Token
+layout: base
+description: "STRAW is live on Solana — transparent, verifiable and on-chain. View the contract address on Solana Explorer."
+---
+
+<section id="token" class="section-compact px-4 max-w-4xl mx-auto">
+  <div class="card rounded-2xl p-6">
+    <h2 class="text-2xl font-bold mb-3 text-center text-s-solana">💎 STRAW — Solana Blockchain</h2>
+    <p class="text-center text-s-muted mb-4 text-sm">Transparent & verifiable — live on-chain.</p>
+    <div class="bg-s-dark rounded-lg p-4 mb-4">
+      <p class="text-xs text-s-muted mb-2">Contract Address:</p>
+      <div class="flex items-center gap-2 flex-wrap">
+        <code class="token-address flex-1 bg-s-card px-3 py-2 rounded-lg text-s-solana text-xs">{{ config.ADDRESSES.solana }}</code>
+        <button onclick="copyTokenAddress()" class="bg-s-solana text-black px-3 py-2 rounded-lg text-sm btn whitespace-nowrap">📋 Copy</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <a href="https://explorer.solana.com/address/{{ config.ADDRESSES.solana }}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 p-3 bg-s-solana/10 rounded-lg border border-s-solana/30 hover:border-s-solana transition text-sm">🔗 Solana Explorer</a>
+      <a href="https://phantom.app/" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 p-3 bg-s-purple/10 rounded-lg border border-s-purple/30 hover:border-s-purple transition text-sm">👻 Phantom Wallet</a>
+    </div>
+    <p class="text-center text-xs text-s-muted">⚠️ Value fluctuates — not financial advice</p>
+  </div>
+</section>

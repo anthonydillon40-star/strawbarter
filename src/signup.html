@@ -1,0 +1,42 @@
+---
+title: Join & Referral
+layout: base
+description: "Join STRAW Barter free — 10,000 tokens on sign-up and 10,000 more for every friend referred."
+---
+
+<section id="signup" class="section-compact px-4 max-w-3xl mx-auto text-center">
+  <div class="card rounded-2xl p-6">
+    <h2 class="text-3xl font-bold mb-3">🎁 Join — It's Free!</h2>
+    <p class="text-s-muted mb-5 text-sm">Start trading today. No fees, no hidden costs.</p>
+    <div class="grid md:grid-cols-2 gap-4 mb-5">
+      <div class="p-4 bg-s-green/10 rounded-xl border border-s-green/20">
+        <div class="text-2xl font-bold text-s-green mb-1">10,000</div>
+        <div class="text-s-muted text-sm">Free on Sign-Up</div>
+      </div>
+      <div class="p-4 bg-s-gold/10 rounded-xl border border-s-gold/20">
+        <div class="text-2xl font-bold text-s-gold mb-1">10,000</div>
+        <div class="text-s-muted text-sm">Per Friend Referred</div>
+      </div>
+    </div>
+    <div id="referral" class="scroll-anchor bg-s-dark rounded-lg p-4 mb-5 text-left">
+      <p class="text-xs text-s-muted mb-2">Your Referral Link:</p>
+      <div class="flex items-center gap-2 mb-3">
+        <input type="text" value="https://strawbarter.com/ref/yourname" id="refLink" class="flex-1 px-3 py-2 rounded-lg bg-s-card border border-s-border text-xs" readonly>
+        <button onclick="copyRefLink()" class="bg-s-green px-3 py-2 rounded-lg font-medium text-xs btn whitespace-nowrap text-s-dark">📋 Copy</button>
+      </div>
+      <div class="flex justify-center gap-3 text-xl">
+        <a href="#" class="hover:text-s-green transition" aria-label="Share on Facebook">📘</a>
+        <a href="#" class="hover:text-s-green transition" aria-label="Share on Twitter">🐦</a>
+        <a href="#" class="hover:text-s-green transition" aria-label="Share on WhatsApp">💬</a>
+        <a href="#" class="hover:text-s-green transition" aria-label="Share by Email">📧</a>
+      </div>
+    </div>
+    <button class="bg-s-green px-8 py-3 rounded-xl text-lg font-semibold btn w-full max-w-md mb-4 text-s-dark">
+      🎁 Claim Free Welcome Bonus
+    </button>
+    <p class="text-xs text-s-muted">
+      👻 <a href="https://phantom.app/" target="_blank" rel="noopener" class="text-s-purple hover:underline">Phantom Wallet</a> &nbsp;|&nbsp;
+      💎 <a href="https://explorer.solana.com/address/{{ config.ADDRESSES.solana }}" target="_blank" rel="noopener" class="text-s-solana hover:underline">Solana Explorer</a>
+    </p>
+  </div>
+</section>

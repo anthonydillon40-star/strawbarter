@@ -1,0 +1,15 @@
+{
+  "name": "strawbarter",
+  "version": "2.0.0",
+  "private": true,
+  "description": "STRAW Barter — static site (Eleventy + Tailwind)",
+  "scripts": {
+    "dev": "eleventy --serve --quiet",
+    "build": "eleventy"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.1.6",
+    "@tailwindcss/postcss": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

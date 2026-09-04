@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if title %}{{ title }} | {% endif %}STRAW Barter</title>
+  <meta name="description" content="{{ description or "The UK's trusted barter platform — buy, sell, trade, connect." }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍓</text></svg>">
+</head>
+<body class="antialiased">
+
+<div class="bg-amber-500/10 border-b border-amber-500/30 py-2 px-4 text-center text-sm">
+  <span class="text-amber-400">⚠️ Digital asset — value can go down as well as up. Not regulated. May lose all capital. Not financial advice.</span>
+</div>
+
+<header class="sticky top-0 bg-s-dark/90 backdrop-blur-md border-b border-s-border z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 text-xl font-bold">
+      <span>🍓</span> STRAW Barter
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1 text-sm font-medium" aria-label="Main">
+      {%- for item in nav.groups -%}
+      <div class="dropdown">
+        <a href="{{ item.url }}" class="dropdown-toggle px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition flex items-center gap-1" aria-haspopup="true" aria-expanded="false">
+          {{ item.label }}<span class="text-[0.6rem] opacity-60">▼</span>
+        </a>
+        {%- if item.dropdown -%}
+        <div class="dropdown-menu">
+          {%- for d in item.dropdown -%}
+          <a href="{{ d.url }}" class="dropdown-item">
+            <span class="w-5 text-center">{{ d.icon }}</span>
+            <span>
+              <span class="block text-slate-200">{{ d.label }}</span>
+              <span class="block text-xs text-slate-400">{{ d.desc }}</span>
+            </span>
+          </a>
+          {%- endfor -%}
+        </div>
+        {%- endif -%}
+      </div>
+      {%- endfor -%}
+      {%- for item in nav.singles -%}
+      <a href="{{ item.url }}" class="px-3 py-2 rounded-lg hover:bg-s-card hover:text-s-green transition">{{ item.icon }} {{ item.label }}</a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://explorer.solana.com/address/{{ config.ADDRESSES.solana }}" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-solana/40 rounded-lg hover:bg-s-solana/10 transition text-xs text-s-solana">Solana</a>
+      <a href="https://phantom.app/" target="_blank" rel="noopener" class="hidden sm:flex items-center gap-1 px-2 py-1.5 border border-s-purple/40 rounded-lg hover:bg-s-purple/10 transition text-xs text-s-purple">Phantom</a>
+      <a href="/signup/" class="hidden sm:block px-2 py-1.5 border border-s-border rounded-lg hover:bg-s-card transition text-xs">Sign In</a>
+      <a href="/signup/" class="bg-s-green px-3 py-1.5 rounded-lg font-medium btn text-sm text-s-dark">🎁 Join Free</a>
+      <button onclick="toggleMobileMenu()" aria-expanded="false" aria-controls="mobileMenu" aria-label="Menu" class="md:hidden text-xl ml-2">☰</button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden border-t border-s-border px-4 py-3 bg-s-dark max-h-[70vh] overflow-y-auto">
+    <nav class="flex flex-col gap-1 text-sm" aria-label="Mobile">
+      {%- for item in nav.groups -%}
+        {%- if item.dropdown -%}
+        <div class="border-b border-s-border/50 pb-1 mb-1">
+          <p class="px-3 pt-2 pb-1 text-xs uppercase tracking-wider text-s-muted">{{ item.icon }} {{ item.label }}</p>
+          {%- for d in item.dropdown -%}
+          <a href="{{ d.url }}" class="mobile-link py-2 px-3 rounded-lg hover:bg-s-card block">{{ d.icon }} {{ d.label }}</a>
+          {%- endfor -%}
+        </div>
+        {%- else -%}
+        <a href="{{ item.url }}" class="mobile-link py-2 px-3 rounded-lg hover:bg-s-card">{{ item.mobile }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- for item in nav.singles -%}
+      <a href="{{ item.url }}" class="mobile-link py-2 px-3 rounded-lg hover:bg-s-card">{{ item.mobile }}</a>
+      {%- endfor -%}
+    </nav>
+  </div>
+</header>
+
+{{ content | safe }}
+
+<footer class="border-t border-s-border py-8 px-4 mt-8">
+  <div class="max-w-6xl mx-auto text-center text-sm text-s-muted">
+    <p class="mb-2">🍓 STRAW Barter — Trade Anything. Own Everything.</p>
+    <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 mb-3">
+      {%- for item in nav.groups -%}
+      <a href="{{ item.url }}" class="hover:text-s-green">{{ item.icon }} {{ item.label }}</a>
+      {%- endfor -%}
+      <a href="/legal/" class="hover:text-s-green">⚖️ Legal</a>
+      <a href="/terms/" class="hover:text-s-green">Terms</a>
+      <a href="/privacy/" class="hover:text-s-green">Privacy</a>
+      <a href="/contact/" class="hover:text-s-green">Contact</a>
+      <a href="https://explorer.solana.com/address/{{ config.ADDRESSES.solana }}" target="_blank" rel="noopener" class="text-s-solana hover:underline">Solana Explorer</a>
+      <a href="https://phantom.app/" target="_blank" rel="noopener" class="text-s-purple hover:underline">Phantom Wallet</a>
+    </div>
+    <p>© 2026 STRAW Barter. All rights reserved.</p>
+  </div>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite">✅ Link copied!</div>
+
+<div id="ageGate" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Age verification">
+  <div class="modal-content">
+    <h3 class="text-2xl font-bold mb-4">🔞 Age Verification</h3>
+    <p class="mb-6 text-s-muted">This section is for users aged 18+. Please confirm your age.</p>
+    <div class="flex gap-4 mb-4">
+      <button onclick="confirmAge(true)" class="flex-1 bg-s-green py-3 rounded-lg font-semibold btn text-s-dark">I am 18+</button>
+      <button onclick="confirmAge(false)" class="flex-1 border border-s-border py-3 rounded-lg font-semibold hover:bg-s-card transition">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

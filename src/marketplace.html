@@ -1,0 +1,36 @@
+---
+title: Marketplace
+layout: base
+description: "Buy, sell and trade across the UK on STRAW Barter — physical goods, digital products and services."
+---
+
+<section id="marketplace" class="section-compact px-4 max-w-6xl mx-auto">
+  <h2 class="text-2xl font-bold mb-3 text-center">🛒 Marketplace</h2>
+  <p class="text-center text-s-muted mb-4 text-sm">Buy, sell, trade across the UK.</p>
+  <div class="flex flex-wrap justify-center gap-2 mb-6">
+    <button class="px-3 py-1.5 rounded-full bg-s-green/10 text-s-green border border-s-green/20 text-sm">🆕 New</button>
+    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">🔥 Hot</button>
+    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">📍 Near Me</button>
+    <button class="px-3 py-1.5 rounded-full bg-s-card border border-s-border text-sm hover:border-s-green/50">£ — ££ — £££</button>
+  </div>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="card rounded-xl p-5 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')" aria-label="Save">❤️</button>
+      <h3 class="text-lg font-semibold mb-2">📦 Physical Goods</h3>
+      <p class="text-s-muted text-sm mb-3">Electronics, furniture, tools, clothing.</p>
+      <a href="/books/" class="text-s-green hover:underline text-sm">Browse →</a>
+    </div>
+    <div class="card rounded-xl p-5 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')" aria-label="Save">❤️</button>
+      <h3 class="text-lg font-semibold mb-2">💻 Digital Products</h3>
+      <p class="text-s-muted text-sm mb-3">Guides, templates — instant download.</p>
+      <a href="/downloads/" class="text-s-green hover:underline text-sm">Browse →</a>
+    </div>
+    <div class="card rounded-xl p-5 relative">
+      <button class="absolute top-3 right-3 text-s-muted hover:text-red-400 transition text-sm" onclick="showToast('Saved! ❤️')" aria-label="Save">❤️</button>
+      <h3 class="text-lg font-semibold mb-2">🛠️ Services & Skills</h3>
+      <p class="text-s-muted text-sm mb-3">Design, writing, repairs — trade skills.</p>
+      <a href="/builder/" class="text-s-green hover:underline text-sm">Find Services →</a>
+    </div>
+  </div>
+</section>
